@@ -6,6 +6,8 @@ import { IndicatorTile } from "./home/IndicatorTile";
 import { Body } from "./body/Body";
 import { LayerPanel } from "./body/LayerPanel";
 import { threeBodyScene } from "./body/threeBodyScene";
+import { BodyStatusList } from "./body/BodyStatusList";
+import { glowFrom } from "./body/glow";
 import type { BodySceneFactory, BodyView, LayerId, LayerView } from "./body/view";
 
 /** See-through by default: outer layers faint, organs and brain nearly solid. */
@@ -28,7 +30,18 @@ export function App({
   const state = missionStateAt(replay, end);
   const [layers, setLayers] = useState(DEFAULT_LAYERS);
 
-  const view = useMemo<BodyView>(() => ({ layers, structures: {}, heartRate: null }), [layers]);
+  const glow = useMemo(() => glowFrom(state.latest), [state]);
+  const view = useMemo<BodyView>(
+    () => ({
+      layers,
+      structures: Object.fromEntries(
+        Object.entries(glow.structures).map(([id, status]) => [id, { status, opacity: null }]),
+      ),
+      wholeBody: glow.wholeBody,
+      heartRate: null,
+    }),
+    [layers, glow],
+  );
 
   const hr = state.latest.get("heart_rate");
   return (
@@ -37,6 +50,7 @@ export function App({
       <main className="home">
         <section className="home__body" aria-label="Body">
           <Body view={view} scene={bodyScene} />
+          <BodyStatusList glow={glow} />
           <LayerPanel layers={layers} onChange={(id, next) => setLayers((l) => ({ ...l, [id]: next }))} />
         </section>
         {hr && <IndicatorTile reading={hr} />}

@@ -28,6 +28,8 @@ export interface StructureView {
 export interface BodyView {
   layers: Record<LayerId, LayerView>;
   structures: Record<string, StructureView>;
+  /** Whole-body Status tint (radiation dose, temperature); null = none. */
+  wholeBody: Status | null;
   /** Beats per minute for the heart, or null for still. */
   heartRate: number | null;
 }
