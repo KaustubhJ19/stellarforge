@@ -10,7 +10,7 @@ One file per ticket, numbered in dependency order. Each lists the tickets that b
 | [04: Mars transit mission profile](04-mars-transit-mission-profile.md) | 02 | In progress (5/6) |
 | [05: Safety bounds](05-safety-bounds.md) | 02 | Done (6/6) |
 | [06: Measurement cards](06-measurement-cards.md) | 02. Card layout agreed with Spec 2. | Done (6/6) |
-| [07: HRP risk map](07-hrp-risk-map.md) | 06 | Not started (0/4) |
+| [07: HRP risk map](07-hrp-risk-map.md) | 06 | Done (4/4) |
 | [08: Integration #1](08-integration-1.md) | 03. Also needs Spec 1 (contracts, replays) and Spec 4 (working emergency flow). | Not started (0/6) |
 | [09: Backup screen recording](09-backup-screen-recording.md) | 08 | Not started (0/3) |
 | [10: Credits page content](10-credits-page-content.md) | 02. Also needs Spec 1's data manifest. | Not started (0/4) |
