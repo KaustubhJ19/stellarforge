@@ -50,8 +50,10 @@
       "name": "NASA Apollo Flight Crew Cardiovascular Evaluations (AP005)",
       "kind": "dataset",
       "link": "https://nlsp.nasa.gov/search/data/details/e1fa5c55-ddfe-5548-91ba-864080319f44?dataType=EXPERIMENTS",
-      "licence": "NASA public summary tables (NASA SP-368), cited as source; no licence stated",
-      "used_for": "Return-to-gravity heart rate and blood pressure shift (group means from Table 6 only; raw per-crew values are restricted and not used)."
+      "licence": "Public use permitted (NASA NTRS record for NASA SP-368, distribution public)",
+      "licence_url": "https://ntrs.nasa.gov/citations/19760005580",
+      "used_for": "Return-to-gravity heart rate and blood pressure shift (group means from Table 6 only). Per the NASA Life Sciences Portal, privacy-protected datasets are available only by data request and the rest are public; we use no per-crew values.",
+      "citation": "Hoffler GW, Johnson RL. Apollo flight crew cardiovascular evaluations. In: Johnson RS, Dietlein LF, Berry CA, eds. Biomedical Results of Apollo. NASA SP-368, 1975:227-264. Experiment AP005, doi:10.83263/e60z-1h46"
     },
     {
       "name": "CGMacros",
@@ -78,7 +80,7 @@
       "link": "https://github.com/Z-Anatomy/Models-of-human-anatomy",
       "licence": "CC BY-SA 4.0",
       "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "used_for": "3D body (male and female). Z-Anatomy credits BodyParts3D (Database Center for Life Science), listed by Z-Anatomy as CC-BY-SA 2.1 Japan."
+      "used_for": "3D body (male and female). Z-Anatomy is derived from BodyParts3D (Database Center for Life Science), CC BY 4.0: https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html"
     },
     {
       "name": "Human Reference Atlas 3D Reference Organ Set, Body, Female (HuBMAP)",
@@ -108,21 +110,24 @@
       "name": "NASA Space Apps Challenge 2026: Create Health Monitoring Software for Astronauts on Space Missions",
       "kind": "challenge",
       "link": "https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/",
-      "licence": "Challenge brief, cited as source; terms not confirmed (page unreachable from our checker on 2026-11-15)",
-      "used_for": "The challenge we answer (author: Brazilian Space Agency)."
+      "licence": "No licence stated; the page shows Copyright 2026 NASA. NASA content guidance: generally not subject to US copyright, credit NASA as the source",
+      "licence_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "used_for": "The challenge we answer. Its Resources tab says participants must follow the data-use terms of each non-US-government site they use."
     },
     {
       "name": "NASA Space Apps Challenge 2026: participant FAQs",
       "kind": "challenge",
       "link": "https://www.spaceappschallenge.org/resources/participant-faqs/",
-      "licence": "Event rules, cited as source; terms not confirmed",
-      "used_for": "Submission rules, including the AI-use statement."
+      "licence": "No licence stated; the page shows Copyright 2026 NASA. NASA content guidance: generally not subject to US copyright, credit NASA as the source",
+      "licence_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "used_for": "Submission rules: each project must describe how SI (AI) tools were used."
     },
     {
       "name": "NASA Human Research Program: risks and hazards",
       "kind": "challenge",
       "link": "https://www.nasa.gov/hrp/risks/",
-      "licence": "NASA web content, cited as source",
+      "licence": "NASA content guidance: generally not subject to US copyright, credit NASA as the source",
+      "licence_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
       "used_for": "The 17 HRP risk titles on the measurement cards and the HRP risk map; the five hazards."
     }
   ]
