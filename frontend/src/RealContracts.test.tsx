@@ -158,3 +158,54 @@ describe("habitat Readings in the trends", () => {
     }
   });
 });
+
+describe("green Alerts clear one kind of Alert (Spec 3, db44200)", () => {
+  function mission(extra: { kind: "acute" | "drift"; status: "green" | "amber" | "red"; t: number; safety?: boolean }[]) {
+    const m = missionWith([
+      { indicator: "heart_rate", value: 70, t: 8 * HOUR },
+      { indicator: "heart_rate", value: 72, t: 12 * HOUR },
+    ]);
+    const reading = m.replay.events[0].payload as Reading;
+    extra.forEach(({ kind, status, t, safety }, i) => {
+      const a = { ...alertFor({ ...reading, t }, status, 100 + i, kind) };
+      if (safety) a.deviation = { value: 160, bound: { low: 50, high: 150 } };
+      m.replay.events.push({ t, type: "alert", payload: a });
+    });
+    m.replay.events.sort((a, b) => a.t - b.t);
+    return m;
+  }
+  const hr = () => screen.getByRole("group", { name: "Heart rate" });
+
+  it("keeps a drift Watch when only the acute Alert clears", () => {
+    render(<App {...mission([
+      { kind: "drift", status: "amber", t: 9 * HOUR },
+      { kind: "acute", status: "red", t: 10 * HOUR },
+      { kind: "acute", status: "green", t: 11 * HOUR },
+    ])} bodyScene={fakeBodyScene().factory} />);
+    expect(hr()).toHaveAttribute("data-status", "amber");
+  });
+
+  it("keeps a Safety-bound Alert when the acute (sigma) Alert clears", () => {
+    render(<App {...mission([
+      { kind: "acute", status: "red", t: 9 * HOUR, safety: true },
+      { kind: "acute", status: "amber", t: 10 * HOUR },
+      { kind: "acute", status: "green", t: 11 * HOUR },
+    ])} bodyScene={fakeBodyScene().factory} />);
+    expect(hr()).toHaveAttribute("data-status", "red");
+  });
+
+  it("shows Normal once every kind has cleared", () => {
+    render(<App {...mission([
+      { kind: "drift", status: "amber", t: 9 * HOUR },
+      { kind: "acute", status: "red", t: 10 * HOUR },
+      { kind: "acute", status: "green", t: 10.5 * HOUR },
+      { kind: "drift", status: "green", t: 11 * HOUR },
+    ])} bodyScene={fakeBodyScene().factory} />);
+    expect(hr()).toHaveAttribute("data-status", "green");
+  });
+
+  it("calls red 'Alert', Spec 3's word", () => {
+    render(<App {...mission([{ kind: "acute", status: "red", t: 11 * HOUR }])} bodyScene={fakeBodyScene().factory} />);
+    expect(within(hr()).getByText("Alert")).toBeInTheDocument();
+  });
+});

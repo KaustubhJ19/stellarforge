@@ -38,6 +38,30 @@ export function replayRange(replay: ReplayFile): [MissionTime, MissionTime] {
   return extent(replay.events.map((e) => e.t));
 }
 
+const RANK: Record<Status, number> = { green: 0, amber: 1, red: 2 };
+
+/**
+ * Spec 3 raises and clears each kind of Alert on its own (drift, acute, Safety bound, emergency):
+ * a green Alert ends only its own kind. A Safety-bound Alert is kind "acute" with a
+ * {value, bound} deviation, so it is told apart by that.
+ */
+function alertKey(a: Alert): string {
+  return `${a.indicator}|${a.kind}${"bound" in (a.deviation ?? {}) ? "|safety" : ""}`;
+}
+
+/** Open Alerts per Indicator; an Indicator's Status is the worst of its open kinds. */
+class OpenAlerts {
+  private open = new Map<string, Status>();
+  add(a: Alert) {
+    this.open.set(alertKey(a), a.status);
+  }
+  statusOf(indicator: IndicatorId): Status {
+    let worst: Status = "green";
+    for (const [key, s] of this.open) if (key.startsWith(`${indicator}|`) && RANK[s] > RANK[worst]) worst = s;
+    return worst;
+  }
+}
+
 /**
  * Whether an event's payload belongs on this crew member's screen: their own, plus the
  * habitat's (cabin, dose). Quarantined Readings are shown: Spec 3 holds Readings out of the
@@ -50,7 +74,7 @@ function shows(replay: ReplayFile, e: ReplayEvent): boolean {
 
 export function missionStateAt(replay: ReplayFile, t: MissionTime): MissionState {
   const latest = new Map<IndicatorId, Reading>();
-  const status = new Map<IndicatorId, Status>();
+  const open = new OpenAlerts();
   const tasks = new Map<string, Task>();
   const alerts: Alert[] = [];
   for (const e of replay.events) {
@@ -63,8 +87,7 @@ export function missionStateAt(replay: ReplayFile, t: MissionTime): MissionState
       }
       case "alert":
         alerts.push(e.payload);
-        // Events are ordered by t, so the last Alert seen is the newest.
-        status.set(e.payload.indicator, e.payload.status);
+        open.add(e.payload); // events are ordered by t, so the last per kind is the newest
         break;
       case "task":
         tasks.set(e.payload.id, e.payload);
@@ -72,7 +95,7 @@ export function missionStateAt(replay: ReplayFile, t: MissionTime): MissionState
     }
   }
   const shown = new Map<IndicatorId, ShownReading>();
-  for (const [id, r] of latest) shown.set(id, { ...r, status: status.get(id) ?? "green" });
+  for (const [id, r] of latest) shown.set(id, { ...r, status: open.statusOf(id) });
   return {
     t,
     missionDay: Math.floor(t / DAY) + 1,
@@ -95,10 +118,10 @@ export function seriesOf(replay: ReplayFile, indicator: IndicatorId): ShownReadi
   alerts.sort((a, b) => a.t - b.t);
   // An Alert applies to Readings at or after its time (including one at the same second).
   let next = 0;
-  let status: Status = "green";
+  const open = new OpenAlerts();
   return readings.map((r) => {
-    while (next < alerts.length && alerts[next].t <= r.t) status = alerts[next++].status;
-    return { ...r, status };
+    while (next < alerts.length && alerts[next].t <= r.t) open.add(alerts[next++]);
+    return { ...r, status: open.statusOf(indicator) };
   });
 }
 

@@ -85,6 +85,6 @@ describe("trend chart", () => {
     expect(rows).toHaveLength(25); // header + 24 hourly Readings
     expect(rows[15]).toHaveTextContent("Day 3 14:00");
     expect(rows[15]).toHaveTextContent("128");
-    expect(rows[15]).toHaveTextContent("Act now");
+    expect(rows[15]).toHaveTextContent("Alert");
   });
 });

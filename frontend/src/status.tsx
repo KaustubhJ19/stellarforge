@@ -1,10 +1,10 @@
 import type { Status } from "./contracts";
 
-/** Status is always shown as colour + icon + words, never colour alone. */
+/** Status is always shown as colour + icon + words, never colour alone. Words agreed with Spec 3. */
 export const STATUS_TEXT: Record<Status, { label: string; icon: string }> = {
   green: { label: "Normal", icon: "✓" },
   amber: { label: "Watch", icon: "!" },
-  red: { label: "Act now", icon: "✕" },
+  red: { label: "Alert", icon: "✕" },
 };
 
 export function StatusBadge({ status }: { status: Status }) {

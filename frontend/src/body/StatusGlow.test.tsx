@@ -16,7 +16,7 @@ describe("status glow", () => {
     expect(body.view.structures["vessels.carotids"].status).toBe("red");
 
     const heart = within(screen.getByRole("list", { name: "Body status" })).getByRole("listitem", { name: "Heart" });
-    expect(heart).toHaveTextContent("Act now");
+    expect(heart).toHaveTextContent("Alert");
     expect(within(heart).getByTestId("status-icon")).toHaveTextContent("✕");
   });
 
