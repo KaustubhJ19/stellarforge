@@ -14,7 +14,18 @@
     "radiation_dose_gcr": "mGy/day",
     "radiation_dose_saa": "mGy/day",
     "radiation_dose_total": "mGy/day",
-    "radiation_dose_accumulated": "mGy"
+    "radiation_dose_accumulated": "mGy",
+    "cabin_pco2": "mmHg",
+    "cabin_pco2_1h": "mmHg"
+  },
+  "derived": {
+    "pressure_mmHg": 760,
+    "pressure_psia": 14.7,
+    "pressure_basis": "ISS cabin nominal total pressure, sea-level equivalent (NASA OCHMO habitable-atmosphere technical brief: 1 atm = 14.7 psia). Operating band about 14.0-14.9 psia (NASA ICES-2025-126) changes pCO2 by about -5% to +1%.",
+    "formula": "cabin_pco2 [mmHg] = cabin_co2 [ppm] x 760 / 1e6",
+    "window_s": 3600,
+    "min_samples": 9,
+    "limit_reference": "NASA-STD-3001 Vol 2 V2 6004: average one-hour ppCO2 no more than 3 mmHg (https://www.nasa.gov/reference/6-0-natural-and-induced-environments-vol-2)"
   },
   "citation": "NASA OSDR Environmental Data App, https://visualization.osdr.nasa.gov/eda/ ; radiation data cited as visualization (not a primary dataset).",
   "terms": "https://www.nasa.gov/reference/osdr-help-terms-and-conditions/",
@@ -23,9 +34,10 @@
     "Units from the EDA chart axis labels; accumulated dose is the running sum of daily total dose (EDA tooltip), unit mGy.",
     "EDA timestamps have no time zone; treated as UTC.",
     "confidence = 1 because the EDA gives no quality score; it is not a validated quality measure.",
-    "Telemetry is from ISS cabin sensors recorded during this Rodent Research mission; ground-control series excluded."
+    "Telemetry is from ISS cabin sensors recorded during this Rodent Research mission; ground-control series excluded.",
+    "cabin_pco2 and cabin_pco2_1h are derived from cabin_co2 at ISS nominal pressure (where the air was measured), not the mission profile's cabin_pressure; Reading.source is 'sensor' because the contract has no 'derived' value."
   ],
-  "readings": 36417,
+  "readings": 60575,
   "crew": "habitat",
   "profile": "mars_transit",
   "offset": 0
