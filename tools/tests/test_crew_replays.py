@@ -251,6 +251,26 @@ def test_command_line_writes_replays_records_and_source(pm, tmp_path):
     assert json.loads((out / "crew-replays.source.json").read_text(encoding="utf-8"))["licence"] == "CC BY 4.0"
 
 
+def test_assign_puts_a_chosen_participant_in_one_crew_slot_and_keeps_the_others(pm, tmp_path):
+    write_person(pm, "p07", 25)  # not among the four most complete
+    sexes = {"p01": "male", "p02": "female", "p03": "male", "p04": "female", "p05": "female", "p07": "female"}
+    plain = cr.build_all(pm, seed=1, sexes=sexes)
+    out = cr.build_all(pm, seed=1, sexes=sexes, assign={"D": "p07"})
+    assert out["mapping"]["D"] == "p07"
+    assert {c: out["mapping"][c] for c in "ABC"} == {c: plain["mapping"][c] for c in "ABC"}
+    assert next(r for r in out["crew_records"] if r["id"] == "D")["sex"] == "female"
+    assert out["source"]["assigned"] == {"D": "p07"}
+    validate("ReplayFile", out["replays"]["D"])
+
+
+def test_assign_rejects_unknown_crew_or_participant_and_duplicates(pm):
+    sexes = {p: "male" for p in ("p01", "p02", "p03", "p04", "p05")}
+    plain = cr.build_all(pm, seed=1, sexes=sexes)
+    for bad in ({"E": "p01"}, {"D": "p99"}, {"D": plain["mapping"]["A"]}):
+        with pytest.raises(ValueError):
+            cr.build_all(pm, seed=1, sexes=sexes, assign=bad)
+
+
 def test_reads_sex_from_the_participant_overview_spreadsheet(tmp_path):
     import zipfile
     path = tmp_path / "participant-overview.xlsx"
