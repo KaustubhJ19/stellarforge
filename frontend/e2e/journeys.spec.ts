@@ -173,13 +173,10 @@ test.describe("home screen in a real browser, no service", () => {
 
 test.describe("female crew member", () => {
   test("loads the female body, which glows and zooms like the male one", async ({ page }) => {
-    const fixture = await import("../src/fixtures/mars-day3.replay.json", { with: { type: "json" } });
-    const replay = { ...fixture.default, crew: { ...fixture.default.crew, sex: "female" } };
     const models: string[] = [];
     page.on("request", (r) => r.url().includes("/models/") && models.push(r.url().split("/models/")[1]));
-    const problems = await openApp(page, "about:blank");
-    await page.route((url) => url.pathname === "/female.json", (r) => r.fulfill({ json: replay }));
-    await page.goto("/?replay=/female.json");
+    // The shipped sample used by `npm run dev:female`.
+    const problems = await openApp(page, "/?replay=/replay/mars-day3-female.json");
     await expect(page.locator('.body-host[data-model="female"][data-loaded="true"]')).toBeVisible({ timeout: 30_000 });
     await page.waitForTimeout(700);
     await expect(page.getByText(/Female organs\. Muscles, skeleton and vessels are approximate/)).toBeVisible();

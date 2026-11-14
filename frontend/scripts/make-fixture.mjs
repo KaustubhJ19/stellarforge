@@ -1,7 +1,7 @@
 // Builds the hand-made Mars replay fixture used until Spec 1's first replay
 // file lands (ticket 12). Deterministic: re-running gives the same file.
-// Run: node scripts/make-fixture.mjs
-import { writeFileSync } from "node:fs";
+// Run: node scripts/make-fixture.mjs (also writes public/replay/mars-day3-female.json)
+import { mkdirSync, writeFileSync } from "node:fs";
 
 const DAY = 86400;
 const HOUR = 3600;
@@ -71,4 +71,11 @@ const replay = {
   events,
 };
 writeFileSync(new URL("../src/fixtures/mars-day3.replay.json", import.meta.url), JSON.stringify(replay, null, 1) + "\n");
-console.log(`wrote ${events.length} events`);
+
+// The same day for a female crew member, served as a static file so it can be opened with
+// ?replay=/replay/mars-day3-female.json (npm run dev:female).
+mkdirSync(new URL("../public/replay/", import.meta.url), { recursive: true });
+const female = { ...replay, crew: { ...replay.crew, id: "crew-b", sex: "female" } };
+for (const e of female.events) if (e.payload.crew) e.payload = { ...e.payload, crew: "crew-b" };
+writeFileSync(new URL("../public/replay/mars-day3-female.json", import.meta.url), JSON.stringify(female, null, 1) + "\n");
+console.log(`wrote ${events.length} events (male fixture and female sample)`);
