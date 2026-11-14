@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
-import type { IndicatorId, ReplayFile } from "./contracts";
-import { missionStateAt, replayRange } from "./replay/state";
+import type { CardContent, IndicatorId, ReplayFile } from "./contracts";
+import { missionStateAt, replayRange, seriesOf } from "./replay/state";
+import { MeasurementCard } from "./home/MeasurementCard";
 import { MissionBar } from "./home/MissionBar";
 import { HealthSummary } from "./home/HealthSummary";
 import { TaskList } from "./home/TaskList";
@@ -34,11 +35,14 @@ export function App({
   replay,
   bodyScene = threeBodyScene,
   onEmergency = emergencyNotWired,
+  cards = [],
 }: {
   replay: ReplayFile;
   bodyScene?: BodySceneFactory;
   /** Hand-off to the emergency flow (Spec 4). */
   onEmergency?: (request: EmergencyRequest) => void;
+  /** Measurement card content (Spec 5). */
+  cards?: CardContent[];
 }) {
   const range = useMemo(() => replayRange(replay), [replay]);
   const [t, setT] = useState(range[1]);
@@ -46,6 +50,7 @@ export function App({
   const [layers, setLayers] = useState(DEFAULT_LAYERS);
   const [focus, setFocus] = useState<Focus>({ level: "body" });
   const [insight, setInsight] = useState<IndicatorId | null>(null);
+  const [cardFor, setCardFor] = useState<IndicatorId | null>(null);
 
   const glow = useMemo(() => glowFrom(state.latest), [state]);
   const heartRate = state.latest.get("heart_rate")?.value ?? null;
@@ -53,6 +58,7 @@ export function App({
   // Insight needs a Reading at the scrubbed time; scrubbing to before one leaves insight.
   const insightReading = insight ? state.latest.get(insight) : undefined;
   const activeInsight = insightReading ? insight : null;
+  const cardReading = cardFor ? state.latest.get(cardFor) : undefined;
   const view = useMemo(
     () => buildBodyView({ focus, layers, glow, heartRate, breathRate, insight: activeInsight }),
     [focus, layers, glow, heartRate, breathRate, activeInsight],
@@ -77,13 +83,21 @@ export function App({
         <div className="home__side">
           <ActionButtons onEmergency={onEmergency} />
           <div className="home__summaries">
-            <HealthSummary kind="physical" latest={state.latest} />
-            <HealthSummary kind="mental" latest={state.latest} />
+            <HealthSummary kind="physical" latest={state.latest} onDetails={setCardFor} />
+            <HealthSummary kind="mental" latest={state.latest} onDetails={setCardFor} />
           </div>
           <Trends replay={replay} state={state} range={range} onScrub={setT} />
           <TaskList tasks={state.tasks} />
         </div>
       </main>
+      {cardReading && (
+        <MeasurementCard
+          reading={cardReading}
+          history={seriesOf(replay, cardReading.indicator).filter((r) => r.t <= state.t)}
+          content={cards.find((c) => c.indicator === cardReading.indicator)}
+          onClose={() => setCardFor(null)}
+        />
+      )}
       <footer className="disclaimer">Decision support, not diagnosis.</footer>
     </div>
   );

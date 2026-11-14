@@ -74,3 +74,18 @@ export interface ReplayFile {
   profile: MissionProfile;
   events: ReplayEvent[];
 }
+
+/**
+ * ASSUMED: one measurement card's content from Spec 5 (content/cards/).
+ * Every field is optional so a card renders before its content is written.
+ */
+export interface CardContent {
+  indicator: IndicatorId;
+  how?: string;
+  why?: string;
+  ifAbnormal?: string;
+  /** Honest labels, e.g. "team value", "Earth reference, no space data". */
+  labels?: string[];
+  /** Citations for the content. */
+  sources?: string[];
+}
