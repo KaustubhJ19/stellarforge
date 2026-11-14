@@ -15,6 +15,9 @@ export type ReadingState = "released" | "quarantined" | "event";
 
 export type ReadingSource = "sensor" | "camera" | "mic" | "manual" | "lab" | "sim";
 
+/** Spec 1's contract version, as every shared replay and Crew record carries it. */
+export const CONTRACT_VERSION = "1.0.0";
+
 export interface Reading {
   /** May be omitted inside a ReplayFile event; it takes the file's. */
   schema_version?: string;

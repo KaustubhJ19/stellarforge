@@ -4,6 +4,13 @@ import { App } from "../App";
 import { marsMission, type Mission } from "../test/replay";
 import { fakeBodyScene } from "../test/fakeBodyScene";
 import type { Reading } from "../contracts";
+import Ajv2020 from "ajv/dist/2020";
+import readingSchema from "../../../contracts/reading.schema.json";
+
+/** The data service checks each POSTed Reading on its own against Spec 1's schema. */
+const validReading = new Ajv2020({ allErrors: true, strict: false }).compile(readingSchema);
+const schemaProblems = (readings: Reading[]) =>
+  readings.flatMap((r) => (validReading(r) ? [] : [`${r.indicator}: ${JSON.stringify(validReading.errors)}`]));
 
 function renderHome(mission: Mission = marsMission(), onReadings = vi.fn()) {
   render(<App {...mission} bodyScene={fakeBodyScene().factory} onReadings={onReadings} />);
@@ -48,6 +55,7 @@ describe("stand test form", () => {
       ["standing_heart_rate", 92, "bpm", "manual"],
       ["standing_systolic_bp", 110, "mmHg", "manual"],
     ]);
+    expect(schemaProblems(saved)).toEqual([]);
   });
 
   it("compares with the astronaut's own pre-flight test first, then the Apollo group average", async () => {
@@ -144,6 +152,7 @@ describe("post-EVA check form", () => {
       ["tingling", 0, "yes/no"],
     ]);
     expect(saved.every((r) => r.source === "manual")).toBe(true);
+    expect(schemaProblems(saved)).toEqual([]);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     const physical = screen.getByRole("region", { name: "Physical health" });
     expect(within(physical).getByRole("group", { name: "Hand or finger pain" })).toHaveTextContent("Yes");
