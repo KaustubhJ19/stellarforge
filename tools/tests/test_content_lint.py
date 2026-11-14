@@ -79,6 +79,19 @@ def test_drug_name_or_dose_in_step_text_fails(text):
     assert any("drug" in p or "dose" in p for p in problems)
 
 
+@pytest.mark.parametrize("name", ["zolpidem", "Modafinil", "melatonin", "loratadine", "promethazine",
+                                  "ciprofloxacin", "silver sulfadiazine", "loperamide"])
+def test_iss_kit_drug_is_blocked(name):
+    assert cl.lint_protocol(with_step(text=f"Take {name} now"))
+
+
+def test_every_blocklist_group_has_source_basis_and_names():
+    data = json.loads((ROOT / "tools" / "drug_blocklist.json").read_text())
+    assert data["groups"]
+    for g in data["groups"]:
+        assert g["source"].strip() and g["basis"].strip() and g["names"]
+
+
 def test_drug_in_equipment_fails():
     assert cl.lint_protocol(with_step(equipment=["AED", "epinephrine auto-injector"]))
 

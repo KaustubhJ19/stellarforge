@@ -17,15 +17,10 @@ sys.path.insert(0, str(ROOT / "contracts"))
 
 from validate import ContractError, validate  # noqa: E402
 
-# shortcut: a fixed list of common emergency/cardiac drugs, not a full formulary;
-# extend it whenever new protocol content is added.
-DRUGS = [
-    "epinephrine", "adrenaline", "norepinephrine", "noradrenaline", "amiodarone", "lidocaine",
-    "atropine", "vasopressin", "adenosine", "aspirin", "acetylsalicylic", "nitroglycerin",
-    "glyceryl trinitrate", "morphine", "fentanyl", "ketamine", "heparin", "clopidogrel",
-    "ticagrelor", "alteplase", "tenecteplase", "magnesium sulfate", "sodium bicarbonate",
-    "calcium chloride", "naloxone", "midazolam", "diazepam", "propofol", "dextrose", "glucagon",
-]
+# Sourced groups: ISS crew-kit drugs (NASA papers) plus a team-value emergency group.
+# shortcut: not a full formulary; the "per flight surgeon" rule below catches unnamed drugs.
+_BLOCKLIST = json.loads((Path(__file__).resolve().parent / "drug_blocklist.json").read_text(encoding="utf-8"))
+DRUGS = sorted({n for g in _BLOCKLIST["groups"] for n in g["names"]}, key=len, reverse=True)
 MEDICATION_RE = re.compile(r"\b(medications?|medicines?|drugs?)\b", re.IGNORECASE)
 HANDOFF = "per flight surgeon"
 
