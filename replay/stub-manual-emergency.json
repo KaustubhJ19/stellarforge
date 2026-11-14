@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "crew": "cmdr",
+  "profile": "stub-mars",
+  "id": "stub-manual-emergency",
+  "stub": true,
+  "note": "STUB test replay",
+  "events": [
+    {
+      "t": 1,
+      "type": "press_emergency",
+      "payload": {
+        "crew": "cmdr"
+      }
+    }
+  ]
+}

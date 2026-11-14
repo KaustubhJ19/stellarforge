@@ -1,0 +1,19 @@
+import { defineConfig } from "@playwright/test";
+import path from "node:path";
+
+const PY = path.resolve(process.cwd(), "../backend/.venv/Scripts/python.exe");
+
+// Serves the BUILT app from the real backend (run `npm run build` first).
+// The explainer points at a closed port so answers are deterministic (recorded / refused).
+export default defineConfig({
+  testDir: "e2e",
+  timeout: 60_000,
+  workers: 1,
+  use: { baseURL: "http://127.0.0.1:8770", viewport: { width: 1024, height: 768 } },
+  webServer: {
+    command: `"${PY}" -m uvicorn app.main:app --app-dir ../backend --host 127.0.0.1 --port 8770`,
+    url: "http://127.0.0.1:8770/api/health",
+    reuseExistingServer: false,
+    env: { SF_CLOCK_SPEED: "1", SF_OLLAMA_URL: "http://127.0.0.1:9" },
+  },
+});

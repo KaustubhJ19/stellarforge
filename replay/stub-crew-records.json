@@ -1,0 +1,55 @@
+{
+  "id": "stub-crew-records",
+  "stub": true,
+  "note": "Test double for Spec 1 Crew records (Spec 1 CrewRecord shape). Not real people or medical data.",
+  "records": [
+    {
+      "schema_version": "1.0.0",
+      "id": "cmdr",
+      "sex": "unspecified",
+      "anchor": {
+        "STUB_indicator": {
+          "mean": 0,
+          "sd": 1
+        }
+      },
+      "missionProfile": "stub-mars"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "eng",
+      "sex": "unspecified",
+      "anchor": {
+        "STUB_indicator": {
+          "mean": 0,
+          "sd": 1
+        }
+      },
+      "missionProfile": "stub-mars"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "sci",
+      "sex": "unspecified",
+      "anchor": {
+        "STUB_indicator": {
+          "mean": 0,
+          "sd": 1
+        }
+      },
+      "missionProfile": "stub-mars"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "cmo",
+      "sex": "unspecified",
+      "anchor": {
+        "STUB_indicator": {
+          "mean": 0,
+          "sd": 1
+        }
+      },
+      "missionProfile": "stub-mars"
+    }
+  ]
+}

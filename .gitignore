@@ -34,3 +34,8 @@ replay/generated/
 
 # Local planning notes (not committed)
 .scratch/
+
+# Frontend test/build artifacts
+test-results/
+playwright-report/
+*.tsbuildinfo
