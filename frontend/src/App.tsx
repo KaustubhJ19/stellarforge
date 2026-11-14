@@ -8,7 +8,8 @@ import { LayerPanel } from "./body/LayerPanel";
 import { threeBodyScene } from "./body/threeBodyScene";
 import { BodyStatusList } from "./body/BodyStatusList";
 import { glowFrom } from "./body/glow";
-import type { BodySceneFactory, BodyView, LayerId, LayerView } from "./body/view";
+import { ZoomControls } from "./body/ZoomControls";
+import type { BodySceneFactory, BodyView, Focus, LayerId, LayerView } from "./body/view";
 
 /** See-through by default: outer layers faint, organs and brain nearly solid. */
 const DEFAULT_LAYERS: Record<LayerId, LayerView> = {
@@ -26,13 +27,14 @@ export function App({
   replay: ReplayFile;
   bodyScene?: BodySceneFactory;
 }) {
-  const [, end] = replayRange(replay);
-  const state = missionStateAt(replay, end);
+  const state = useMemo(() => missionStateAt(replay, replayRange(replay)[1]), [replay]);
   const [layers, setLayers] = useState(DEFAULT_LAYERS);
+  const [focus, setFocus] = useState<Focus>({ level: "body" });
 
   const glow = useMemo(() => glowFrom(state.latest), [state]);
   const view = useMemo<BodyView>(
     () => ({
+      focus,
       layers,
       structures: Object.fromEntries(
         Object.entries(glow.structures).map(([id, status]) => [id, { status, opacity: null }]),
@@ -40,7 +42,7 @@ export function App({
       wholeBody: glow.wholeBody,
       heartRate: null,
     }),
-    [layers, glow],
+    [focus, layers, glow],
   );
 
   const hr = state.latest.get("heart_rate");
@@ -50,6 +52,7 @@ export function App({
       <main className="home">
         <section className="home__body" aria-label="Body">
           <Body view={view} scene={bodyScene} />
+          <ZoomControls focus={focus} onFocus={setFocus} />
           <BodyStatusList glow={glow} />
           <LayerPanel layers={layers} onChange={(id, next) => setLayers((l) => ({ ...l, [id]: next }))} />
         </section>
