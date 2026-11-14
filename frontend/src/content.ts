@@ -61,6 +61,8 @@ export interface ProfileContent {
   id: string;
   name: string;
   comm_delay?: { value: unknown; unit?: string; status?: string };
+  /** Cabin CO₂ limit in mmHg, compared with the cabin's trailing average (`cabin_pco2_1h`). */
+  co2_limit?: { value: unknown; unit?: string; status?: string; source?: string; averaging_window_min?: number };
 }
 
 export const CONTENT_PROFILES: ProfileContent[] = Object.values(

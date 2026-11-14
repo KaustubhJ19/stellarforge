@@ -208,14 +208,15 @@ test.describe("phone width", () => {
 });
 
 test.describe("cabin CO₂ banner", () => {
-  test("shows while the cabin replay's CO₂ is high (10:00-12:00) and clears after", async ({ page }) => {
+  // Needs Spec 5's co2_limit in content/profiles/mars_transit.json (their 740e851, not pushed yet).
+  test.fixme("shows while the cabin's 1-hour CO₂ average is over the limit (10:00-12:00) and clears after", async ({ page }) => {
     const problems = await openApp(page, "/?replay=/replay/mars-day3-female.json&cabin=/replay/iss-cabin-day3.json");
     const banner = page.getByRole("status", { name: "Cabin CO₂" });
     await expect(page.getByRole("region", { name: "Mission" })).toContainText("41.9 mGy");
     await expect(banner).toHaveCount(0);
     await scrubTo(page, 10);
-    await expect(banner).toContainText("Cabin CO₂ high: 5,800 ppm");
-    await expect(banner).toContainText("team value, not yet researched");
+    await expect(banner).toContainText("Cabin CO₂ high: 3.4 mmHg (1-hour average)");
+    await expect(banner).toContainText("Limit 3 mmHg, 1-hour average");
     await banner.scrollIntoViewIfNeeded();
     await page.screenshot({ path: "test-results/co2-banner.png" });
     await scrubTo(page, 12);

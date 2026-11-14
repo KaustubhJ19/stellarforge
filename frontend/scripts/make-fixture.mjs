@@ -99,7 +99,7 @@ function day3(crew) {
   return { schema_version: SCHEMA_VERSION, crew, profile: PROFILE, events };
 }
 
-/** The habitat's day 3, as tools/cabin_dose_replay.py writes it (crew "habitat"). CO₂ runs high 10:00-12:00. */
+/** The habitat's day 3, as tools/cabin_dose_replay.py writes it (crew "habitat"). CO₂ runs high 10:00-12:00 (over 3 mmHg as a 1-hour average). */
 function cabinDay3() {
   const events = [];
   const reading = (h, indicator, value, unit) => {
@@ -112,6 +112,8 @@ function cabinDay3() {
   };
   for (let h = 0; h < 24; h++) {
     reading(h, "cabin_co2", h >= 10 && h < 12 ? 5600 + h * 20 : 2800 + ((h * 37) % 300), "ppm");
+    // Trailing 1-hour average CO₂ partial pressure, as the cabin replay now carries it.
+    reading(h, "cabin_pco2_1h", h >= 10 && h < 12 ? 3.4 : +(2.1 + ((h * 37) % 300) / 1000).toFixed(2), "mmHg");
     reading(h, "cabin_temperature", +(22.4 + ((h * 3) % 7) / 10).toFixed(1), "degC");
     reading(h, "cabin_relative_humidity", 42 + (h % 4), "%");
     reading(h, "radiation_dose_accumulated", +(41.2 + h * 0.03).toFixed(2), "mGy");

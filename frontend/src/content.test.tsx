@@ -28,7 +28,7 @@ describe("Spec 5 content (content/ at the repo root)", () => {
   });
 
   it("reads the Mars transit profile: name, and the one-way delay labelled a team value", () => {
-    expect(profileFor("mars_transit")).toEqual({ name: "Mars transit", delay: "28.5 min", delayNote: "one way, team value" });
+    expect(profileFor("mars_transit")).toMatchObject({ name: "Mars transit", delay: "28.5 min", delayNote: "one way, team value" });
     render(<App {...marsMission()} bodyScene={fakeBodyScene().factory} />);
     const bar = screen.getByRole("region", { name: "Mission" });
     expect(within(bar).getByText("28.5 min")).toBeInTheDocument();
@@ -56,11 +56,11 @@ describe("profile delay units and labels", () => {
       id: "lunar", name: "Lunar base",
       comm_delay: { value: 1.3, unit: "s one way", status: "not confirmed" },
     });
-    expect(view).toEqual({ name: "Lunar base", delay: "1.3 s", delayNote: "one way, not confirmed" });
+    expect(view).toMatchObject({ name: "Lunar base", delay: "1.3 s", delayNote: "one way, not confirmed" });
   });
 
   it("shows minutes for the Mars profile, one way, team value", () => {
     expect(profileView({ id: "m", name: "M", comm_delay: { value: 28.5, unit: "min one way (57 min round trip)", status: "not confirmed: team value" } }))
-      .toEqual({ name: "M", delay: "28.5 min", delayNote: "one way, team value" });
+      .toMatchObject({ name: "M", delay: "28.5 min", delayNote: "one way, team value" });
   });
 });

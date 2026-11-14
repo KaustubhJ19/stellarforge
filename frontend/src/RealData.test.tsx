@@ -49,7 +49,7 @@ describe("cabin data that stops before the crew data (RR-1 covers 42 days)", () 
       { indicator: "heart_rate", value: 70, t: 1 * HOUR },
       { indicator: "heart_rate", value: 71, t: 10 * DAY },
     ]);
-    for (const [indicator, value, unit] of [["cabin_co2", 6200, "ppm"], ["radiation_dose_accumulated", 12.5, "mGy"]] as const) {
+    for (const [indicator, value, unit] of [["cabin_pco2_1h", 3.4, "mmHg"], ["radiation_dose_accumulated", 12.5, "mGy"]] as const) {
       const r: Reading = { crew: "habitat", indicator, value, unit, t: 2 * HOUR, source: "sensor", confidence: 1, state: "released" };
       m.replay.events.push({ t: 2 * HOUR, type: "reading", payload: r });
     }
@@ -58,7 +58,8 @@ describe("cabin data that stops before the crew data (RR-1 covers 42 days)", () 
   }
 
   it("does not show an old CO₂ Reading as current", () => {
-    render(<App {...staleCabin()} bodyScene={fakeBodyScene().factory} />);
+    const profiles = [{ id: "mars_transit", name: "Mars transit", co2_limit: { value: 3, status: "sourced" } }];
+    render(<App {...staleCabin()} bodyScene={fakeBodyScene().factory} profiles={profiles} />);
     expect(screen.queryByRole("status", { name: "Cabin CO₂" })).not.toBeInTheDocument();
     fireEvent.change(screen.getByRole("slider", { name: "Mission clock" }), { target: { value: String(3 * HOUR) } });
     expect(screen.getByRole("status", { name: "Cabin CO₂" })).toBeInTheDocument();

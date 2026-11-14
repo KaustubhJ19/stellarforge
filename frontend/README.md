@@ -90,8 +90,11 @@ The app reads Spec 1's frozen shapes: the JSON Schemas in `contracts/` at the re
 - **Stand test** compares with the astronaut's own pre-flight test, then the Apollo AP005
   after-landing group shift, read from Spec 3's `content/profiles/detection-cut-offs.json`
   (`return_to_gravity_shift`) with its label and source.
-- **CO₂ banner** shows while the latest cabin CO₂ is over 5,000 ppm, a team value (not yet
-  researched) kept in `src/teamValues.ts` and labelled on screen.
+- **CO₂ banner** shows while the cabin's trailing 1-hour CO₂ average (`cabin_pco2_1h`, mmHg,
+  from the cabin replay) is over the Mission profile's `co2_limit.value` (Spec 5: 3 mmHg,
+  NASA-STD-3001 Vol 2 [V2 6004]). Both are mmHg, so the app converts nothing. The limit comes
+  from the profile chosen in the mission bar, with its averaging window and source, or its
+  status when not sourced. A profile with no `co2_limit` shows no banner.
 - **Tasks** (`task` events) are app-side; no contract carries them yet. `trigger` and
   `crew_report` events are ignored here (Spec 4).
 

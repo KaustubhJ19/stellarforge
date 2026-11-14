@@ -90,6 +90,8 @@ export const HABITAT_INDICATORS: IndicatorId[] = [
   "cabin_temperature",
   "cabin_relative_humidity",
   "cabin_co2",
+  // Trailing 1-hour average CO₂ partial pressure (mmHg); the CO₂ banner compares it with the profile's limit.
+  "cabin_pco2_1h",
 ];
 
 /** "CoarseVentricularFibrillation" -> "Coarse ventricular fibrillation". */
