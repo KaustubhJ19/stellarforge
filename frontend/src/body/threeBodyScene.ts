@@ -3,13 +3,13 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import type { Status } from "../contracts";
-import type { BodyScene, BodySceneFactory, BodyView, Focus, LayerId } from "./view";
+import type { BodyModel, BodyScene, BodySceneFactory, BodyView, Focus, LayerId } from "./view";
 import { STRUCTURES, structuresIn, type RegionId, type StructureId } from "./structures";
 
 const BASE = import.meta.env.BASE_URL;
-const MODEL_URL = `${BASE}models/body-male.glb`;
+const modelUrl = (model: BodyModel) => `${BASE}models/body-${model}.glb`;
 /** Higher-detail structures for one region, fetched the first time it is zoomed into. */
-const regionDetailUrl = (region: RegionId) => `${BASE}models/body-male.${region}.glb`;
+const regionDetailUrl = (model: BodyModel, region: RegionId) => `${BASE}models/body-${model}.${region}.glb`;
 const FLY_SECONDS = 0.6;
 /** Glowing structures stay visible even when their layer is faded. */
 const GLOW_MIN_OPACITY = 0.85;
@@ -63,6 +63,7 @@ export const threeBodyScene: BodySceneFactory = (host, events) => {
   let lungs: THREE.Mesh | null = null;
   let view: BodyView | null = null;
   let body: THREE.Object3D | null = null;
+  let loadedModel: BodyModel | null = null;
   let framedFocus = "";
   const detailRequested = new Set<RegionId>();
   let fly: { from: [THREE.Vector3, THREE.Vector3]; to: [THREE.Vector3, THREE.Vector3]; t: number } | null = null;
@@ -70,42 +71,62 @@ export const threeBodyScene: BodySceneFactory = (host, events) => {
 
   const draco = new DRACOLoader().setDecoderPath(`${BASE}draco/`);
   const loader = new GLTFLoader().setDRACOLoader(draco);
-  loader
-    .loadAsync(MODEL_URL)
-    .then((gltf) => {
-      if (disposed) return;
-      gltf.scene.traverse((o) => {
-        if (!(o instanceof THREE.Mesh)) return;
-        // GLTFLoader strips dots from node names, so the structure id travels in glTF extras.
-        const { kind, layer, id } = o.userData as { kind: Part["kind"]; layer: LayerId; id: string };
-        const material = new THREE.MeshStandardMaterial({
-          color: layerColor(layer),
-          roughness: 0.65,
-          metalness: 0,
-          transparent: true,
+
+  /** Load (or switch to) a body model; the view says which one. */
+  function loadModel(model: BodyModel) {
+    loadedModel = model;
+    clearBody();
+    host.dataset.loaded = "false";
+    loader
+      .loadAsync(modelUrl(model))
+      .then((gltf) => {
+        if (disposed || loadedModel !== model) return;
+        gltf.scene.traverse((o) => {
+          if (!(o instanceof THREE.Mesh)) return;
+          // GLTFLoader strips dots from node names, so the structure id travels in glTF extras.
+          const { kind, layer, id } = o.userData as { kind: Part["kind"]; layer: LayerId; id: string };
+          const material = new THREE.MeshStandardMaterial({
+            color: layerColor(layer),
+            roughness: 0.65,
+            metalness: 0,
+            transparent: true,
+          });
+          o.material = material;
+          parts.set(id, { mesh: o, material, kind, layer });
         });
-        o.material = material;
-        parts.set(id, { mesh: o, material, kind, layer });
+        heart = parts.get("heart")?.mesh ?? null;
+        lungs = parts.get("lungs")?.mesh ?? null;
+        if (heart) centreOnItself(heart);
+        if (lungs) centreOnItself(lungs);
+        scene.add(gltf.scene);
+        body = gltf.scene;
+        const box = new THREE.Box3().setFromObject(body);
+        controls.maxDistance = box.getSize(new THREE.Vector3()).y * 4;
+        controls.minDistance = 0.05;
+        jumpTo(box);
+        if (view) apply(view);
+        host.dataset.loaded = "true";
+        host.dataset.model = model;
+        events.onLoaded();
+      })
+      .catch((e: Error) => {
+        if (disposed || loadedModel !== model) return;
+        host.dataset.error = e.message;
+        events.onError(e.message);
       });
-      heart = parts.get("heart")?.mesh ?? null;
-      lungs = parts.get("lungs")?.mesh ?? null;
-      if (heart) centreOnItself(heart);
-      if (lungs) centreOnItself(lungs);
-      scene.add(gltf.scene);
-      body = gltf.scene;
-      const box = new THREE.Box3().setFromObject(body);
-      controls.maxDistance = box.getSize(new THREE.Vector3()).y * 4;
-      controls.minDistance = 0.05;
-      jumpTo(box);
-      if (view) apply(view);
-      host.dataset.loaded = "true";
-      events.onLoaded();
-    })
-    .catch((e: Error) => {
-      if (disposed) return;
-      host.dataset.error = e.message;
-      events.onError(e.message);
-    });
+  }
+
+  function clearBody() {
+    if (body) scene.remove(body);
+    for (const p of parts.values()) {
+      p.mesh.geometry.dispose();
+      p.material.dispose();
+    }
+    parts.clear();
+    body = heart = lungs = null;
+    framedFocus = "";
+    detailRequested.clear();
+  }
 
   function centreOnItself(mesh: THREE.Mesh) {
     mesh.geometry.computeBoundingBox();
@@ -159,9 +180,9 @@ export const threeBodyScene: BodySceneFactory = (host, events) => {
     if (detailRequested.has(region)) return;
     detailRequested.add(region);
     loader
-      .loadAsync(regionDetailUrl(region))
+      .loadAsync(regionDetailUrl(loadedModel!, region))
       .then((gltf) => {
-        if (disposed) return;
+        if (disposed || !body) return;
         gltf.scene.traverse((o) => {
           const p = o instanceof THREE.Mesh ? parts.get(o.userData.id) : undefined;
           if (!p) return;
@@ -189,6 +210,7 @@ export const threeBodyScene: BodySceneFactory = (host, events) => {
 
   function apply(next: BodyView) {
     view = next;
+    if (next.model !== loadedModel) loadModel(next.model);
     applyFocus(next.focus);
     for (const [name, p] of parts) {
       const layer = next.layers[p.layer];
@@ -274,11 +296,7 @@ export const threeBodyScene: BodySceneFactory = (host, events) => {
       motionQuery.removeEventListener("change", onMotionChange);
       controls.dispose();
       draco.dispose();
-      for (const p of parts.values()) {
-        p.mesh.geometry.dispose();
-        p.material.dispose();
-      }
-      parts.clear();
+      clearBody();
       renderer.dispose();
       renderer.forceContextLoss();
       renderer.domElement.remove();

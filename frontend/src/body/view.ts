@@ -32,7 +32,11 @@ export type Focus =
   | { level: "structure"; structure: StructureId };
 
 /** Everything the 3D body must draw. The renderer applies it; it decides nothing. */
+/** Which body model to draw, from the Crew record. */
+export type BodyModel = "male" | "female";
+
 export interface BodyView {
+  model: BodyModel;
   focus: Focus;
   layers: Record<LayerId, LayerView>;
   structures: Record<string, StructureView>;

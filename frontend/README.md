@@ -51,7 +51,7 @@ src/
   home/               mission bar, summaries, tasks, Emergency/Help, measurement card
   fixtures/           hand-made Mars replay used until Spec 1's replay lands
 e2e/                  Playwright browser tests
-public/models/        body GLBs built by tools/anatomy/export_body.py (CC BY-SA 4.0)
+public/models/        male and female body GLBs built by tools/anatomy/export_body.py (CC BY-SA 4.0)
 public/draco/         vendored Draco decoder so models load offline
 ```
 
@@ -61,6 +61,12 @@ public/draco/         vendored Draco decoder so models load offline
   `"help-crewmate"`. Until then a placeholder alert shows.
 - **Spec 5 (content):** pass `cards` to `<App>` (shape `CardContent` in `contracts.ts`);
   missing sections read "Not added yet".
+
+## Female body
+
+When the replay's Crew record has `sex: "female"`, the app loads `body-female.glb`: female
+organs from the Human Reference Atlas, with muscles, skeleton and vessels resized from the
+male model and labelled approximate on screen.
 
 ## Anatomy is approximate
 

@@ -54,6 +54,7 @@ export function App({
   const closeCard = useCallback(() => setCardFor(null), []);
 
   const glow = useMemo(() => glowFrom(state.latest), [state]);
+  const model = replay.crew.sex === "female" ? "female" : "male";
   const heartRate = state.latest.get("heart_rate")?.value ?? null;
   const breathRate = state.latest.get("respiratory_rate")?.value ?? null;
   // Insight and cards need a Reading at the scrubbed time; scrubbing to before one closes them.
@@ -65,9 +66,9 @@ export function App({
   }, [insight, insightReading, cardFor, cardReading]);
   const examined = insightReading ? { indicator: insightReading.indicator, status: insightReading.state } : null;
   const view = useMemo(
-    () => buildBodyView({ focus, layers, glow, heartRate, breathRate, insight: examined }),
+    () => buildBodyView({ model, focus, layers, glow, heartRate, breathRate, insight: examined }),
     // `examined` is a new object each render, so depend on its parts.
-    [focus, layers, glow, heartRate, breathRate, examined?.indicator, examined?.status],
+    [model, focus, layers, glow, heartRate, breathRate, examined?.indicator, examined?.status],
   );
 
   return (
@@ -79,6 +80,11 @@ export function App({
         <section className="home__body" aria-label="Body">
           {insightReading && <InsightBanner reading={insightReading} onExit={() => setInsight(null)} />}
           <Body view={view} scene={bodyScene} />
+          {model === "female" && (
+            <p className="body-note">
+              Female organs. Muscles, skeleton and vessels are approximate (resized from the male model).
+            </p>
+          )}
           {!insightReading && (
             <>
               <ZoomControls focus={focus} onFocus={setFocus} />
