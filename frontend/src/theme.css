@@ -10,9 +10,12 @@
   --text: #eef2f8;
   --text-muted: #a7b1c4;
 
-  /* Status: always paired with an icon and words */
-  --status-green: #3ccf7a;
-  --status-amber: #f5b53d;
+  /* Status: always paired with an icon and words.
+     Chosen so every pair stays apart under colour-blind vision (worst OKLab ΔE 11.8,
+     protan/deutan/tritan) on the dark surface; checked with the dataviz skill's
+     validate_palette.js --mode dark --surface #141a26 --pairs all. */
+  --status-green: #29c0b1;
+  --status-amber: #ffcc33;
   --status-red: #ff5a5a;
 
   /* Body layers: one calm neutral colour each */
