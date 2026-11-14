@@ -20,7 +20,9 @@ def flat():
 
 
 def test_every_entry_has_exactly_the_frontend_shape():
-    for c in flat():
+    cards = flat()
+    assert cards, "no cards exported"  # an empty list would pass the loop below vacuously
+    for c in cards:
         assert set(c) == KEYS
         assert all(isinstance(c[k], str) and c[k].strip() for k in ("indicator", "how", "why", "ifAbnormal"))
         assert all(isinstance(c[k], list) for k in ("labels", "sources"))
