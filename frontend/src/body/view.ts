@@ -50,4 +50,10 @@ export interface BodyScene {
   dispose(): void;
 }
 
-export type BodySceneFactory = (host: HTMLElement) => BodyScene;
+/** How the scene reports that its model finished (or failed) loading. */
+export interface BodySceneEvents {
+  onLoaded(): void;
+  onError(message: string): void;
+}
+
+export type BodySceneFactory = (host: HTMLElement, events: BodySceneEvents) => BodyScene;
