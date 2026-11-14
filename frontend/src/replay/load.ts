@@ -7,15 +7,49 @@ const CREW_RECORDS = "crew-records.json";
 
 /**
  * Fetches a replay file named by `?replay=` and its Crew record from the crew-records.json
- * beside it (where Spec 1's generators write both). Only files served from the app's own
- * address are accepted, so a link cannot make the app show readings from elsewhere.
+ * beside it (where Spec 1's generators write both). An optional cabin replay (`&cabin=`, the
+ * habitat's CO₂, temperature and dose) is merged in by time. Only files served from the app's
+ * own address are accepted, so a link cannot make the app show readings from elsewhere.
  * Every failure comes back as a plain-language message.
  */
 export async function loadMission(
   address: string,
   appOrigin: string,
   fetchFn: typeof fetch = fetch,
+  cabinAddress?: string,
 ): Promise<MissionResult> {
+  const url = sameOrigin(address, appOrigin);
+  if (!url.ok) return url;
+
+  const replayJson = await fetchJson(url.url, fetchFn, "a replay file");
+  if (!replayJson.ok) return replayJson;
+  const parsed = parseReplay(replayJson.json);
+  if (!parsed.ok) return parsed;
+
+  const where = `${CREW_RECORDS} beside the replay`;
+  const crewJson = await fetchJson(new URL(CREW_RECORDS, url.url), fetchFn, CREW_RECORDS, "is it there?");
+  if (!crewJson.ok) return { ok: false, error: `${where}: ${crewJson.error}` };
+  const mission = missionFrom(parsed.replay, crewJson.json, where);
+  if (!mission.ok || !cabinAddress) return mission;
+
+  const cabin = await loadCabin(cabinAddress, appOrigin, fetchFn);
+  if (!cabin.ok) return { ok: false, error: `cabin replay: ${cabin.error}` };
+  return { ...mission, replay: withCabin(mission.replay, cabin.replay) };
+}
+
+/** The crew replay with the habitat's (cabin) events merged in by time. */
+export function withCabin(replay: ReplayFile, cabin: ReplayFile): ReplayFile {
+  return { ...replay, events: [...replay.events, ...cabin.events].sort((a, b) => a.t - b.t) };
+}
+
+async function loadCabin(address: string, appOrigin: string, fetchFn: typeof fetch) {
+  const url = sameOrigin(address, appOrigin);
+  if (!url.ok) return url;
+  const json = await fetchJson(url.url, fetchFn, "a replay file");
+  return json.ok ? parseReplay(json.json) : json;
+}
+
+function sameOrigin(address: string, appOrigin: string): { ok: true; url: URL } | { ok: false; error: string } {
   let url: URL;
   try {
     url = new URL(address, appOrigin);
@@ -25,16 +59,7 @@ export async function loadMission(
   if (url.origin !== new URL(appOrigin).origin) {
     return { ok: false, error: "replay files must come from this app's own address" };
   }
-
-  const replayJson = await fetchJson(url, fetchFn, "a replay file");
-  if (!replayJson.ok) return replayJson;
-  const parsed = parseReplay(replayJson.json);
-  if (!parsed.ok) return parsed;
-
-  const where = `${CREW_RECORDS} beside the replay`;
-  const crewJson = await fetchJson(new URL(CREW_RECORDS, url), fetchFn, CREW_RECORDS, "is it there?");
-  if (!crewJson.ok) return { ok: false, error: `${where}: ${crewJson.error}` };
-  return missionFrom(parsed.replay, crewJson.json, where);
+  return { ok: true, url };
 }
 
 /**

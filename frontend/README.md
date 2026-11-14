@@ -18,7 +18,7 @@ npx playwright install chromium   # only for the browser tests and the audit
 
 ```
 npm run dev          # http://localhost:5173 with the bundled Mars day-3 replay (male crew)
-npm run dev:female   # same day for a female crew member: opens the female body
+npm run dev:female   # same day for a female crew member, with the cabin replay: opens the female body
 npm run build        # production build in dist/ (static files, works offline)
 npm run preview      # serve the build
 ```
@@ -26,7 +26,9 @@ npm run preview      # serve the build
 Load another replay file served by the app (for example one placed in `public/replay/`):
 `http://localhost:5173/?replay=/replay/<file>.json`. Its Crew record is read from the
 `crew-records.json` in the same folder, which is how Spec 1's generators write them
-(`replay/generated/crew-A.json` beside `crew-records.json`). Files from other addresses are refused.
+(`replay/generated/crew-A.json` beside `crew-records.json`). Add the habitat's cabin replay
+(CO₂, temperature, humidity, dose) with `&cabin=/replay/<file>.json`; its events are merged in by
+time. Files from other addresses are refused.
 
 ## Data contracts
 
@@ -47,6 +49,8 @@ The app reads Spec 1's frozen shapes: the JSON Schemas in `contracts/` at the re
   Spec 5's profiles exist; an unknown profile shows its id and "Not known".
 - **Habitat Readings** (`radiation_dose_*`, `cabin_*`) stay out of the health summaries; the
   mission bar shows `radiation_dose_accumulated`.
+- **CO₂ banner** shows while the latest cabin CO₂ is over 5,000 ppm, a team value (not yet
+  researched) kept in `src/teamValues.ts` and labelled on screen.
 - **Tasks** (`task` events) are app-side; no contract carries them yet. `trigger` and
   `crew_report` events are ignored here (Spec 4).
 

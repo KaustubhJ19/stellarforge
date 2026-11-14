@@ -10,7 +10,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "audit:a11y": "node scripts/a11y-audit.mjs",
-    "dev:female": "vite --open \"/?replay=/replay/mars-day3-female.json\"",
+    "dev:female": "vite --open \"/?replay=/replay/mars-day3-female.json&cabin=/replay/iss-cabin-day3.json\"",
     "fixtures": "node scripts/make-fixture.mjs"
   },
   "type": "module",
