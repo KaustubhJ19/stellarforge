@@ -1,0 +1,29 @@
+import type { IndicatorId, Reading } from "../contracts";
+import { INDICATORS, type HealthKind } from "../indicators";
+import { IndicatorTile } from "./IndicatorTile";
+
+const TITLE: Record<HealthKind, string> = { physical: "Physical health", mental: "Mental health" };
+/** Shown in the mission bar instead. */
+const IN_MISSION_BAR: IndicatorId[] = ["radiation_dose"];
+
+/** One summary per kind of health; the two are never mixed. */
+export function HealthSummary({ kind, latest }: { kind: HealthKind; latest: Map<IndicatorId, Reading> }) {
+  const order = Object.keys(INDICATORS);
+  const readings = [...latest.values()]
+    .filter((r) => (INDICATORS[r.indicator]?.kind ?? "physical") === kind && !IN_MISSION_BAR.includes(r.indicator))
+    .sort((a, b) => order.indexOf(a.indicator) - order.indexOf(b.indicator));
+  return (
+    <section className="summary" aria-label={TITLE[kind]}>
+      <h2>{TITLE[kind]}</h2>
+      {readings.length === 0 ? (
+        <p className="empty">No readings yet.</p>
+      ) : (
+        <div className="summary__tiles">
+          {readings.map((r) => (
+            <IndicatorTile key={r.indicator} reading={r} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}

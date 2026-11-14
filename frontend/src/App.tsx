@@ -2,7 +2,9 @@ import { useMemo, useState } from "react";
 import type { IndicatorId, ReplayFile } from "./contracts";
 import { missionStateAt, replayRange } from "./replay/state";
 import { MissionBar } from "./home/MissionBar";
-import { IndicatorTile } from "./home/IndicatorTile";
+import { HealthSummary } from "./home/HealthSummary";
+import { TaskList } from "./home/TaskList";
+import { ActionButtons, type EmergencyRequest } from "./home/ActionButtons";
 import { Body } from "./body/Body";
 import { LayerPanel } from "./body/LayerPanel";
 import { threeBodyScene } from "./body/threeBodyScene";
@@ -22,12 +24,20 @@ const DEFAULT_LAYERS: Record<LayerId, LayerView> = {
   brain: { visible: true, opacity: 0.9 },
 };
 
+/** Until Spec 4's emergency flow is wired in, say so rather than do nothing. */
+function emergencyNotWired(request: EmergencyRequest) {
+  alert(`The ${request === "emergency" ? "emergency" : "help a crewmate"} flow opens here (Spec 4).`);
+}
+
 export function App({
   replay,
   bodyScene = threeBodyScene,
+  onEmergency = emergencyNotWired,
 }: {
   replay: ReplayFile;
   bodyScene?: BodySceneFactory;
+  /** Hand-off to the emergency flow (Spec 4). */
+  onEmergency?: (request: EmergencyRequest) => void;
 }) {
   const state = useMemo(() => missionStateAt(replay, replayRange(replay)[1]), [replay]);
   const [layers, setLayers] = useState(DEFAULT_LAYERS);
@@ -43,7 +53,6 @@ export function App({
   );
 
   const insightReading = insight ? state.latest.get(insight) : undefined;
-  const hr = state.latest.get("heart_rate");
   return (
     <div className="app">
       <MissionBar replay={replay} state={state} />
@@ -60,7 +69,14 @@ export function App({
             </>
           )}
         </section>
-        {hr && <IndicatorTile reading={hr} />}
+        <div className="home__side">
+          <ActionButtons onEmergency={onEmergency} />
+          <div className="home__summaries">
+            <HealthSummary kind="physical" latest={state.latest} />
+            <HealthSummary kind="mental" latest={state.latest} />
+          </div>
+          <TaskList tasks={state.tasks} />
+        </div>
       </main>
       <footer className="disclaimer">Decision support, not diagnosis.</footer>
     </div>
