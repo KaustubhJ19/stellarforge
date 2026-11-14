@@ -47,18 +47,14 @@ def estimate_bpm(rgb: np.ndarray, fps: float) -> tuple[float, float]:
     return bpm, confidence
 
 
-def _capture(seconds: float = 20.0) -> tuple[np.ndarray, float]:
-    """Mean colour of the forehead/cheek area from the default webcam."""
+def _skin_means(cap, n_frames: int) -> tuple[np.ndarray, list[float]]:
+    """Mean R, G, B of the forehead/cheek area for up to n_frames frames, plus capture times."""
     import cv2
 
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        raise RuntimeError("no webcam found (on macOS, allow camera access for your terminal)")
-    fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
     faces = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
     means, stamps, box = [], [], None
     try:
-        while len(means) < seconds * fps:
+        while len(means) < n_frames:
             ok, frame = cap.read()
             if not ok:
                 break
@@ -76,8 +72,32 @@ def _capture(seconds: float = 20.0) -> tuple[np.ndarray, float]:
         cap.release()
     if len(means) < 2:
         raise RuntimeError("no face found; face the camera in good light")
+    return np.array(means), stamps
+
+
+def bpm_from_video(path, start_s: float, seconds: float) -> tuple[float, float]:
+    """Heart rate from a recorded clip, using `seconds` of video from `start_s`."""
+    import cv2
+
+    cap = cv2.VideoCapture(str(path))
+    if not cap.isOpened():
+        raise RuntimeError(f"cannot open video {path}")
+    fps = cap.get(cv2.CAP_PROP_FPS)  # a recorded file's frame rate is fixed, unlike a live webcam
+    cap.set(cv2.CAP_PROP_POS_FRAMES, int(start_s * fps))
+    rgb, _ = _skin_means(cap, int(seconds * fps))
+    return estimate_bpm(rgb, fps)
+
+
+def _capture(seconds: float = 20.0) -> tuple[np.ndarray, float]:
+    """Mean colour of the forehead/cheek area from the default webcam."""
+    import cv2
+
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        raise RuntimeError("no webcam found (on macOS, allow camera access for your terminal)")
+    rgb, stamps = _skin_means(cap, int(seconds * (cap.get(cv2.CAP_PROP_FPS) or 30.0)))
     # The camera's nominal FPS is often wrong once face detection slows the loop; use the measured rate.
-    return np.array(means), (len(stamps) - 1) / (stamps[-1] - stamps[0])
+    return rgb, (len(stamps) - 1) / (stamps[-1] - stamps[0])
 
 
 if __name__ == "__main__":
