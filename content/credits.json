@@ -1,0 +1,129 @@
+{
+  "checked": "2026-11-15",
+  "entries": [
+    {
+      "name": "PMData",
+      "kind": "dataset",
+      "link": "https://datasets.simula.no/pmdata/",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "used_for": "Normal days for the four crew replays; Readiness target for Forecast B. Daily values reshaped into StellarForge Readings; crew A has a planted drift.",
+      "citation": "Thambawita V. et al., PMData: A Sports Logging Dataset, MMSys '20, doi:10.1145/3339825.3394926",
+      "manifest": ["crew-replays.source.json"]
+    },
+    {
+      "name": "Pulse Physiology Engine (Kitware)",
+      "kind": "model",
+      "link": "https://pulse.kitware.com/",
+      "licence": "Apache 2.0",
+      "licence_url": "https://www.apache.org/licenses/LICENSE-2.0",
+      "used_for": "Simulated chest-pain collapse and cardiac arrest (emergency replay) and simulated normal blood pressure. Estimate, not validated.",
+      "manifest": ["emergency-crew-B.source.json"]
+    },
+    {
+      "name": "NASA OSDR Environmental Data App (EDA), mission RR-1",
+      "kind": "dataset",
+      "link": "https://visualization.osdr.nasa.gov/eda/",
+      "licence": "Open download, cited as visualization under the NASA OSDR terms",
+      "licence_url": "https://www.nasa.gov/reference/osdr-help-terms-and-conditions/",
+      "used_for": "ISS cabin temperature, humidity, CO2 and radiation dose replay (2014 rodent mission; values as labelled by NASA, not crew-measured).",
+      "manifest": ["iss-cabin-dose-RR-1.source.json"]
+    },
+    {
+      "name": "NASA OSDR Inspiration4, OSD-569 (complete blood count)",
+      "kind": "dataset",
+      "link": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-569",
+      "licence": "Processed data public, under the NASA OSDR terms",
+      "licence_url": "https://www.nasa.gov/reference/osdr-help-terms-and-conditions/",
+      "used_for": "Real astronaut blood values as lab Readings.",
+      "manifest": ["inspiration4-labs.source.json"]
+    },
+    {
+      "name": "NASA OSDR Inspiration4, OSD-575 (comprehensive metabolic panel)",
+      "kind": "dataset",
+      "link": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-575",
+      "licence": "Processed data public, under the NASA OSDR terms",
+      "licence_url": "https://www.nasa.gov/reference/osdr-help-terms-and-conditions/",
+      "used_for": "Checked the glucose Safety bound against real astronaut values."
+    },
+    {
+      "name": "NASA Apollo Flight Crew Cardiovascular Evaluations (AP005)",
+      "kind": "dataset",
+      "link": "https://nlsp.nasa.gov/search/data/details/e1fa5c55-ddfe-5548-91ba-864080319f44?dataType=EXPERIMENTS",
+      "licence": "NASA public summary tables (NASA SP-368), cited as source; no licence stated",
+      "used_for": "Return-to-gravity heart rate and blood pressure shift (group means from Table 6 only; raw per-crew values are restricted and not used)."
+    },
+    {
+      "name": "CGMacros",
+      "kind": "dataset",
+      "link": "https://physionet.org/content/cgmacros/1.0.0/",
+      "licence": "CC BY-NC-SA 4.0",
+      "licence_url": "https://physionet.org/content/cgmacros/view-license/1.0.0/",
+      "restriction": "Non-commercial use only, and share-alike: anything derived from it must use the same licence. Kept in its own file so the licence does not spread to the rest of StellarForge.",
+      "used_for": "Simulated continuous glucose stream.",
+      "citation": "CGMacros: a scientific dataset for personalized nutrition and diet monitoring, accessed from https://registry.opendata.aws/cgmacros/"
+    },
+    {
+      "name": "UBFC-rPPG (DATASET_2, subjects 1, 3, 4, 5, 8)",
+      "kind": "dataset",
+      "link": "https://sites.google.com/view/ybenezeth/ubfcrppg",
+      "licence": "Research use only (shared for research purpose)",
+      "restriction": "Research use only. Used only to measure webcam heart-rate error; the videos are not shipped and no face is shown.",
+      "used_for": "Accuracy check of the webcam heart-rate estimate (mean error 4.9 bpm on 5 people; estimate, not validated).",
+      "citation": "S. Bobbia, R. Macwan, Y. Benezeth, A. Mansouri, J. Dubois, Unsupervised skin tissue segmentation for remote photoplethysmography, Pattern Recognition Letters, 2017"
+    },
+    {
+      "name": "Z-Anatomy models of human anatomy",
+      "kind": "asset",
+      "link": "https://github.com/Z-Anatomy/Models-of-human-anatomy",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "used_for": "3D body (male and female). Z-Anatomy credits BodyParts3D (Database Center for Life Science), listed by Z-Anatomy as CC-BY-SA 2.1 Japan."
+    },
+    {
+      "name": "Human Reference Atlas 3D Reference Organ Set, Body, Female (HuBMAP)",
+      "kind": "asset",
+      "link": "https://humanatlas.io/3d-reference-library",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "used_for": "Female organs (heart, lungs, liver, kidneys, organ outline) in the 3D body. Licence as recorded by the 3D / UI lead in frontend/public/models/LICENSE.md."
+    },
+    {
+      "name": "StellarForge code",
+      "kind": "code",
+      "link": "https://github.com/SCAPE-NASA/stellarforge",
+      "licence": "MIT",
+      "licence_url": "https://opensource.org/license/mit",
+      "used_for": "All StellarForge source code (see LICENSE)."
+    },
+    {
+      "name": "StellarForge 3D files",
+      "kind": "asset",
+      "link": "https://github.com/SCAPE-NASA/stellarforge",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "used_for": "The body models we derived from Z-Anatomy and the Human Reference Atlas (share-alike, as their sources require)."
+    },
+    {
+      "name": "NASA Space Apps Challenge 2026: Create Health Monitoring Software for Astronauts on Space Missions",
+      "kind": "challenge",
+      "link": "https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/",
+      "licence": "Challenge brief, cited as source; terms not confirmed (page unreachable from our checker on 2026-11-15)",
+      "used_for": "The challenge we answer (author: Brazilian Space Agency)."
+    },
+    {
+      "name": "NASA Space Apps Challenge 2026: participant FAQs",
+      "kind": "challenge",
+      "link": "https://www.spaceappschallenge.org/resources/participant-faqs/",
+      "licence": "Event rules, cited as source; terms not confirmed",
+      "used_for": "Submission rules, including the AI-use statement."
+    },
+    {
+      "name": "NASA Human Research Program: risks and hazards",
+      "kind": "challenge",
+      "link": "https://www.nasa.gov/hrp/risks/",
+      "licence": "NASA web content, cited as source",
+      "used_for": "The 17 HRP risk titles on the measurement cards and the HRP risk map; the five hazards."
+    }
+  ]
+}

@@ -3,6 +3,8 @@
 Rules so far (ticket 02):
   (a) every protocol step has a real source (non-empty guideline and section)
   (b) no drug name or dose anywhere in protocol content
+  (e) ticket 10: every manifest item (replay/*.source.json) is in content/credits.json, and every
+      Credits entry has name, link and licence, with restrictive licences stated plainly
 
 Command line:
     python tools/content_lint.py [content_dir]   # default: content/ ; exit 0 clean, 1 problems
@@ -200,6 +202,30 @@ def lint_card(doc):
     return problems
 
 
+CREDITS_FILE = "credits.json"
+# Licences that limit how the data may be used must say so in plain words on the Credits page.
+RESTRICTIVE_RE = re.compile(r"\bNC\b|non-?commercial|research", re.IGNORECASE)
+
+
+def lint_credits(doc, manifest):
+    """Ticket 10: every entry has name, link and licence; restrictive licences say so plainly.
+    Test (e): every manifest item (a replay/*.source.json name) is named by an entry's "manifest" list."""
+    entries = doc.get("entries") if isinstance(doc, dict) else None
+    if not (isinstance(entries, list) and entries):
+        return ["credits: needs a non-empty list of entries"]
+    problems, credited = [], set()
+    for i, e in enumerate(entries):
+        where = f"entries[{i}] ({e.get('name', '?')})"
+        problems += [f"{where}: {k} needs a non-empty string" for k in ("name", "licence") if not _filled(e.get(k))]
+        if not (_filled(e.get("link")) and e["link"].startswith("https://")):
+            problems.append(f"{where}: link needs an https:// address")
+        if _filled(e.get("licence")) and RESTRICTIVE_RE.search(e["licence"]) and not _filled(e.get("restriction")):
+            problems.append(f"{where}: a restrictive licence needs a plain-words restriction")
+        credited |= set(e.get("manifest", []))
+    problems += [f"test (e): manifest item {m} is missing from the Credits" for m in sorted(set(manifest) - credited)]
+    return problems
+
+
 def _load(path):
     try:
         return json.loads(path.read_text(encoding="utf-8")), []
@@ -238,6 +264,16 @@ def lint_dir(content_dir):
         problems = problems or lint_card(doc)
         if problems:
             failures[path] = problems
+    # Spec 1 has no single manifest yet: the data lead's per-replay records are the manifest.
+    manifest = {p.name for p in (Path(content_dir).parent / "replay").glob("*.source.json")}
+    credits_path = Path(content_dir) / CREDITS_FILE
+    if credits_path.exists():
+        doc, problems = _load(credits_path)
+        problems = problems or lint_credits(doc, manifest)
+        if problems:
+            failures[credits_path] = problems
+    elif manifest:
+        failures[credits_path] = ["missing: every manifest item needs a Credits entry (test e)"]
     return failures
 
 
