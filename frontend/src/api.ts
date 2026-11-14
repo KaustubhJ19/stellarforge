@@ -87,6 +87,10 @@ async function call<T>(method: string, path: string, body?: unknown): Promise<T>
   } catch {
     throw new ApiError(0, "service unavailable");
   }
+  // A static server (no Spec 4 backend) answers /api/* with its HTML page: that is "unavailable".
+  if ((res.headers.get("content-type") ?? "").includes("text/html")) {
+    throw new ApiError(res.ok ? 404 : res.status, "service unavailable");
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new ApiError(res.status, (data as { error?: string }).error ?? res.statusText);
   return data as T;
@@ -94,8 +98,8 @@ async function call<T>(method: string, path: string, body?: unknown): Promise<T>
 
 export const api = {
   view: (crew: string) => call<View>("GET", `/api/view?crew=${encodeURIComponent(crew)}`),
-  trigger: (crew: string, t: number) =>
-    call<{ emergency: string }>("POST", "/api/trigger", { schema_version: "1.0.0", kind: "manual", crew, t, reason: "Emergency button" }),
+  trigger: (crew: string, t: number, reason = "Emergency button") =>
+    call<{ emergency: string }>("POST", "/api/trigger", { schema_version: "1.0.0", kind: "manual", crew, t, reason }),
   answer: (crew: string, question: string, choice: string) => call<View>("POST", "/api/answer", { crew, question, choice }),
   accept: (crew: string) => call<{ role: string }>("POST", "/api/accept", { crew }),
   joinR2: (crew: string) => call<{ role: string }>("POST", "/api/join-r2", { crew }),

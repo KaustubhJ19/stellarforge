@@ -10,7 +10,10 @@ self.addEventListener("activate", (e) => e.waitUntil(self.clients.claim()));
 
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
-  if (e.request.method !== "GET" || url.origin !== self.location.origin || url.pathname.startsWith("/api/")) return;
+  // Only the app shell: page navigations and built assets. Data files (replays, crew records,
+  // models) and /api/* are left to the browser so the app's own loaders see them unchanged.
+  const shell = e.request.mode === "navigate" || url.pathname.startsWith("/assets/");
+  if (e.request.method !== "GET" || url.origin !== self.location.origin || !shell) return;
   e.respondWith(
     fetch(e.request)
       .then((res) => {

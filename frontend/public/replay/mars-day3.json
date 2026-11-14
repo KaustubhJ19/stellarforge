@@ -1,0 +1,1736 @@
+{
+ "schema_version": "1.0.0",
+ "crew": "A",
+ "profile": "mars_transit",
+ "events": [
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 62,
+    "unit": "bpm",
+    "t": 172800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 14,
+    "unit": "1/min",
+    "t": 172800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.97,
+    "unit": "fraction",
+    "t": 172800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.2,
+    "unit": "mGy",
+    "t": 172800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "task",
+   "payload": {
+    "id": "t1",
+    "title": "Morning check-in",
+    "done": true
+   }
+  },
+  {
+   "t": 172800,
+   "type": "task",
+   "payload": {
+    "id": "t2",
+    "title": "Blood pressure",
+    "done": false
+   }
+  },
+  {
+   "t": 172800,
+   "type": "task",
+   "payload": {
+    "id": "t3",
+    "title": "Attention test",
+    "done": false
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 69,
+    "unit": "bpm",
+    "t": 176400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 15,
+    "unit": "1/min",
+    "t": 176400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.98,
+    "unit": "fraction",
+    "t": 176400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.23,
+    "unit": "mGy",
+    "t": 176400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 67,
+    "unit": "bpm",
+    "t": 180000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 16,
+    "unit": "1/min",
+    "t": 180000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.97,
+    "unit": "fraction",
+    "t": 180000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.26,
+    "unit": "mGy",
+    "t": 180000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "stress",
+    "value": 2,
+    "unit": "score 1-5",
+    "t": 180000,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "fatigue",
+    "value": 2,
+    "unit": "score 1-5",
+    "t": 180000,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 65,
+    "unit": "bpm",
+    "t": 183600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 14,
+    "unit": "1/min",
+    "t": 183600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.98,
+    "unit": "fraction",
+    "t": 183600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.29,
+    "unit": "mGy",
+    "t": 183600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 63,
+    "unit": "bpm",
+    "t": 187200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 15,
+    "unit": "1/min",
+    "t": 187200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.97,
+    "unit": "fraction",
+    "t": 187200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.32,
+    "unit": "mGy",
+    "t": 187200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 70,
+    "unit": "bpm",
+    "t": 190800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 16,
+    "unit": "1/min",
+    "t": 190800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.98,
+    "unit": "fraction",
+    "t": 190800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.35,
+    "unit": "mGy",
+    "t": 190800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 68,
+    "unit": "bpm",
+    "t": 194400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 14,
+    "unit": "1/min",
+    "t": 194400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.97,
+    "unit": "fraction",
+    "t": 194400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.38,
+    "unit": "mGy",
+    "t": 194400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "stress",
+    "value": 2,
+    "unit": "score 1-5",
+    "t": 194400,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "fatigue",
+    "value": 2,
+    "unit": "score 1-5",
+    "t": 194400,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "resting_heart_rate",
+    "value": 59,
+    "unit": "bpm",
+    "t": 198000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "sleep_duration",
+    "value": 360,
+    "unit": "min",
+    "t": 198000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "steps",
+    "value": 8000,
+    "unit": "steps",
+    "t": 198000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 66,
+    "unit": "bpm",
+    "t": 198000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 15,
+    "unit": "1/min",
+    "t": 198000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.98,
+    "unit": "fraction",
+    "t": 198000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.41,
+    "unit": "mGy",
+    "t": 198000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "bone_density",
+    "value": -1.1,
+    "unit": "T-score",
+    "t": 201600,
+    "source": "lab",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 64,
+    "unit": "bpm",
+    "t": 201600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 16,
+    "unit": "1/min",
+    "t": 201600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.97,
+    "unit": "fraction",
+    "t": 201600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.44,
+    "unit": "mGy",
+    "t": 201600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "mood",
+    "value": 3,
+    "unit": "score 1-5",
+    "t": 201600,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "alert",
+   "payload": {
+    "id": "a-drift-bone",
+    "kind": "drift",
+    "crew": "A",
+    "indicator": "bone_density",
+    "status": "amber",
+    "urgency": "MONITOR",
+    "likely_causes": [],
+    "t": 201600,
+    "deviation": {
+     "sigma": 1.2,
+     "cusum": 3.6,
+     "combined": 0.72
+    }
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 62,
+    "unit": "bpm",
+    "t": 205200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 14,
+    "unit": "1/min",
+    "t": 205200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.98,
+    "unit": "fraction",
+    "t": 205200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.47,
+    "unit": "mGy",
+    "t": 205200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 69,
+    "unit": "bpm",
+    "t": 208800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 15,
+    "unit": "1/min",
+    "t": 208800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.97,
+    "unit": "fraction",
+    "t": 208800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.5,
+    "unit": "mGy",
+    "t": 208800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "stress",
+    "value": 3,
+    "unit": "score 1-5",
+    "t": 208800,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "fatigue",
+    "value": 3,
+    "unit": "score 1-5",
+    "t": 208800,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 67,
+    "unit": "bpm",
+    "t": 212400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 16,
+    "unit": "1/min",
+    "t": 212400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.98,
+    "unit": "fraction",
+    "t": 212400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.53,
+    "unit": "mGy",
+    "t": 212400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "alert",
+   "payload": {
+    "id": "a-drift-stress",
+    "kind": "drift",
+    "crew": "A",
+    "indicator": "stress",
+    "status": "amber",
+    "urgency": "MONITOR",
+    "likely_causes": [
+     {
+      "indicator": "sleep_duration",
+      "direction": "down",
+      "note": "Example: shorter sleep over three days"
+     }
+    ],
+    "t": 212400,
+    "deviation": {
+     "sigma": 1.8,
+     "cusum": 5.4,
+     "combined": 1.08
+    }
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 65,
+    "unit": "bpm",
+    "t": 216000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 14,
+    "unit": "1/min",
+    "t": 216000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.97,
+    "unit": "fraction",
+    "t": 216000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.56,
+    "unit": "mGy",
+    "t": 216000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 63,
+    "unit": "bpm",
+    "t": 219600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 15,
+    "unit": "1/min",
+    "t": 219600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.98,
+    "unit": "fraction",
+    "t": 219600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.59,
+    "unit": "mGy",
+    "t": 219600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 128,
+    "unit": "bpm",
+    "t": 223200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "quarantined"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 16,
+    "unit": "1/min",
+    "t": 223200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.97,
+    "unit": "fraction",
+    "t": 223200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.62,
+    "unit": "mGy",
+    "t": 223200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "stress",
+    "value": 4,
+    "unit": "score 1-5",
+    "t": 223200,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "fatigue",
+    "value": 3,
+    "unit": "score 1-5",
+    "t": 223200,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "alert",
+   "payload": {
+    "id": "a-acute-hr",
+    "kind": "acute",
+    "crew": "A",
+    "indicator": "heart_rate",
+    "status": "red",
+    "urgency": "ESCALATE_TO_GROUND",
+    "likely_causes": [],
+    "t": 223200,
+    "deviation": {
+     "sigma": 5.4,
+     "cusum": null,
+     "combined": 3.24
+    }
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 96,
+    "unit": "bpm",
+    "t": 226800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "quarantined"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 14,
+    "unit": "1/min",
+    "t": 226800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.98,
+    "unit": "fraction",
+    "t": 226800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.65,
+    "unit": "mGy",
+    "t": 226800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "alert",
+   "payload": {
+    "id": "a-acute-hr-2",
+    "kind": "acute",
+    "crew": "A",
+    "indicator": "heart_rate",
+    "status": "amber",
+    "urgency": "MONITOR",
+    "likely_causes": [],
+    "t": 226800,
+    "deviation": {
+     "sigma": 4.1,
+     "cusum": null,
+     "combined": 2.46
+    }
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 66,
+    "unit": "bpm",
+    "t": 230400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 15,
+    "unit": "1/min",
+    "t": 230400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.97,
+    "unit": "fraction",
+    "t": 230400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.68,
+    "unit": "mGy",
+    "t": 230400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "alert",
+   "payload": {
+    "id": "a-acute-hr-3",
+    "kind": "acute",
+    "crew": "A",
+    "indicator": "heart_rate",
+    "status": "green",
+    "urgency": "ROUTINE",
+    "likely_causes": [],
+    "t": 230400,
+    "deviation": {
+     "sigma": 0.4,
+     "cusum": null,
+     "combined": 0.24
+    }
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 64,
+    "unit": "bpm",
+    "t": 234000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 16,
+    "unit": "1/min",
+    "t": 234000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.98,
+    "unit": "fraction",
+    "t": 234000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.71,
+    "unit": "mGy",
+    "t": 234000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 62,
+    "unit": "bpm",
+    "t": 237600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 14,
+    "unit": "1/min",
+    "t": 237600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.97,
+    "unit": "fraction",
+    "t": 237600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.74,
+    "unit": "mGy",
+    "t": 237600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "stress",
+    "value": 4,
+    "unit": "score 1-5",
+    "t": 237600,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "fatigue",
+    "value": 4,
+    "unit": "score 1-5",
+    "t": 237600,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "alert",
+   "payload": {
+    "id": "a-drift-fatigue",
+    "kind": "drift",
+    "crew": "A",
+    "indicator": "fatigue",
+    "status": "amber",
+    "urgency": "MONITOR",
+    "likely_causes": [],
+    "t": 237600,
+    "deviation": {
+     "sigma": 1.6,
+     "cusum": 4.8,
+     "combined": 0.96
+    }
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 69,
+    "unit": "bpm",
+    "t": 241200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 15,
+    "unit": "1/min",
+    "t": 241200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.98,
+    "unit": "fraction",
+    "t": 241200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.77,
+    "unit": "mGy",
+    "t": 241200,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 67,
+    "unit": "bpm",
+    "t": 244800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 16,
+    "unit": "1/min",
+    "t": 244800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.97,
+    "unit": "fraction",
+    "t": 244800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.8,
+    "unit": "mGy",
+    "t": 244800,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 65,
+    "unit": "bpm",
+    "t": 248400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 14,
+    "unit": "1/min",
+    "t": 248400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.98,
+    "unit": "fraction",
+    "t": 248400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.83,
+    "unit": "mGy",
+    "t": 248400,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 63,
+    "unit": "bpm",
+    "t": 252000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 15,
+    "unit": "1/min",
+    "t": 252000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.97,
+    "unit": "fraction",
+    "t": 252000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.86,
+    "unit": "mGy",
+    "t": 252000,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "stress",
+    "value": 4,
+    "unit": "score 1-5",
+    "t": 252000,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "fatigue",
+    "value": 4,
+    "unit": "score 1-5",
+    "t": 252000,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "heart_rate",
+    "value": 70,
+    "unit": "bpm",
+    "t": 255600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "respiration_rate",
+    "value": 16,
+    "unit": "1/min",
+    "t": 255600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "A",
+    "indicator": "spo2",
+    "value": 0.98,
+    "unit": "fraction",
+    "t": 255600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.89,
+    "unit": "mGy",
+    "t": 255600,
+    "source": "sensor",
+    "confidence": 0.9,
+    "state": "released"
+   }
+  }
+ ]
+}

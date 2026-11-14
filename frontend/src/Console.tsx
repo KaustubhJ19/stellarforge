@@ -24,7 +24,7 @@ export default function Console() {
   };
 
   return (
-    <main className="console">
+    <main className="sf4 console">
       <h1>Ground console — flight surgeon (demo)</h1>
       <p className="note">Mission clock T+{Math.round(data?.now ?? 0)} s · Reports arrive after the one-way delay.</p>
       {error && <p className="error" role="alert">{error}</p>}

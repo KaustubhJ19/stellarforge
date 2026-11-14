@@ -1,49 +1,54 @@
-:root {
-  --bg: #0c0f14; --fg: #f4f6f8; --muted: #b8c0cc; --danger: #ff4d4d; --warn: #ffb020; --ok: #3ccf91;
-  --panel: #1a2029; --line: #3a4452; --focus: #7cc4ff;
+/* Spec 4 emergency-flow styles. Scoped under .sf4 so they never touch Spec 2's theme.css. */
+.sf4 {
+  --sf4-bg: #0c0f14; --sf4-fg: #f4f6f8; --sf4-muted: #b8c0cc; --sf4-danger: #ff4d4d; --sf4-warn: #ffb020; --sf4-ok: #3ccf91;
+  --sf4-panel: #1a2029; --sf4-line: #3a4452; --sf4-focus: #7cc4ff;
   font-family: system-ui, "Segoe UI", sans-serif;
   font-size: 22px; /* large type: glove and stress use (story 12) */
-  line-height: 1.4; color: var(--fg); background: var(--bg);
+  line-height: 1.4; color: var(--sf4-fg); background: var(--sf4-bg);
+  max-width: 900px; margin: 0 auto; padding: 16px; box-sizing: border-box; min-height: 100vh;
 }
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); }
-main { max-width: 900px; margin: 0 auto; padding: 16px; }
-h1 { font-size: 1.8rem; margin: 0.4em 0; }
-.big {
+.sf4 *, .sf4 *::before, .sf4 *::after { box-sizing: border-box; }
+.sf4 h1 { font-size: 1.8rem; margin: 0.4em 0; }
+.sf4 .big {
   min-height: 72px; min-width: 120px; padding: 14px 24px; font-size: 1.2rem; font-weight: 600;
-  border-radius: 14px; border: 2px solid var(--line); background: var(--panel); color: var(--fg); cursor: pointer;
+  border-radius: 14px; border: 2px solid var(--sf4-line); background: var(--sf4-panel); color: var(--sf4-fg); cursor: pointer;
 }
-.big:focus-visible { outline: 4px solid var(--focus); outline-offset: 2px; }
-.big:disabled { opacity: 0.45; }
-.big.primary { background: #1f6feb; border-color: #1f6feb; }
-.big.secondary { background: #2b3440; }
-.big.selected { border-color: var(--ok); box-shadow: 0 0 0 3px var(--ok) inset; }
-.emergency-button { background: var(--danger); border-color: var(--danger); width: 100%; min-height: 140px; font-size: 2rem; }
-.big-link { display: block; padding: 18px; margin: 8px 0; background: var(--panel); color: var(--fg); border-radius: 12px; text-decoration: none; }
-.picker ul { list-style: none; padding: 0; }
-.emergency header { display: flex; gap: 16px; align-items: center; justify-content: space-between; }
-.tag { background: var(--danger); color: #fff; font-weight: 800; padding: 4px 12px; border-radius: 8px; }
-.patient { color: var(--muted); }
-.disclaimer { margin-top: 24px; padding: 12px; border-top: 2px solid var(--line); color: var(--warn); font-weight: 700; text-align: center; }
-.urgency { font-size: 2.2rem; font-weight: 900; padding: 12px; border-radius: 12px; background: var(--panel); text-align: center; }
-.urgency-act_now { background: var(--danger); }
-.urgency-escalate_to_ground { background: var(--warn); color: #000; }
-.question { border: 2px solid var(--line); border-radius: 12px; margin: 16px 0; padding: 12px; }
-.question legend { font-size: 1.3rem; font-weight: 700; }
-.choices, .nav { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
-.choices .big, .nav .big { flex: 1 1 200px; }
-.countdown { color: var(--warn); font-weight: 700; }
-.alarm .big { width: 100%; min-height: 120px; font-size: 1.6rem; }
-.step-text { font-size: 1.6rem; font-weight: 700; background: var(--panel); padding: 20px; border-radius: 12px; }
-.source { color: var(--muted); }
-.why { margin: 12px 0; padding: 12px; border-left: 6px solid var(--focus); background: var(--panel); }
-.note { color: var(--muted); }
-.lead { font-size: 1.3rem; }
-.error { color: #fff; background: #8b1d1d; padding: 10px; border-radius: 8px; }
-.warning { color: #000; background: var(--warn); padding: 10px; border-radius: 8px; }
-.offline { background: var(--warn); color: #000; padding: 8px; border-radius: 8px; font-weight: 700; }
-.stub-banner { background: #5b2a86; padding: 6px 10px; border-radius: 8px; font-weight: 700; }
-.reply { background: #13432f; padding: 12px; border-radius: 8px; }
-.console textarea { width: 100%; min-height: 120px; font-size: 1.1rem; margin: 8px 0; }
-.console-report { border: 2px solid var(--line); border-radius: 12px; padding: 12px; margin: 12px 0; }
-pre { white-space: pre-wrap; font-size: 0.8rem; }
+.sf4 .big:focus-visible { outline: 4px solid var(--sf4-focus); outline-offset: 2px; }
+.sf4 .big:disabled { opacity: 0.45; }
+.sf4 .big.primary { background: #1f6feb; border-color: #1f6feb; }
+.sf4 .big.secondary { background: #2b3440; }
+.sf4 .big.selected { border-color: var(--sf4-ok); box-shadow: 0 0 0 3px var(--sf4-ok) inset; }
+.sf4 .emergency-button { background: var(--sf4-danger); border-color: var(--sf4-danger); width: 100%; min-height: 140px; font-size: 2rem; }
+.sf4 .big-link { display: block; padding: 18px; margin: 8px 0; background: var(--sf4-panel); color: var(--sf4-fg); border-radius: 12px; text-decoration: none; }
+.sf4.picker ul { list-style: none; padding: 0; }
+.sf4 header { display: flex; gap: 16px; align-items: center; justify-content: space-between; }
+.sf4 .tag { background: var(--sf4-danger); color: #fff; font-weight: 800; padding: 4px 12px; border-radius: 8px; }
+.sf4 .patient { color: var(--sf4-muted); }
+.sf4 .disclaimer { margin-top: 24px; padding: 12px; border-top: 2px solid var(--sf4-line); color: var(--sf4-warn); font-weight: 700; text-align: center; }
+.sf4 .urgency { font-size: 2.2rem; font-weight: 900; padding: 12px; border-radius: 12px; background: var(--sf4-panel); text-align: center; }
+.sf4 .urgency-act_now { background: var(--sf4-danger); }
+.sf4 .urgency-escalate_to_ground { background: var(--sf4-warn); color: #000; }
+.sf4 .question { border: 2px solid var(--sf4-line); border-radius: 12px; margin: 16px 0; padding: 12px; }
+.sf4 .question legend { font-size: 1.3rem; font-weight: 700; }
+.sf4 .choices, .sf4 .nav { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
+.sf4 .choices .big, .sf4 .nav .big { flex: 1 1 200px; }
+.sf4 .countdown { color: var(--sf4-warn); font-weight: 700; }
+.sf4 .alarm .big { width: 100%; min-height: 120px; font-size: 1.6rem; }
+.sf4 .step-text { font-size: 1.6rem; font-weight: 700; background: var(--sf4-panel); padding: 20px; border-radius: 12px; }
+.sf4 .source { color: var(--sf4-muted); }
+.sf4 .why { margin: 12px 0; padding: 12px; border-left: 6px solid var(--sf4-focus); background: var(--sf4-panel); }
+.sf4 .note { color: var(--sf4-muted); }
+.sf4 .lead { font-size: 1.3rem; }
+.sf4 .error { color: #fff; background: #8b1d1d; padding: 10px; border-radius: 8px; }
+.sf4 .warning { color: #000; background: var(--sf4-warn); padding: 10px; border-radius: 8px; }
+.sf4 .offline { background: var(--sf4-warn); color: #000; padding: 8px; border-radius: 8px; font-weight: 700; }
+.sf4 .stub-banner { background: #5b2a86; padding: 6px 10px; border-radius: 8px; font-weight: 700; }
+.sf4 .reply { background: #13432f; padding: 12px; border-radius: 8px; }
+.sf4.console textarea { width: 100%; min-height: 120px; font-size: 1.1rem; margin: 8px 0; }
+.sf4 .console-report { border: 2px solid var(--sf4-line); border-radius: 12px; padding: 12px; margin: 12px 0; }
+.sf4 pre { white-space: pre-wrap; font-size: 0.8rem; }
+
+/* Integration strip shown under Spec 2's home on a tablet (status, access log, Help picker). */
+.sf4-strip { max-width: none; min-height: 0; margin: 0; padding: 12px 16px; font-size: 18px; }
+.sf4-dialog { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); display: grid; place-items: center; z-index: 1000; }
+.sf4-dialog > .sf4 { min-height: 0; border-radius: 16px; width: min(640px, 92vw); }

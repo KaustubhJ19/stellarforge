@@ -69,6 +69,7 @@ describe("ticket 14: backend down", () => {
   it("no cached protocol shows a clear message", async () => {
     localStorage.clear();
     render(<Tablet crew="cmdr" />);
+    await userEvent.click(await screen.findByRole("button", { name: "Emergency" }));
     await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("No cached protocol"));
   });
 });

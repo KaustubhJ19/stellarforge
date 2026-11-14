@@ -48,7 +48,8 @@ def test_bad_sync_item_rejected_and_not_marked(client, eng):
 def test_no_external_urls_in_runtime_code():
     """Offline: our runtime code references no non-local hosts."""
     pat = re.compile(r"https?://(?!127\.0\.0\.1|localhost|json-schema\.org)[\w.-]+", re.I)
-    files = list((REPO / "backend/app").glob("*.py")) + list((REPO / "frontend/src").rglob("*.ts*"))
+    files = list((REPO / "backend/app").glob("*.py")) + [
+        p for p in (REPO / "frontend/src").rglob("*.ts*") if ".test." not in p.name and "test" not in p.parent.name]  # runtime code only
     files += [REPO / "frontend/index.html"]
     # The built bundle is checked by the Playwright network-off test (real requests, not strings).
     hits = {str(f.relative_to(REPO)): pat.findall(f.read_text(encoding="utf-8", errors="ignore")) for f in files}

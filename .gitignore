@@ -32,7 +32,7 @@ replay/generated/
 .vscode/
 *.log
 
-# Local planning notes (not committed)
+# Local planning notes / scratch work (not committed)
 .scratch/
 
 # Frontend test/build artifacts

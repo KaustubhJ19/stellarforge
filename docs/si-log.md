@@ -1,8 +1,8 @@
-# SI-use log
+# AI-use log
 
 Every use of an AI tool on this project: who, which tool, what for.
 
-| Date | Who | Tool | What for |
+| Date | Who (stream) | Tool | What for |
 |---|---|---|---|
 | 2026-11-14 | Vedant (AI / detection lead) | Claude Code (Claude Opus 5.5) | Ticket 01 (Spike D): found PMData, OSDR ISS cabin (RR-1) and Inspiration4 CBC/CMP files, checked licences, readiness scale, OSD ID-to-panel mapping and cabin units; drafted `docs/datasets.md`. All findings checked against the source files. |
 | 2026-11-14 | Vedant (AI / detection lead) | Claude Code (Claude Opus 5.5) | Ticket 02 (Spike E): wrote the classic webcam heart-rate method (POS, Wang 2017) in `backend/webcam_hr.py` and its test in `tools/test_webcam_hr_spike.py`. |
@@ -11,5 +11,10 @@ Every use of an AI tool on this project: who, which tool, what for.
 | 2026-11-14 | Vedant (AI / detection lead) | Claude Code (Claude Opus 5.5) | Tickets 03, 04, 06, 07, 09 (Baseline A core): wrote `backend/baseline_a.py` (Anchor CuSum drift, 28-day Adaptive acute check, quarantine with Label hooks, Status and urgency rule, briefing text) and `tools/test_baseline_a.py`, before Spec 1 contracts exist. Result to be checked by Vedant. |
 | 2026-11-14 | Vedant (AI / detection lead) | Claude Code (Claude Opus 5.5) | Tickets 05 and 08: wrote `backend/emergency.py` (auto-detect rule, manual Trigger, emergency Alert) and `likely_causes()` in `backend/baseline_a.py`, with `tools/test_emergency.py`, before Spec 1 contracts exist. Result to be checked by Vedant. |
 | 2026-11-14 | Vedant (AI / detection lead) | Claude Code (Claude Opus 5.5) | Listed every detection cut-off that needs a team value in `docs/cut-offs-needed.md`, with suggested start values and possible sources (not yet checked). To be checked by Vedant and the integration lead. |
+| 2026-11-14 | 3D / UI lead (Stream 1) | Claude Code (Claude Opus 5.5) | Broke Spec 2 into tickets; wrote the Z-Anatomy body export script (Spike B) and the Spec 2 web app (3D body, home screen, charts) test-first, with human review |
+| 2026-11-14 | 3D / UI lead (Stream 1) | Claude Code (Claude Opus 5.5) | Tested the Spec 2 web app (coverage, Playwright browser tests, large-replay and slow-device runs, keyboard / high-contrast / reduced-motion checks, colour-blind palette validation, security review) and fixed the issues found, with human review and decisions |
 | 2026-11-15 | Vedant (AI / detection lead) | Claude Code (Claude Opus 5.5) | Merged the data lead's Spec 1 branch into spec-3, generated the crew replays locally, wrote `backend/detection.py` (service messages in, contract-valid Alert/Trigger/Reading-state out, Pulse rhythm names) and `tools/test_detection.py`; measured 0.20 alerts per crew-day on the four crew replays with the starting cut-offs. Result to be checked by Vedant. |
 | 2026-11-15 | Vedant (AI / detection lead) | Claude Code (Claude Opus 5.5) | Tickets 03-13: content file with cited cut-offs and Safety bounds, tuning (0.20 -> 0.11 alerts per crew-day), golden replay tests through the service, tested service hook patch, webcam morning-check Reading, docs/accuracy.md and docs/notes-for-team.md. Result to be checked by Vedant. |
+| 2026-11-15 | 3D / UI lead (Stream 1) | Claude Code (Claude Opus 5.5) | Switched the Spec 2 web app to Spec 1's frozen contracts (ticket 12): Status from Alerts, Crew record loading, anchor-based normal band, profile table, fixtures checked against the shared schemas, with human decisions and review |
+| 2026-11-15 | Emergency-flow lead (Stream 3) | Claude Code (Claude Opus 5.5) | Spec 4: broke the spec into 16 tickets; built the emergency flow, protocol engine and content linter, explainer (Ollama), ground report and console, offline mode, and their tests, with human decisions on every open product and safety question. Protocol content is STUB, non-clinical. |
+| 2026-11-15 | Emergency-flow lead (Stream 3) | Claude Code (Claude Opus 5.5) | Local integration: merged Spec 1 + Spec 3 branches, adopted Spec 1's frozen contracts, applied Spec 3's service-detection hook patch unchanged, merged Spec 2's web app and wired its Emergency / Help buttons to the Spec 4 flow, with human decisions on structure, crew IDs and the Help button. |

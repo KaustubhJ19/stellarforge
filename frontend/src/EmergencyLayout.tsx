@@ -10,7 +10,7 @@ export function EmergencyLayout({ title, patient, offline, children }: {
   children: ReactNode;
 }) {
   return (
-    <main className="emergency" data-testid="emergency-screen">
+    <main className="sf4 emergency" data-testid="emergency-screen">
       <header>
         <span className="tag">EMERGENCY</span>
         {patient && <span className="patient">Patient: {patient}</span>}

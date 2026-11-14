@@ -166,7 +166,7 @@ function Nav({ crew, act, canBack }: { crew: string; act: Act; canBack: boolean 
 // Temporary home screen. Spec 2 owns the real home screen and its Emergency / Help buttons.
 function Home({ crew, offline, act, error, t = 0 }: { crew: string; offline: boolean; act: Act; error?: React.ReactNode; t?: number }) {
   return (
-    <main className="home">
+    <main className="sf4 sf4-home">
       <h1>Crew tablet: {crew}</h1>
       {offline && <p className="offline" role="status">Service unavailable — continuing offline</p>}
       {error}
@@ -179,7 +179,7 @@ function Home({ crew, offline, act, error, t = 0 }: { crew: string; offline: boo
 }
 
 // Story 9: the patient sees every emergency opening of their record.
-function AccessLog({ crew }: { crew: string }) {
+export function AccessLog({ crew }: { crew: string }) {
   const [log, setLog] = useState<AccessEntry[] | null>(null);
   const load = () => api.accessLog(crew).then(setLog).catch(() => setLog(null));
   return (
