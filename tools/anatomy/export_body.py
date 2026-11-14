@@ -5,7 +5,10 @@ named nodes, plus one simplified outline per layer. Everything else is dropped.
 
 Run:
   Blender -b data/z-anatomy/Z-Anatomy/Startup.blend \
-      --python tools/anatomy/export_body.py -- <out.glb>
+      --python tools/anatomy/export_body.py -- <out.glb> [--region <region>]
+
+With --region, writes only that region's structures at high detail (no outlines);
+the web app loads it the first time the astronaut zooms into the region.
 
 Derived from Z-Anatomy (CC BY-SA 4.0), itself from BodyParts3D (CC BY 4.0).
 The output file is released under CC BY-SA 4.0.
@@ -14,7 +17,9 @@ import sys
 import bpy
 import bmesh
 
-OUT = sys.argv[sys.argv.index("--") + 1]
+ARGS = sys.argv[sys.argv.index("--") + 1:]
+OUT = ARGS[0]
+REGION = ARGS[ARGS.index("--region") + 1] if "--region" in ARGS else None
 
 # Structure id -> (layer, collections to include, extra object names to include).
 # Ids are the contract between this file and the web app's structure map.
@@ -49,7 +54,17 @@ LAYERS = {
     "organs":   (["Visceral systems"], 25_000),
     "brain":    (["Brain"], 25_000),
 }
+# Structure id -> zoom region (matches the web app's structure table).
+REGION_OF = {
+    "brain.prefrontal": "head", "brain.amygdala": "head", "brain.parietal": "head",
+    "brain.occipital": "head", "brain.thalamus": "head", "brain.hypothalamus": "head",
+    "brain.cerebellum": "head", "ear.vestibular": "head", "eye.optic": "head",
+    "heart": "chest", "vessels.carotids": "chest", "lungs": "chest",
+    "liver": "abdomen", "kidneys": "abdomen", "bone.spine": "abdomen",
+    "bone.hip": "legs", "muscle.thigh": "legs",
+}
 STRUCTURE_BUDGET = 12_000  # triangles per mapped structure, at most
+DETAIL_BUDGET = 60_000     # triangles per structure in a region detail file
 MIN_VERTS = 10           # Z-Anatomy label anchors are 2-vertex meshes; skip them
 
 
@@ -111,12 +126,15 @@ def main():
         if not objs:
             raise SystemExit(f"structure {sid} matched no geometry")
         used |= objs
-        exported.append(bake(objs, sid, STRUCTURE_BUDGET, {"kind": "structure", "layer": layer}))
+        if REGION and REGION_OF[sid] != REGION:
+            continue
+        budget = DETAIL_BUDGET if REGION else STRUCTURE_BUDGET
+        exported.append(bake(objs, sid, budget, {"kind": "structure", "layer": layer, "id": sid}))
         print(f"structure {sid:20} objects={len(objs)}")
 
-    for layer, (cols, budget) in LAYERS.items():
+    for layer, (cols, budget) in ({} if REGION else LAYERS).items():
         objs = gather(cols, []) - used
-        exported.append(bake(objs, f"outline.{layer}", budget, {"kind": "outline", "layer": layer}))
+        exported.append(bake(objs, f"outline.{layer}", budget, {"kind": "outline", "layer": layer, "id": f"outline.{layer}"}))
         print(f"outline   {layer:20} objects={len(objs)}")
 
     bpy.ops.object.select_all(action="DESELECT")

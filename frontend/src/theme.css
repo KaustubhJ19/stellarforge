@@ -295,3 +295,25 @@ input[type="range"] {
 .body-status__item[data-status="green"] { border-left-color: var(--status-green); }
 .body-status__item[data-status="amber"] { border-left-color: var(--status-amber); }
 .body-status__item[data-status="red"] { border-left-color: var(--status-red); }
+
+/* Zoom */
+.zoom {
+  display: grid;
+  gap: 8px;
+}
+
+.zoom__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.zoom button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: #24324d;
+}
+
+.zoom__back {
+  justify-self: start;
+  font-weight: 600;
+}

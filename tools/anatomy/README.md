@@ -20,8 +20,9 @@ Builds `frontend/public/models/body-male.glb` from Z-Anatomy with Blender.
 
 - **17 structure nodes**, one per entry in the Indicator-to-structure map, named by a
   stable id (`heart`, `brain.amygdala`, `bone.hip`, …). Each carries glTF extras
-  `kind: "structure"` and `layer: <layer>`. The web app finds them by name.
-- **5 outline nodes**, `outline.<layer>`, for muscles, skeleton, vessels, organs and brain:
+  `kind: "structure"`, `layer: <layer>` and `id: <id>`. The web app finds them by the `id`
+  extra, because Three.js's GLTFLoader strips dots from node names.
+- **5 outline nodes**, `outline.<layer>` (same extras), for muscles, skeleton, vessels, organs and brain:
   everything else in that layer merged and decimated to a triangle budget.
 - No materials; the web app colours each layer from its theme tokens.
 - Draco-compressed. The decoder is vendored in `frontend/public/draco/` so it works offline.
@@ -45,6 +46,10 @@ Mapping notes:
 | Frame rate, software rendering (no GPU) | 10 fps |
 
 No fallback needed. Female layers not yet tried (ticket 18, P1).
+With `--region head|chest|abdomen|legs` the script writes `body-male.<region>.glb`: that
+region's structures only, at up to 60k triangles each. The app loads one the first time the
+astronaut zooms into that region.
+
 Re-run the check: start `npm run dev` in `frontend/`, then `node spike/run-spike.mjs http://localhost:5173`.
 
 ## Licence

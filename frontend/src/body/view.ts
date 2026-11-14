@@ -1,4 +1,5 @@
 import type { Status } from "../contracts";
+import type { RegionId, StructureId } from "./structures";
 
 export const LAYERS = ["muscles", "skeleton", "vessels", "organs", "brain"] as const;
 export type LayerId = (typeof LAYERS)[number];
@@ -24,8 +25,15 @@ export interface StructureView {
   opacity: number | null;
 }
 
+/** Zoom level: whole body → region → one structure. */
+export type Focus =
+  | { level: "body" }
+  | { level: "region"; region: RegionId }
+  | { level: "structure"; structure: StructureId };
+
 /** Everything the 3D body must draw. The renderer applies it; it decides nothing. */
 export interface BodyView {
+  focus: Focus;
   layers: Record<LayerId, LayerView>;
   structures: Record<string, StructureView>;
   /** Whole-body Status tint (radiation dose, temperature); null = none. */
