@@ -119,6 +119,46 @@ def lint_profile(doc):
     return problems
 
 
+# Spec 3 reads this file (backend/detection.py CONTENT); it is not a Mission profile.
+BOUNDS_FILE = "detection-cut-offs.json"
+HONEST_LABELS = {"Earth reference, no space data", "team value", "estimate, not validated", TEAM_VALUE}
+
+
+def _link(text):
+    return isinstance(text, str) and ("https://" in text or "http://" in text)
+
+
+def _labelled(where, item):
+    """Label and source present; a label outside the honest set must point to a linked (space/personal) source."""
+    problems = []
+    if not _filled(item.get("label")):
+        problems.append(f"{where}: needs a label")
+    if not _filled(item.get("source")):
+        problems.append(f"{where}: needs a source")
+    elif item.get("label") not in HONEST_LABELS and not _link(item["source"]):
+        problems.append(f"{where}: label {item.get('label')!r} is not a standard label, so the source needs a link")
+    return problems
+
+
+def lint_bounds(doc):
+    """Safety bounds and detection cut-offs: every item labelled and sourced; bounds have a sane limit."""
+    problems = []
+    for i, c in enumerate(doc.get("cutoffs", [])):
+        problems += _labelled(f"cutoffs/{i} ({c.get('name')})", c)
+    for i, b in enumerate(doc.get("safety_bounds", [])):
+        where = f"safety_bounds/{i} ({b.get('indicator')})"
+        if not _filled(b.get("indicator")):
+            problems.append(f"{where}: needs an indicator")
+        low, high = b.get("low"), b.get("high")
+        nums = [v for v in (low, high) if isinstance(v, (int, float)) and not isinstance(v, bool)]
+        if not nums:
+            problems.append(f"{where}: needs a numeric low or high")
+        if len(nums) == 2 and low >= high:
+            problems.append(f"{where}: low must be below high")
+        problems += _labelled(where, b)
+    return problems
+
+
 def _load(path):
     try:
         return json.loads(path.read_text(encoding="utf-8")), []
@@ -149,7 +189,7 @@ def lint_dir(content_dir):
             failures[cov_path] = problems
     for path in sorted((Path(content_dir) / "profiles").glob("*.json")):
         doc, problems = _load(path)
-        problems = problems or lint_profile(doc)
+        problems = problems or (lint_bounds(doc) if path.name == BOUNDS_FILE else lint_profile(doc))
         if problems:
             failures[path] = problems
     return failures

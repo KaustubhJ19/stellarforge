@@ -243,6 +243,70 @@ def test_repo_has_a_mars_transit_profile():
     assert (ROOT / "content" / "profiles" / "mars_transit.json").exists()
 
 
+# --- Safety bounds and detection cut-offs (content/profiles/detection-cut-offs.json) ---
+
+def bounds(**bound_changes):
+    b = {"indicator": "heart_rate", "low": 50, "high": 150, "label": "Earth reference, no space data",
+         "source": "AHA 2025 algorithms https://cpr.heart.org/"}
+    b.update(bound_changes)
+    return {"cutoffs": [{"name": "drift_red", "value": 8, "label": "team value", "source": "twice drift_amber"}],
+            "safety_bounds": [b]}
+
+
+def test_good_bounds_have_no_problems():
+    assert cl.lint_bounds(bounds()) == []
+
+
+@pytest.mark.parametrize("source", ["", "  ", None])
+def test_bound_with_no_source_fails(source):
+    assert any("source" in p for p in cl.lint_bounds(bounds(source=source)))
+
+
+def test_bound_needs_a_label():
+    assert cl.lint_bounds(bounds(label=""))
+
+
+def test_bound_with_neither_limit_fails():
+    assert cl.lint_bounds(bounds(low=None, high=None))
+
+
+def test_one_sided_bound_is_allowed():
+    assert cl.lint_bounds(bounds(high=None)) == []
+
+
+def test_low_above_high_fails():
+    assert cl.lint_bounds(bounds(low=160, high=150))
+
+
+def test_nonstandard_label_needs_a_linked_source():
+    assert cl.lint_bounds(bounds(label="crew personal value", source="crew record"))
+    assert cl.lint_bounds(bounds(label="crew personal value", source="NASA https://nlsp.nasa.gov/x")) == []
+
+
+def test_cutoff_with_no_source_fails():
+    doc = bounds()
+    doc["cutoffs"][0]["source"] = ""
+    assert cl.lint_bounds(doc)
+
+
+def test_bounds_file_is_not_linted_as_a_profile(tmp_path):
+    (tmp_path / "profiles").mkdir()
+    (tmp_path / "profiles" / cl.BOUNDS_FILE).write_text(json.dumps(bounds()))
+    assert cl.lint_dir(tmp_path) == {}
+
+
+def test_bad_bounds_file_fails_lint_dir(tmp_path):
+    (tmp_path / "profiles").mkdir()
+    (tmp_path / "profiles" / cl.BOUNDS_FILE).write_text(json.dumps(bounds(source="")))
+    assert tmp_path / "profiles" / cl.BOUNDS_FILE in cl.lint_dir(tmp_path)
+
+
+@pytest.mark.parametrize("indicator", ["heart_rate", "systolic_bp", "glucose", "body_temperature"])
+def test_repo_has_a_safety_bound_for(indicator):
+    doc = json.loads((ROOT / "content" / "profiles" / cl.BOUNDS_FILE).read_text())
+    assert indicator in {b["indicator"] for b in doc["safety_bounds"]}
+
+
 def write_clean(tmp_path):
     (tmp_path / "protocols").mkdir()
     (tmp_path / "protocols" / "p.json").write_text(json.dumps(GOOD))
