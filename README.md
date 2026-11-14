@@ -67,4 +67,4 @@ Folders are empty on purpose. Each spec says what to put in them.
 
 ## Licence
 
-Code: MIT (a `LICENSE` file is still to be added). Derived 3D assets: CC BY-SA 4.0. Every dataset, model and asset is credited in `docs/`.
+Code: MIT (see [LICENSE](LICENSE)). Derived 3D assets: CC BY-SA 4.0. Every dataset, model and asset is credited in `docs/`.
