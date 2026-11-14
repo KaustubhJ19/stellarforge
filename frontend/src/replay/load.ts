@@ -34,7 +34,17 @@ export async function loadMission(
   const where = `${CREW_RECORDS} beside the replay`;
   const crewJson = await fetchJson(new URL(CREW_RECORDS, url), fetchFn, CREW_RECORDS, "is it there?");
   if (!crewJson.ok) return { ok: false, error: `${where}: ${crewJson.error}` };
-  const crew = pickCrewRecord(crewJson.json, parsed.replay.crew, where);
+  return missionFrom(parsed.replay, crewJson.json, where);
+}
+
+/**
+ * Checks a replay and finds its Crew record in a crew-records document. Used for loaded
+ * files and for the bundled sample, so a mismatch is a message, never a crash.
+ */
+export function missionFrom(replayJson: unknown, crewRecordsJson: unknown, where: string): MissionResult {
+  const parsed = parseReplay(replayJson);
+  if (!parsed.ok) return parsed;
+  const crew = pickCrewRecord(crewRecordsJson, parsed.replay.crew, where);
   if (!crew.ok) return crew;
   return { ok: true, replay: parsed.replay, crew: crew.crew };
 }

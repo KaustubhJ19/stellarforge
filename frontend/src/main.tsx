@@ -2,7 +2,7 @@ import { Component, StrictMode, useEffect, useState, type ReactNode } from "reac
 import { createRoot } from "react-dom/client";
 import type { CrewRecord, ReplayFile } from "./contracts";
 import { App } from "./App";
-import { loadMission } from "./replay/load";
+import { loadMission, missionFrom, type MissionResult } from "./replay/load";
 import marsDay3 from "./fixtures/mars-day3.replay.json";
 import crewRecords from "./fixtures/crew-records.json";
 import "./theme.css";
@@ -30,15 +30,13 @@ interface Mission {
   replay: ReplayFile;
   crew: CrewRecord;
 }
-const BUNDLED: Mission = {
-  replay: marsDay3 as ReplayFile,
-  crew: (crewRecords as CrewRecord[]).find((c) => c.id === marsDay3.crew)!,
-};
+const BUNDLED: MissionResult = missionFrom(marsDay3, crewRecords, "bundled crew-records.json");
+const bundledMission = BUNDLED.ok ? { replay: BUNDLED.replay, crew: BUNDLED.crew } : null;
 
 function Root() {
   const url = new URLSearchParams(location.search).get("replay");
-  const [mission, setMission] = useState<Mission | null>(url ? null : BUNDLED);
-  const [error, setError] = useState<string | null>(null);
+  const [mission, setMission] = useState<Mission | null>(url ? null : bundledMission);
+  const [error, setError] = useState<string | null>(!url && !BUNDLED.ok ? BUNDLED.error : null);
 
   useEffect(() => {
     if (!url) return;

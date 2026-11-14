@@ -36,7 +36,9 @@ The app reads Spec 1's frozen shapes: the JSON Schemas in `contracts/` at the re
 - **Status comes only from Alerts.** A Reading's `state` is a data state, not a Status. An
   Indicator shows the Status of its newest Alert at the scrubbed time; with no Alert it is
   Normal. ASSUMED: Spec 3 clears an Indicator with a green Alert.
-- **"Your normal" band** on a trend is the Crew record's anchor mean ± 2 SD.
+- **"Your normal" band** on a trend is the Crew record's anchor mean ± 2 SD. OPEN QUESTION for
+  the Spec 3 owner: on a bounded scale this can pass the edge (stress 2 ± 1.2 on 1-5 gives
+  0.8-3.2; SpO₂ could pass 100%). Trim to the scale, or another rule?
 - **Mission profile** name and Earth delay come from `src/profiles.ts` (team values) until
   Spec 5's profiles exist; an unknown profile shows its id and "Not known".
 - **Habitat Readings** (`radiation_dose_*`, `cabin_*`) stay out of the health summaries; the

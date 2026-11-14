@@ -1,4 +1,4 @@
-import { loadMission } from "./load";
+import { loadMission, missionFrom } from "./load";
 import { marsMission } from "../test/replay";
 
 const ORIGIN = "http://localhost:4173";
@@ -83,5 +83,16 @@ describe("loading a replay file from ?replay=", () => {
   it("reports a missing file", async () => {
     const result = await loadReplay("/nope.json", ORIGIN, respond("", "text/plain", 404));
     expect(result).toEqual({ ok: false, error: "file not found (404)" });
+  });
+});
+
+describe("the bundled sample replay and Crew records", () => {
+  it("pairs up when the crew ids match", () => {
+    expect(missionFrom(replay, [crew], "bundled crew-records.json")).toEqual({ ok: true, replay, crew });
+  });
+
+  it("gives a clear message instead of crashing when the crew ids do not match", () => {
+    const result = missionFrom(replay, [{ ...crew, id: "Z" }], "bundled crew-records.json");
+    expect(result).toEqual({ ok: false, error: "bundled crew-records.json has no Crew record for crew A" });
   });
 });
