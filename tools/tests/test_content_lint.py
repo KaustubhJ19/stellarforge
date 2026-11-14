@@ -301,7 +301,7 @@ def test_bad_bounds_file_fails_lint_dir(tmp_path):
     assert tmp_path / "profiles" / cl.BOUNDS_FILE in cl.lint_dir(tmp_path)
 
 
-@pytest.mark.parametrize("indicator", ["heart_rate", "systolic_bp", "body_temperature"])
+@pytest.mark.parametrize("indicator", ["heart_rate", "systolic_bp", "glucose", "body_temperature"])
 def test_repo_has_a_safety_bound_for(indicator):
     doc = json.loads((ROOT / "content" / "profiles" / cl.BOUNDS_FILE).read_text())
     assert indicator in {b["indicator"] for b in doc["safety_bounds"]}

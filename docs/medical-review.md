@@ -56,12 +56,13 @@ File: `content/profiles/detection-cut-offs.json` (read by Spec 3 detection).
 |---|---|---|---|---|---|---|
 | `heart_rate` | 50 | 150 | Earth reference, no space data | AHA 2025 Adult Bradycardia and Tachyarrhythmia With a Pulse Algorithms: https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms. Not used for resting_heart_rate: AHA notes a low rate can be normal in athletes, and one crew's normal is 49 bpm. | ☐ | |
 | `systolic_bp` | 90 | None | Earth reference, no space data | AHA 2020 Part 3 (Panchal et al.): systolic 90 mmHg is a common hypotension cutoff. No upper limit sourced. https://www.ahajournals.org/doi/10.1161/CIR.0000000000000916 | ☐ | |
+| `glucose` | 54 | 250 | Earth reference, no space data | ADA Standards of Care in Diabetes 2025, Section 6, Table 6.2 (CGM metrics): TBR <54 mg/dL is level 2 hypoglycemia; TAR >250 mg/dL is level 2 hyperglycemia. Diabetes-care limits, used with the personal baseline. Real astronaut data: 3 of 28 Inspiration4 values (NASA OSDR OSD-575) are below 54 mg/dL, all at R+45. https://pmc.ncbi.nlm.nih.gov/articles/PMC11635034/ https://osdr.nasa.gov/bio/repo/data/studies/OSD-575 | ☐ | |
 | `body_temperature` | 35.0 | 38.0 | low: NASA-STD-3001 (space standard); high: Earth reference, no space data | Low: NASA-STD-3001 Volume 1 Rev C, Definitions: hypothermia occurs as body temperature falls below 95 °F (35 °C). https://standards.nasa.gov/sites/default/files/standards/NASA/C//nasa-std-3001-vol-1-rev-c-signature.pdf High: CDC ill-traveler definitions (Fever): a measured temperature of 100.4 °F [38 °C] or greater. https://www.cdc.gov/quarantine/maritime/definitions-signs-symptoms-conditions-ill-travelers.html Caution: resting core temperature rose about 1 °C over 2.5 months of long-duration flight (Stahn 2017), so 38 °C may be reached by healthy crew in flight; see expected_shift. https://pmc.ncbi.nlm.nih.gov/articles/PMC5701078/ | ☐ | |
 
 ## Points to check first
 
 - Rescuer counts of 1: the guideline names a single "rescuer" or gives no number for those steps.
 - Chest-pain ECG and defibrillator steps come from an Earth guideline (ESC 2023), labelled "Earth reference, no space data".
-- Glucose has no Safety bound (decision 2026-11-15): 7 of 28 Inspiration4 astronaut values (NASA OSDR OSD-575) fall below ADA's 70 mg/dL, minimum 36. Glucose uses the personal baseline only.
+- Glucose: personal baseline plus an ADA level 2 Safety bound (54-250 mg/dL), decision 2026-11-15. Level 1 (70) would fire on 7 of 28 Inspiration4 values (OSD-575); level 2 fires on 3, all at R+45 (36, 43, 44 mg/dL).
 - Body temperature: in-flight resting core temperature rises about 1 °C (Stahn 2017), so the 38 °C Earth fever bound may fire on healthy crew. Detection applies a +1 °C expected shift.
 - "Stop activity" was dropped from the chest-pain phase: no source found.

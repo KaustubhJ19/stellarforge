@@ -91,10 +91,12 @@ def test_body_temperature_low_is_nasa_hypothermia():
     assert "NASA-STD-3001" in b["source"] and "standards.nasa.gov" in b["source"]
 
 
-def test_glucose_uses_the_personal_baseline_only():
-    # Decision 2026-11-15: 7 of 28 Inspiration4 values (OSD-575) fall below ADA's 70 mg/dL,
-    # so a hard bound would raise red alerts on healthy crew.
-    assert "glucose" not in {b["indicator"] for b in detection_content()["safety_bounds"]}
+def test_glucose_bound_is_ada_level_2():
+    # Decision 2026-11-15: personal baseline plus a level 2 Safety bound. Level 1 (70) fired on
+    # 7 of 28 Inspiration4 values (OSD-575); level 2 fires on 3 (all at R+45).
+    b = bound("glucose")
+    assert (b["low"], b["high"]) == (54, 250)
+    assert "PMC11635034" in b["source"] and "Table 6.2" in b["source"]
 
 
 def test_in_flight_temperature_shift_is_sourced():
