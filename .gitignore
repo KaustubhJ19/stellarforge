@@ -31,3 +31,6 @@ replay/generated/
 .idea/
 .vscode/
 *.log
+
+# Local planning notes (not committed)
+.scratch/
