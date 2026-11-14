@@ -30,7 +30,7 @@ def test_normal_stream_raises_nothing():
                       + [(t, "systolic_bp", 120) for t in range(5, 600, 10)])
 
 
-@pytest.mark.parametrize("hr", [170, 30])
+@pytest.mark.parametrize("hr", [170, 150, 30])  # 150 itself counts (AHA: >=150/min)
 def test_sustained_extreme_heart_rate_with_low_pressure_raises_a_trigger(hr):
     readings = [(0, "systolic_bp", 80)] + [(t, "heart_rate", hr) for t in range(0, 121, 10)]
     found = stream(AutoDetect("C001", ETH), readings)
