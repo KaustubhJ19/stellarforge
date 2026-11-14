@@ -1,6 +1,7 @@
+import { useState } from "react";
 import type { ReplayFile } from "../contracts";
 import { formatValue } from "../indicators";
-import { profileFor } from "../profiles";
+import { profileChoices, profileFor } from "../profiles";
 import type { MissionState } from "../replay/state";
 import { formatMissionTime } from "../replay/time";
 
@@ -9,11 +10,30 @@ const DOSE_FRESH_S = 36 * 3600;
 
 export function MissionBar({ replay, state }: { replay: ReplayFile; state: MissionState }) {
   const dose = state.latest.get("radiation_dose_accumulated");
-  const profile = profileFor(replay.profile);
+  // Starts on the replay's own profile; the crew can switch to compare (ticket 17).
+  const [chosen, setChosen] = useState({ replay: replay.profile, id: replay.profile });
+  const profileId = chosen.replay === replay.profile ? chosen.id : replay.profile;
+  const profile = profileFor(profileId);
   return (
     <section aria-label="Mission" className="mission-bar">
       <Item label="Mission day" value={`Day ${state.missionDay}`} />
-      <Item label="Profile" value={profile.name} />
+      <div className="mission-bar__item">
+        <label className="mission-bar__label" htmlFor="mission-profile">
+          Mission profile
+        </label>
+        <select
+          id="mission-profile"
+          className="mission-bar__select"
+          value={profileId}
+          onChange={(e) => setChosen({ replay: replay.profile, id: e.target.value })}
+        >
+          {profileChoices(replay.profile).map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
+      </div>
       <Item
         label="Ground delay"
         value={profile.delay ?? "Not known"}

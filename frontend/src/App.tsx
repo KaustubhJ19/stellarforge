@@ -120,7 +120,6 @@ export function App({
 
   return (
     <div className="app">
-      <MissionBar replay={replay} state={state} />
       <Co2Banner latest={state.latest} now={state.t} />
       <main className="home">
         {/* First in tab order so Emergency is one Tab away; CSS places it on screen. */}
@@ -160,6 +159,8 @@ export function App({
           <TaskList tasks={state.tasks} notes={notes} onLog={setForm} />
         </div>
       </main>
+      {/* After main so Emergency stays first in the tab order; CSS shows it at the top. */}
+      <MissionBar replay={replay} state={state} />
       {cardReading && (
         <MeasurementCard
           reading={cardReading}

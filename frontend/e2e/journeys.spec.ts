@@ -242,3 +242,24 @@ test.describe('"Why this forecast?"', () => {
     expect(problems).toEqual([]);
   });
 });
+
+test.describe("Mission profile switcher", () => {
+  for (const width of [1440, 390]) {
+    test(`stays at the top, is a large target and switches the delay (${width} px)`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await openApp(page);
+      const bar = page.getByRole("region", { name: "Mission" });
+      const barBox = (await bar.boundingBox())!;
+      const mainBox = (await page.getByRole("main").boundingBox())!;
+      expect(barBox.y).toBeLessThan(mainBox.y);
+      const select = bar.getByRole("combobox", { name: "Mission profile" });
+      expect((await select.boundingBox())!.height).toBeGreaterThanOrEqual(56);
+      await select.selectOption({ label: "Space station (ISS)" });
+      await expect(bar).toContainText("0 min");
+      // Emergency is still first in the tab order from a fresh page.
+      await page.reload();
+      await page.keyboard.press("Tab");
+      await expect(page.getByRole("button", { name: "Emergency" })).toBeFocused();
+    });
+  }
+});

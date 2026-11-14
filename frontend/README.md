@@ -72,7 +72,11 @@ The app reads Spec 1's frozen shapes: the JSON Schemas in `contracts/` at the re
   Revisit when body temperature data exists.
 - **Mission profile** name and Earth delay come from Spec 5's `content/profiles/<id>.json`
   (`name`, `comm_delay`), with the delay's direction and "team value" label shown; an
-  unknown profile shows its id and "Not known".
+  unknown profile shows its id and "Not known". A **Mission profile** dropdown in the mission
+  bar lists every profile in `content/profiles/` (Mars transit, Space station (ISS)) and
+  starts on the replay's own; switching it changes the name and ground delay shown. The
+  mission bar comes after `main` in the page so Emergency stays first in the tab order; CSS
+  shows it at the top.
 - **Measurement cards** come from Spec 5's structured `content/cards/*.json` (How as steps,
   Why with the NASA HRP risk and space note, If abnormal in four parts). A card also covers
   its `related_indicators`. Fields in another shape read "Not added yet."

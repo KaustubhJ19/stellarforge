@@ -99,6 +99,8 @@ input:focus-visible {
 
 /* Mission bar */
 .mission-bar {
+  /* Last in the DOM (tab order), first on screen. */
+  order: -1;
   display: flex;
   flex-wrap: wrap;
   gap: var(--gap);
@@ -120,6 +122,17 @@ input:focus-visible {
 .mission-bar__label {
   font-size: var(--font-size-sm);
   color: var(--text-muted);
+}
+
+.mission-bar__select {
+  min-height: var(--tap-min);
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 12px;
 }
 
 .mission-bar__value {

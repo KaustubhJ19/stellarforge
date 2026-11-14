@@ -31,3 +31,9 @@ export function profileFor(id: string): ProfileView {
   const p = CONTENT_PROFILES.find((c) => c.id === id);
   return p ? profileView(p) : { name: id, delay: null, delayNote: null };
 }
+
+/** Profiles the switcher offers: every content profile, plus the replay's own if it is unknown. */
+export function profileChoices(replayProfile: string): { id: string; name: string }[] {
+  const known = CONTENT_PROFILES.map((p) => ({ id: p.id, name: p.name }));
+  return known.some((p) => p.id === replayProfile) ? known : [{ id: replayProfile, name: replayProfile }, ...known];
+}
