@@ -80,8 +80,8 @@ export function App({
             </>
           )}
         </section>
+        <ActionButtons onEmergency={onEmergency} />
         <div className="home__side">
-          <ActionButtons onEmergency={onEmergency} />
           <div className="home__summaries">
             <HealthSummary kind="physical" latest={state.latest} onDetails={setCardFor} />
             <HealthSummary kind="mental" latest={state.latest} onDetails={setCardFor} />

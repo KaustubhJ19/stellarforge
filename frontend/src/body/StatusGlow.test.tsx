@@ -24,7 +24,8 @@ describe("status glow", () => {
     const body = renderBody([{ indicator: "mood", value: 1, state: "red" }]);
     const glowing = Object.values(body.view.structures).filter((s) => s.status !== null);
     expect(glowing).toEqual([]);
-    expect(within(screen.getByRole("list", { name: "Body status" })).queryAllByRole("listitem")).toEqual([]);
+    expect(screen.queryByRole("list", { name: "Body status" })).not.toBeInTheDocument();
+    expect(screen.getByText("Nothing to show on the body yet.")).toBeVisible();
   });
 
   it("shows the worse Status when two Indicators share a structure", () => {

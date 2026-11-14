@@ -13,6 +13,7 @@ export function BodyStatusList({ glow }: { glow: Glow }) {
     if (status) rows.push({ name: STRUCTURES[id].label, status });
   }
   rows.sort((a, b) => RANK[a.status] - RANK[b.status]);
+  if (rows.length === 0) return <p className="empty">Nothing to show on the body yet.</p>;
   return (
     <ul className="body-status" aria-label="Body status">
       {rows.map((r) => (

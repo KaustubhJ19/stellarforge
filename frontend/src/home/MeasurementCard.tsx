@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef } from "react";
 import type { CardContent, Reading } from "../contracts";
-import { indicatorLabel } from "../indicators";
+import { formatValue, indicatorLabel } from "../indicators";
 import { StatusBadge } from "../status";
 import { Sparkline } from "../charts/Sparkline";
 
@@ -23,6 +23,7 @@ export function MeasurementCard({
   onClose: () => void;
 }) {
   const label = indicatorLabel(reading.indicator);
+  const shown = formatValue(reading.value, reading.unit);
   const close = useRef<HTMLButtonElement>(null);
   const ids = useId();
   useEffect(() => close.current?.focus(), []);
@@ -46,7 +47,7 @@ export function MeasurementCard({
         </header>
         <div className="card__value">
           <span className="card__number">
-            {reading.value} {reading.unit}
+            {shown.value} {shown.unit}
           </span>
           <StatusBadge status={reading.state} />
           <Sparkline readings={history} />

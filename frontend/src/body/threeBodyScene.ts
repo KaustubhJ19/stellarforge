@@ -27,7 +27,7 @@ interface Part {
 }
 
 /** Real WebGL body drawn with Three.js from the Spike B GLB. */
-export const threeBodyScene: BodySceneFactory = (host) => {
+export const threeBodyScene: BodySceneFactory = (host, events) => {
   if (typeof WebGL2RenderingContext === "undefined") {
     throw new Error("this browser has no WebGL");
   }
@@ -94,9 +94,12 @@ export const threeBodyScene: BodySceneFactory = (host) => {
       jumpTo(box);
       if (view) apply(view);
       host.dataset.loaded = "true";
+      events.onLoaded();
     })
     .catch((e: Error) => {
+      if (disposed) return;
       host.dataset.error = e.message;
+      events.onError(e.message);
     });
 
   function centreOnItself(mesh: THREE.Mesh) {

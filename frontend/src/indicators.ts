@@ -44,6 +44,12 @@ export const INDICATORS: Record<IndicatorId, IndicatorInfo> = {
   mood: { label: "Mood", kind: "mental", place: [] },
 };
 
+/** Value and unit for display; a "1-5" self-report scale reads "3 of 5". */
+export function formatValue(value: number, unit: string): { value: string; unit: string } {
+  const scale = /^1-(\d+)$/.exec(unit);
+  return scale ? { value: String(value), unit: `of ${scale[1]}` } : { value: String(value), unit };
+}
+
 export function indicatorLabel(id: IndicatorId): string {
   return INDICATORS[id]?.label ?? id;
 }
