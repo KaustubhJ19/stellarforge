@@ -13,7 +13,7 @@ export default defineConfig({
     launchOptions: { args: ["--use-angle=metal", "--enable-gpu"] },
   },
   webServer: {
-    command: "npx vite build && npx vite preview --port 4173 --strictPort",
+    command: "node scripts/sync-replays.mjs && npx vite build && npx vite preview --port 4173 --strictPort",
     url: "http://localhost:4173",
     reuseExistingServer: false,
     timeout: 120_000,

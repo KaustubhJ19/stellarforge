@@ -211,7 +211,7 @@ test.describe("cabin CO₂ banner", () => {
   test("shows while the cabin replay's CO₂ is high (10:00-12:00) and clears after", async ({ page }) => {
     const problems = await openApp(page, "/?replay=/replay/mars-day3-female.json&cabin=/replay/iss-cabin-day3.json");
     const banner = page.getByRole("status", { name: "Cabin CO₂" });
-    await expect(page.getByRole("region", { name: "Mission" })).toContainText("41.89 mGy");
+    await expect(page.getByRole("region", { name: "Mission" })).toContainText("41.9 mGy");
     await expect(banner).toHaveCount(0);
     await scrubTo(page, 10);
     await expect(banner).toContainText("Cabin CO₂ high: 5,800 ppm");

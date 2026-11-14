@@ -13,6 +13,8 @@ export interface IndicatorInfo {
   label: string;
   kind: HealthKind;
   place: BodyPlace;
+  /** An honest label shown with every value, e.g. "sample, not real data". */
+  note?: string;
 }
 
 /** Display facts about each Indicator the web app knows how to show. */
@@ -26,13 +28,16 @@ export const INDICATORS: Record<IndicatorId, IndicatorInfo> = {
   stroke_volume: { label: "Stroke volume", kind: "physical", place: ["heart"] },
   cardiac_output: { label: "Cardiac output", kind: "physical", place: ["heart"] },
   ecg: { label: "ECG", kind: "physical", place: ["heart", "vessels.carotids"] },
+  cardiac_rhythm: { label: "Heart rhythm", kind: "physical", place: ["heart"] },
   respiration_rate: { label: "Respiration", kind: "physical", place: ["lungs"] },
   spo2: { label: "SpO₂", kind: "physical", place: ["lungs"] },
   etco2: { label: "Exhaled CO₂", kind: "physical", place: ["lungs"] },
   steps: { label: "Steps", kind: "physical", place: [] },
   glucose: { label: "Glucose", kind: "physical", place: ["liver", "muscle.thigh"] },
   insulin_resistance: { label: "Insulin resistance", kind: "physical", place: ["liver", "muscle.thigh"] },
-  bone_density: { label: "Bone density", kind: "physical", place: ["bone.hip", "bone.spine"] },
+  // No open source for bone density (data lead, 2026-11-15): sample only.
+  bone_density: { label: "Bone density", kind: "physical", place: ["bone.hip", "bone.spine"], note: "sample, not real data" },
+  soreness: { label: "Muscle soreness", kind: "physical", place: ["muscle.thigh"] },
   muscle_strength: { label: "Muscle strength", kind: "physical", place: ["muscle.thigh"] },
   kidney_stones: { label: "Kidney stone risk", kind: "physical", place: ["kidneys"] },
   eyes_sans: { label: "Eyes (SANS)", kind: "physical", place: ["eye.optic"] },
@@ -81,17 +86,37 @@ export const HABITAT_INDICATORS: IndicatorId[] = [
   "cabin_co2",
 ];
 
+/** "CoarseVentricularFibrillation" -> "Coarse ventricular fibrillation". */
+function words(text: string): string {
+  const spaced = text.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/_/g, " ").toLowerCase();
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+}
+
 /**
- * Value and unit for display: a "score 1-5" self-report reads "3 of 5", and a 0-1
- * "fraction" (Pulse SpO2) reads as a percentage.
+ * Few enough decimals to read: one at 10 and above, two from 1 to 10 (a T-score of -1.15),
+ * two significant figures below 1 so small values never read as 0 (0.004 mGy/day).
  */
-export function formatValue(value: number, unit: string): { value: string; unit: string } {
+export function formatNumber(value: number): string {
+  const a = Math.abs(value);
+  if (a === 0) return "0";
+  if (a < 1) return String(+value.toPrecision(2));
+  return String(+value.toFixed(a >= 10 ? 1 : 2));
+}
+const rounded = formatNumber;
+
+/**
+ * Value and unit for display: a "score 1-5" self-report reads "3 of 5", a 0-1 "fraction"
+ * (Pulse SpO2) reads as a percentage, text values (cardiac rhythm) read as words.
+ */
+export function formatValue(value: number | string, unit: string): { value: string; unit: string } {
+  if (typeof value === "string") return { value: words(value), unit: "" };
   const scale = /^(?:score )?\d+-(\d+)$/.exec(unit);
-  if (scale) return { value: String(value), unit: `of ${scale[1]}` };
+  if (scale) return { value: rounded(value), unit: `of ${scale[1]}` };
   if (unit === "yes/no") return { value: value ? "Yes" : "No", unit: "" };
-  if (unit === "1/min") return { value: String(value), unit: "/min" }; // Pulse's per-minute rates
+  if (unit === "1/min") return { value: rounded(value), unit: "/min" }; // Pulse's per-minute rates
+  if (unit === "degC") return { value: rounded(value), unit: "°C" };
   if (unit === "fraction") return { value: String(+(value * 100).toFixed(1)), unit: "%" };
-  return { value: String(value), unit };
+  return { value: rounded(value), unit };
 }
 
 const ORDER = Object.keys(INDICATORS);
@@ -114,8 +139,12 @@ export const SOURCE_TEXT: Record<ReadingSource, string> = {
 
 /** A 0-1 fraction becomes a percentage for display (tiles, charts, bands); other units are as given. */
 export function displayScale(unit: string): { factor: number; unit: string } {
-  return unit === "fraction" ? { factor: 100, unit: "%" } : { factor: 1, unit };
+  if (unit === "fraction") return { factor: 100, unit: "%" };
+  return { factor: 1, unit: UNIT_TEXT[unit] ?? unit };
 }
+
+/** Units as the crew reads them (charts; tiles use formatValue). */
+const UNIT_TEXT: Record<string, string> = { degC: "°C", "1/min": "/min" };
 
 /** The possible range of a bounded unit ("score 1-5", "fraction", "%"); null if open-ended. */
 export function scaleRange(unit: string): [number, number] | null {

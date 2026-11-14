@@ -20,7 +20,8 @@ export interface Reading {
   schema_version?: string;
   crew: string;
   indicator: IndicatorId;
-  value: number;
+  /** A number, or text for categorical Indicators (e.g. cardiac_rhythm "NormalSinus"). */
+  value: number | string;
   unit: string;
   t: MissionTime;
   source: ReadingSource;

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CardContent, CrewRecord, IndicatorId, Reading, ReplayFile } from "./contracts";
-import { missionStateAt, replayRange, seriesOf } from "./replay/state";
+import { isNumeric, missionStateAt, replayRange, seriesOf, type NumericReading } from "./replay/state";
 import { MeasurementCard } from "./home/MeasurementCard";
 import { CONTENT_CARDS, cardFor } from "./content";
 import { MissionBar } from "./home/MissionBar";
@@ -94,8 +94,10 @@ export function App({
 
   const glow = useMemo(() => glowFrom(state.latest), [state]);
   const model = crew.sex === "female" ? "female" : "male";
-  const heartRate = state.latest.get("heart_rate")?.value ?? null;
-  const breathRate = state.latest.get("respiration_rate")?.value ?? null;
+  const hr = state.latest.get("heart_rate");
+  const heartRate = isNumeric(hr) ? hr.value : null;
+  const br = state.latest.get("respiration_rate");
+  const breathRate = isNumeric(br) ? br.value : null;
   // Insight and cards need a Reading at the scrubbed time; scrubbing to before one closes them.
   const insightReading = insight ? state.latest.get(insight) : undefined;
   const cardReading = openCard ? state.latest.get(openCard) : undefined;
@@ -119,7 +121,7 @@ export function App({
   return (
     <div className="app">
       <MissionBar replay={replay} state={state} />
-      <Co2Banner latest={state.latest} />
+      <Co2Banner latest={state.latest} now={state.t} />
       <main className="home">
         {/* First in tab order so Emergency is one Tab away; CSS places it on screen. */}
         <ActionButtons onEmergency={onEmergency} />
@@ -161,7 +163,7 @@ export function App({
       {cardReading && (
         <MeasurementCard
           reading={cardReading}
-          history={seriesOf(replay, cardReading.indicator).filter((r) => r.t <= state.t)}
+          history={seriesOf(replay, cardReading.indicator).filter((r) => r.t <= state.t && isNumeric(r)) as NumericReading[]}
           content={cardFor(cards, cardReading.indicator)}
           onClose={closeCard}
         />

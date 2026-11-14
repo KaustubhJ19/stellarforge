@@ -20,6 +20,13 @@ export interface ShownReading extends Reading {
   status: Status;
 }
 
+/** A shown Reading whose value is a number (charts, rates); text values are shown, never plotted. */
+export type NumericReading = ShownReading & { value: number };
+
+export function isNumeric<T extends Reading>(r: T | undefined): r is T & { value: number } {
+  return r !== undefined && typeof r.value === "number" && Number.isFinite(r.value);
+}
+
 /** The person's own normal band for an Indicator. */
 export interface Baseline {
   low: number;

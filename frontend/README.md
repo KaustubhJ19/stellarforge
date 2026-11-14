@@ -19,6 +19,7 @@ npx playwright install chromium   # only for the browser tests and the audit
 ```
 npm run dev          # http://localhost:5173 with the bundled Mars day-3 replay (male crew)
 npm run dev:female   # same day for a female crew member, with the cabin replay: opens the female body
+npm run dev:real     # the data lead's real replay: crew A (152 days) with the ISS RR-1 cabin
 npm run build        # production build in dist/ (static files, works offline)
 npm run preview      # serve the build
 ```
@@ -29,6 +30,21 @@ Load another replay file served by the app (for example one placed in `public/re
 (`replay/generated/crew-A.json` beside `crew-records.json`). Add the habitat's cabin replay
 (CO₂, temperature, humidity, dose) with `&cabin=/replay/<file>.json`; its events are merged in by
 time. Files from other addresses are refused.
+
+## Real replays (Spec 1)
+
+`replay/` at the repo root holds the data lead's shared replays (copied from
+`workstream-1-data-service`): `crew-A..D.json` with `crew-records.json`, `iss-cabin-dose-RR-1.json`
+(cabin, use with `&cabin=`), `emergency-crew-B.json` (Pulse, starts day 152). `npm run dev`, `build`
+and the browser tests copy them to `public/replay/shared/` (git-ignored), e.g.
+`/?replay=/replay/shared/crew-A.json&cabin=/replay/shared/iss-cabin-dose-RR-1.json`.
+
+What the real data needed: rounding long decimals, text values (`cardiac_rhythm`) shown in
+words and kept out of charts, `degC` read as °C, `soreness` on the thigh muscles, day ticks on
+long charts, and cabin data that stops early (RR-1 covers 42 days): the CO₂ banner shows only for
+a Reading from the last hour and the dose says "as of …" when older than 36 h. All four real crew
+are male, so the female body shows only with the sample. Real replays carry no Alerts or
+forecasts until Spec 3's recording script runs (`replay/recorded/`).
 
 ## Data contracts
 
