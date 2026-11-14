@@ -31,3 +31,6 @@ replay/generated/
 .idea/
 .vscode/
 *.log
+
+# Scratch / throwaway work
+.scratch/

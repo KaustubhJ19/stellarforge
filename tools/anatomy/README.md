@@ -52,6 +52,15 @@ astronaut zooms into that region.
 
 Re-run the check: start `npm run dev` in `frontend/`, then `node spike/run-spike.mjs http://localhost:5173`.
 
+## Credits page text (send to the integration lead)
+
+> **3D body:** derived from Z-Anatomy (https://github.com/Z-Anatomy/Models-of-human-anatomy,
+> CC BY-SA 4.0), itself based on BodyParts3D, © The Database Center for Life Science
+> (CC BY 4.0). Our derived models are released under CC BY-SA 4.0. Anatomy is approximate:
+> where the model has no separate structure, the nearest containing structure is shown
+> (prefrontal cortex → frontal lobe, suprachiasmatic nucleus → hypothalamus, optic disc →
+> optic nerve and retina, visual cortex → occipital lobe; no fat tissue is shown).
+
 ## Licence
 
 Derived from Z-Anatomy (CC BY-SA 4.0), which derives from BodyParts3D (CC BY 4.0,
