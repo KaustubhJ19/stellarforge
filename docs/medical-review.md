@@ -63,6 +63,6 @@ File: `content/profiles/detection-cut-offs.json` (read by Spec 3 detection).
 
 - Rescuer counts of 1: the guideline names a single "rescuer" or gives no number for those steps.
 - Chest-pain ECG and defibrillator steps come from an Earth guideline (ESC 2023), labelled "Earth reference, no space data".
-- Glucose low (70) is a diabetes-care cut-off (ADA 2025 Section 6); the high (200) is ADA's diagnosis threshold, which applies to people without a diagnosis.
+- Glucose low (70): 7 of 28 Inspiration4 astronaut values (NASA OSDR OSD-575) are below it, minimum 36 mg/dL. Glucose low (70) is a diabetes-care cut-off (ADA 2025 Section 6); the high (200) is ADA's diagnosis threshold, which applies to people without a diagnosis.
 - Body temperature: in-flight resting core temperature rises about 1 °C (Stahn 2017), so the 38 °C Earth fever bound may fire on healthy crew. Detection applies a +1 °C expected shift.
 - "Stop activity" was dropped from the chest-pain phase: no source found.
