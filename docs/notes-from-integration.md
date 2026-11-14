@@ -22,12 +22,24 @@ Reviewed `content/profiles/detection-cut-offs.json` (Spec 5 ticket 05). Changes:
 
 ## For the 3D / UI lead (Spec 2)
 
-- **Measurement cards are in `content/cards/`**, one per Indicator: `heart_rate`, `systolic_bp`, `sleep_duration`, `glucose`, `body_temperature`, `mood`. They follow the Spec 5 card shape, not the flat `CardContent` strings your frontend assumes:
-  - `how`: list of steps (join them for display)
-  - `why`: `{text, hrp_risk, source}`, with `uncovered_reason` when `hrp_risk` is `"uncovered"`
-  - `if_abnormal`: `{now, remeasure, tell_crew, tell_ground}`
-  - `unit`, `space_note`, `labels` (list), `sources` (list)
-- **Mission profile:** read `content/profiles/mars_transit.json`; your `groundDelayMin` is `comm_delay.value`.
+**Measurement cards, ready in your `CardContent` shape.** No change to your types or components is needed.
+
+- `content/cards-frontend.json` is a `CardContent[]` with exactly your fields: `indicator`, `how`, `why`, `ifAbnormal`, `labels`, `sources` (all text, labels and sources as lists).
+- 7 entries: `heart_rate`, `resting_heart_rate`, `systolic_bp`, `sleep_duration`, `glucose`, `body_temperature`, `mood`.
+- `why` includes the NASA HRP risk and the space note. `ifAbnormal` reads "Now: … Measure again: … Tell the crew: … Tell the ground: …".
+- It is generated from the structured cards in `content/cards/*.json` by `python tools/export_cards.py`. A test fails if it falls out of step. Don't edit it by hand.
+
+To use it, change one line in `frontend/src/main.tsx` (line 56):
+
+```tsx
+import cards from "../../content/cards-frontend.json";
+// ...
+return <App replay={mission.replay} crew={mission.crew} cards={cards as CardContent[]} />;
+```
+
+If the Vite dev server refuses a file outside `frontend/`, add `server: { fs: { allow: [".."] } }` to `vite.config.ts`, or copy the file into `frontend/src/` at build time.
+
+**Mission profile:** read `content/profiles/mars_transit.json`; your `groundDelayMin` is `comm_delay.value`.
 
 ## For everyone
 

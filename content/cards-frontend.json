@@ -1,0 +1,110 @@
+[
+  {
+    "indicator": "body_temperature",
+    "how": "Use the onboard thermometer. Record the value in °C, at rest.",
+    "why": "No NASA HRP risk names body temperature. It is tracked because fever or a low temperature needs attention, and the closed spacecraft environment is a NASA hazard. NASA HRP: not covered. No HRP risk names body temperature; Hostile/Closed Environments is a NASA hazard, not a risk. In space: Resting core temperature rose about 1 °C over 2.5 months of long-duration flight (Stahn 2017), so detection expects +1 °C. Safety bound 35 to 38 °C: below 35 °C is hypothermia (NASA-STD-3001); 38 °C is the CDC fever definition (Earth reference, no space data).",
+    "ifAbnormal": "Now: Check the thermometer and that the crewmember is at rest. Measure again: Measure again after the crewmember has rested, with the same device. Tell the crew: Tell the crew medical officer. Tell the ground: Add the readings to the next ground report.",
+    "labels": [
+      "team value (how and if_abnormal steps)",
+      "Earth reference, no space data (38 °C)"
+    ],
+    "sources": [
+      "https://www.nasa.gov/hrp/hazards/",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC5701078/",
+      "https://standards.nasa.gov/sites/default/files/standards/NASA/C//nasa-std-3001-vol-1-rev-c-signature.pdf",
+      "https://www.cdc.gov/quarantine/maritime/definitions-signs-symptoms-conditions-ill-travelers.html"
+    ]
+  },
+  {
+    "indicator": "glucose",
+    "how": "Measure blood glucose with the onboard analyser, in mg/dL. Note whether the crewmember has eaten recently.",
+    "why": "No NASA HRP risk names blood glucose. It is tracked because a very low or very high value needs a doctor's attention. NASA HRP: not covered. No HRP risk names glucose; the closest is Risk of Inadequate Food and Nutrition. In space: Safety bound 54 to 250 mg/dL: ADA level 2 limits (Table 6.2), an Earth reference, no space data. Inspiration4 astronauts (NASA OSDR OSD-575) had 3 of 28 values below 54 mg/dL, all 45 days after return.",
+    "ifAbnormal": "Now: Check the sample and the analyser. Compare with the crewmember's own normal. Measure again: Measure again after the crewmember has rested, with the same device. Tell the crew: Tell the crew medical officer. Any treatment is per flight surgeon / onboard medical checklist. Tell the ground: Add the readings to the next ground report.",
+    "labels": [
+      "team value (how and if_abnormal steps)",
+      "Earth reference, no space data (Safety bound)"
+    ],
+    "sources": [
+      "https://www.nasa.gov/hrp/risks/",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC11635034/",
+      "https://osdr.nasa.gov/bio/repo/data/studies/OSD-575"
+    ]
+  },
+  {
+    "indicator": "heart_rate",
+    "how": "Wear the heart-rate sensor as the device instructions say. Read the resting value at the same time each morning, before exercise. The morning check can also estimate it from the webcam (estimate, not validated).",
+    "why": "Weightlessness changes the heart and blood vessels, potentially increasing the risk of cardiovascular events. NASA HRP: Risk of Cardiovascular Adaptations. In space: After landing, Apollo crews' average resting heart rate was 8.1 bpm higher than before flight (61.6 to 69.7), and standing heart rate 23.4 bpm higher. Safety bound 50 to 150 bpm is an Earth reference, no space data (AHA 2025).",
+    "ifAbnormal": "Now: Check the sensor is worn correctly. If the crewmember is unresponsive, start the CPR protocol. If they report chest pain, start the chest-pain protocol. Measure again: Measure again after the crewmember has rested, with the same device. Tell the crew: Tell the crew medical officer. Tell the ground: Add the readings to the next ground report.",
+    "labels": [
+      "team value (how and if_abnormal steps)",
+      "Earth reference, no space data (Safety bound)"
+    ],
+    "sources": [
+      "https://www.nasa.gov/hrp/risks/",
+      "https://nlsp.nasa.gov/search/data/details/e1fa5c55-ddfe-5548-91ba-864080319f44?dataType=EXPERIMENTS",
+      "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms",
+      "Hinkelbein et al. 2020, Recommendation 14 (content/protocols/microgravity-cpr.json)"
+    ]
+  },
+  {
+    "indicator": "resting_heart_rate",
+    "how": "Wear the heart-rate sensor as the device instructions say. Read the resting value at the same time each morning, before exercise. The morning check can also estimate it from the webcam (estimate, not validated).",
+    "why": "Weightlessness changes the heart and blood vessels, potentially increasing the risk of cardiovascular events. NASA HRP: Risk of Cardiovascular Adaptations. In space: After landing, Apollo crews' average resting heart rate was 8.1 bpm higher than before flight (61.6 to 69.7), and standing heart rate 23.4 bpm higher. Safety bound 50 to 150 bpm is an Earth reference, no space data (AHA 2025).",
+    "ifAbnormal": "Now: Check the sensor is worn correctly. If the crewmember is unresponsive, start the CPR protocol. If they report chest pain, start the chest-pain protocol. Measure again: Measure again after the crewmember has rested, with the same device. Tell the crew: Tell the crew medical officer. Tell the ground: Add the readings to the next ground report.",
+    "labels": [
+      "team value (how and if_abnormal steps)",
+      "Earth reference, no space data (Safety bound)"
+    ],
+    "sources": [
+      "https://www.nasa.gov/hrp/risks/",
+      "https://nlsp.nasa.gov/search/data/details/e1fa5c55-ddfe-5548-91ba-864080319f44?dataType=EXPERIMENTS",
+      "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms",
+      "Hinkelbein et al. 2020, Recommendation 14 (content/protocols/microgravity-cpr.json)"
+    ]
+  },
+  {
+    "indicator": "mood",
+    "how": "Each morning, rate your mood from 1 to 5 in the app. Answer honestly; the rating is private to the crew medical officer.",
+    "why": "Isolation and confinement over long missions can lead to behavioral changes. NASA HRP: Risk of Behavioral Changes and Psychiatric Disorders. In space: A 1 to 5 self-rating has no clinical limit, so mood has no Safety bound and is judged against the crewmember's own normal. Normal-day data come from Earth wearable users (PMData), not astronauts.",
+    "ifAbnormal": "Now: Talk with the crewmember privately. Measure again: Look at the next few days' ratings; one low day is normal. Tell the crew: Tell the crew medical officer. Tell the ground: Raise it at the next private medical conference with the ground.",
+    "labels": [
+      "team value (how and if_abnormal steps)"
+    ],
+    "sources": [
+      "https://www.nasa.gov/hrp/risks/",
+      "https://www.nasa.gov/hrp/hazards/"
+    ]
+  },
+  {
+    "indicator": "sleep_duration",
+    "how": "Wear the sleep tracker through the main sleep period. Check last night's time asleep each morning.",
+    "why": "Crews face chronic sleep loss and irregularities in their internal biological clocks. NASA HRP: Risk of Inadequate Sleep and Irregular Schedules. In space: NASA schedules an 8.5 hour sleep period (NASA-STD-3001 [V1 6001]). ISS crews actually slept about 6.1 hours a night in flight (Barger 2014). On Earth, adults need 7 or more hours (AASM). No Safety bound: judged against the personal baseline only.",
+    "ifAbnormal": "Now: Compare with the crewmember's own normal, not with one night. Measure again: Look at the next nights; one short night is common in flight. Tell the crew: Tell the crew medical officer. Tell the ground: Add the sleep trend to the next ground report.",
+    "labels": [
+      "team value (how and if_abnormal steps)",
+      "Earth reference, no space data (AASM 7 hours)"
+    ],
+    "sources": [
+      "https://www.nasa.gov/hrp/risks/",
+      "https://standards.nasa.gov/sites/default/files/standards/NASA/C//nasa-std-3001-vol-1-rev-c-signature.pdf",
+      "https://pubmed.ncbi.nlm.nih.gov/25127232/",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4442216/"
+    ]
+  },
+  {
+    "indicator": "systolic_bp",
+    "how": "Use the onboard blood pressure cuff on a supported arm. Measure after a few minutes at rest, restrained or seated. Record the top (systolic) number in mmHg.",
+    "why": "Weightlessness changes the heart and blood vessels, potentially increasing the risk of cardiovascular events. NASA HRP: Risk of Cardiovascular Adaptations. In space: After landing, Apollo crews' average standing systolic pressure was 13 mmHg lower than before flight (118.8 to 105.8). Safety bound: systolic below 90 mmHg, an Earth reference, no space data (AHA 2020); no upper limit sourced.",
+    "ifAbnormal": "Now: Check the cuff size and position. If the crewmember is unresponsive, start the CPR protocol. Measure again: Measure again after the crewmember has rested, with the same device. Tell the crew: Tell the crew medical officer. Tell the ground: Add the readings to the next ground report.",
+    "labels": [
+      "team value (how and if_abnormal steps)",
+      "Earth reference, no space data (Safety bound)"
+    ],
+    "sources": [
+      "https://www.nasa.gov/hrp/risks/",
+      "https://nlsp.nasa.gov/search/data/details/e1fa5c55-ddfe-5548-91ba-864080319f44?dataType=EXPERIMENTS",
+      "https://www.ahajournals.org/doi/10.1161/CIR.0000000000000916",
+      "Hinkelbein et al. 2020, Recommendation 14 (content/protocols/microgravity-cpr.json)"
+    ]
+  }
+]
