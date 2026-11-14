@@ -96,3 +96,41 @@ describe("the bundled sample replay and Crew records", () => {
     expect(result).toEqual({ ok: false, error: "bundled crew-records.json has no Crew record for crew A" });
   });
 });
+
+describe("adding the cabin replay (&cabin=)", () => {
+  const cabin = {
+    schema_version: "1.0.0", crew: "habitat", profile: "mars_transit",
+    events: [5, 50_000_000].map((t) => ({
+      t, type: "reading",
+      payload: { crew: "habitat", indicator: "cabin_co2", value: 3000, unit: "ppm", t, source: "sensor", confidence: 1, state: "released" },
+    })),
+  };
+  const serve: typeof fetch = async (input) => {
+    const path = new URL(String(input)).pathname;
+    const body = path.endsWith("crew-records.json") ? [crew] : path.endsWith("cabin.json") ? cabin : replay;
+    return new Response(JSON.stringify(body), { headers: { "content-type": "application/json" } });
+  };
+
+  it("merges the cabin Readings into the crew replay in time order", async () => {
+    const result = await loadMission("/replay/day3.json", ORIGIN, serve, "/replay/cabin.json");
+    if (!result.ok) throw new Error(result.error);
+    const times = result.replay.events.map((e) => e.t);
+    expect(times).toEqual([...times].sort((a, b) => a - b));
+    const co2 = (events: typeof replay.events) =>
+      events.filter((e) => e.type === "reading" && e.payload.indicator === "cabin_co2").length;
+    expect(co2(result.replay.events)).toBe(co2(replay.events) + 2);
+    expect(result.replay.crew).toBe("A");
+  });
+
+  it("refuses a cabin replay from another address", async () => {
+    const result = await loadMission("/replay/day3.json", ORIGIN, serve, "https://example.com/cabin.json");
+    expect(result).toEqual({ ok: false, error: "cabin replay: replay files must come from this app's own address" });
+  });
+
+  it("says which file failed when the cabin replay is missing", async () => {
+    const missing: typeof fetch = async (input) =>
+      String(input).endsWith("cabin.json") ? new Response("", { status: 404 }) : serve(input);
+    const result = await loadMission("/replay/day3.json", ORIGIN, missing, "/replay/cabin.json");
+    expect(result).toEqual({ ok: false, error: "cabin replay: file not found (404)" });
+  });
+});

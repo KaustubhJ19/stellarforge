@@ -3,6 +3,7 @@ import type { CardContent, CrewRecord, IndicatorId, ReplayFile } from "./contrac
 import { missionStateAt, replayRange, seriesOf } from "./replay/state";
 import { MeasurementCard } from "./home/MeasurementCard";
 import { MissionBar } from "./home/MissionBar";
+import { Co2Banner } from "./home/Co2Banner";
 import { HealthSummary } from "./home/HealthSummary";
 import { TaskList } from "./home/TaskList";
 import { Trends } from "./charts/Trends";
@@ -77,6 +78,7 @@ export function App({
   return (
     <div className="app">
       <MissionBar replay={replay} state={state} />
+      <Co2Banner latest={state.latest} />
       <main className="home">
         {/* First in tab order so Emergency is one Tab away; CSS places it on screen. */}
         <ActionButtons onEmergency={onEmergency} />

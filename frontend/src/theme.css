@@ -144,6 +144,21 @@ input:focus-visible {
 .status-badge[data-status="amber"] .status-badge__icon { background: var(--status-amber); }
 .status-badge[data-status="red"] .status-badge__icon { background: var(--status-red); }
 
+/* CO₂ banner: an environment warning, Watch colour plus icon and words */
+.co2-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 0 16px;
+  padding: 12px 16px;
+  border: 2px solid var(--status-amber);
+  border-radius: 12px;
+  background: var(--surface);
+  font-size: var(--font-size);
+}
+.co2-banner__limit { color: var(--text-muted); font-size: var(--font-size-sm); }
+
 /* Indicator tile */
 .indicator-tile {
   display: grid;

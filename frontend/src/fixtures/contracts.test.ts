@@ -74,7 +74,8 @@ describe.each(replayDocs)("%s Alerts as Spec 3 emits them", (_name, raw) => {
     .filter((e) => e.type === "alert")
     .map((e) => e.payload);
 
-  it("has Alerts to check", () => expect(alerts.length).toBeGreaterThan(0));
+  const isCabin = (raw as { crew: string }).crew === "habitat";
+  it("has Alerts to check (a cabin replay has none)", () => expect(alerts.length > 0).toBe(!isCabin));
 
   it("gives deviation as an object: {sigma, cusum, combined} or {value, bound}", () => {
     for (const a of alerts) {

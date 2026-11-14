@@ -2,9 +2,10 @@ import { Component, StrictMode, useEffect, useState, type ReactNode } from "reac
 import { createRoot } from "react-dom/client";
 import type { CrewRecord, ReplayFile } from "./contracts";
 import { App } from "./App";
-import { loadMission, missionFrom, type MissionResult } from "./replay/load";
+import { loadMission, missionFrom, withCabin, type MissionResult } from "./replay/load";
 import marsDay3 from "./fixtures/mars-day3.replay.json";
 import crewRecords from "./fixtures/crew-records.json";
+import cabinDay3 from "./fixtures/iss-cabin-day3.json";
 import "./theme.css";
 
 /** Last line of defence: say what broke instead of showing a blank page. */
@@ -31,20 +32,24 @@ interface Mission {
   crew: CrewRecord;
 }
 const BUNDLED: MissionResult = missionFrom(marsDay3, crewRecords, "bundled crew-records.json");
-const bundledMission = BUNDLED.ok ? { replay: BUNDLED.replay, crew: BUNDLED.crew } : null;
+const bundledMission = BUNDLED.ok
+  ? { replay: withCabin(BUNDLED.replay, cabinDay3 as ReplayFile), crew: BUNDLED.crew }
+  : null;
 
 function Root() {
-  const url = new URLSearchParams(location.search).get("replay");
+  const params = new URLSearchParams(location.search);
+  const url = params.get("replay");
+  const cabin = params.get("cabin") ?? undefined;
   const [mission, setMission] = useState<Mission | null>(url ? null : bundledMission);
   const [error, setError] = useState<string | null>(!url && !BUNDLED.ok ? BUNDLED.error : null);
 
   useEffect(() => {
     if (!url) return;
-    void loadMission(url, location.origin).then((result) => {
+    void loadMission(url, location.origin, fetch, cabin).then((result) => {
       if (result.ok) setMission({ replay: result.replay, crew: result.crew });
       else setError(result.error);
     });
-  }, [url]);
+  }, [url, cabin]);
 
   if (error) return <p className="load-message">Could not load replay file: {error}</p>;
   if (!mission) return <p className="load-message">Loading replay…</p>;

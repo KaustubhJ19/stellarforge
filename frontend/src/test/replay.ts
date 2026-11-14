@@ -1,6 +1,8 @@
 import type { Alert, CrewRecord, Reading, ReplayEvent, ReplayFile, Status } from "../contracts";
 import marsDay3 from "../fixtures/mars-day3.replay.json";
 import crewRecords from "../fixtures/crew-records.json";
+import cabinDay3 from "../fixtures/iss-cabin-day3.json";
+import { withCabin } from "../replay/load";
 
 /** What the app is given: a replay and the Crew record it belongs to. */
 export interface Mission {
@@ -8,9 +10,9 @@ export interface Mission {
   crew: CrewRecord;
 }
 
-/** The hand-made Mars mission-day-3 replay (crew A) and its Crew record. */
+/** The hand-made Mars mission-day-3 replay (crew A) with the cabin day merged in, and its Crew record. */
 export function marsMission(): Mission {
-  const replay = structuredClone(marsDay3) as ReplayFile;
+  const replay = withCabin(structuredClone(marsDay3) as ReplayFile, structuredClone(cabinDay3) as ReplayFile);
   const crew = structuredClone((crewRecords as CrewRecord[]).find((c) => c.id === replay.crew)!);
   return { replay, crew };
 }
