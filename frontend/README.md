@@ -45,6 +45,9 @@ The app reads Spec 1's frozen shapes: the JSON Schemas in `contracts/` at the re
   (`{sigma, cusum, combined}` or `{value, bound}`).
 - **"Your normal" band** on a trend is the Crew record's anchor mean ± 2 SD, drawn only inside the
   scale's possible range (a 1-5 score stops at 1 and 5; SpO₂ stops at 100%); agreed with Spec 3.
+  KNOWN GAP: it does not include Spec 3's expected space shift (body temperature +1 °C, building
+  up over 75 days), so a healthy in-flight temperature can sit above the band while Normal.
+  Revisit when body temperature data exists.
 - **Mission profile** name and Earth delay come from Spec 5's `content/profiles/<id>.json`
   (`name`, `comm_delay`), with the delay's direction and "team value" label shown; an
   unknown profile shows its id and "Not known".
