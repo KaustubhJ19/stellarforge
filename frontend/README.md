@@ -20,6 +20,7 @@ npx playwright install chromium   # only for the browser tests and the audit
 npm run dev          # http://localhost:5173 with the bundled Mars day-3 replay (male crew)
 npm run dev:female   # same day for a female crew member, with the cabin replay: opens the female body
 npm run dev:real     # the data lead's real replay: crew A (152 days) with the ISS RR-1 cabin
+npm run dev:recorded # the same crew A after Spec 3's detection: real Alerts and forecasts
 npm run build        # production build in dist/ (static files, works offline)
 npm run preview      # serve the build
 ```
@@ -43,8 +44,13 @@ What the real data needed: rounding long decimals, text values (`cardiac_rhythm`
 words and kept out of charts, `degC` read as °C, `soreness` on the thigh muscles, day ticks on
 long charts, and cabin data that stops early (RR-1 covers 42 days): the CO₂ banner shows only for
 a Reading from the last hour and the dose says "as of …" when older than 36 h. All four real crew
-are male, so the female body shows only with the sample. Real replays carry no Alerts or
-forecasts until Spec 3's recording script runs (`replay/recorded/`).
+are male, so the female body shows only with the sample.
+
+`replay/recorded/` holds the same replays after Spec 3's recording script
+(`tools/record_replays.py`) ran detection over them: they add Alerts, `reading_state` events and
+forecasts, so Status colours, the readiness forecast and "Why this forecast?" show real output. Their
+Crew records are read from `crew-records.json` one folder up. An emergency Alert (no Indicator) is
+left to Spec 4's flow; its Safety-bound Alerts colour the Indicators they name.
 
 ## Data contracts
 

@@ -80,7 +80,8 @@ class OpenAlerts {
 function shows(replay: ReplayFile, e: ReplayEvent): boolean {
   if (e.type === "forecast") return e.payload.crew === replay.crew;
   if (e.type !== "reading" && e.type !== "alert") return true;
-  return e.payload.crew === replay.crew || HABITAT_INDICATORS.includes(e.payload.indicator);
+  const indicator = e.payload.indicator;
+  return e.payload.crew === replay.crew || (indicator !== null && HABITAT_INDICATORS.includes(indicator));
 }
 
 export function missionStateAt(replay: ReplayFile, t: MissionTime): MissionState {

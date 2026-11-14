@@ -52,8 +52,10 @@ export interface Alert {
   id: string;
   kind: AlertKind;
   crew: string;
-  indicator: IndicatorId;
-  deviation: Deviation;
+  /** null for an emergency Alert about the whole person (Spec 3); Spec 4's flow shows those. */
+  indicator: IndicatorId | null;
+  /** null for an emergency Alert. */
+  deviation: Deviation | null;
   status: Status;
   urgency: Urgency;
   likely_causes: LikelyCause[];

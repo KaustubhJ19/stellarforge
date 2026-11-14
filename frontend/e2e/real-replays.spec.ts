@@ -60,3 +60,38 @@ test.describe("real replays from Spec 1", () => {
     expect(problems).toEqual([]);
   });
 });
+
+// Spec 3's recorded replays (replay/recorded/, tools/record_replays.py): the real crew data plus
+// detection output (alert, reading_state) and daily forecasts.
+const RECORDED_A = "/?replay=/replay/shared/recorded/crew-A.json&cabin=/replay/shared/iss-cabin-dose-RR-1.json";
+
+test.describe("recorded replays from Spec 3", () => {
+  test("crew A: real Alerts colour the tiles, and the forecast panel fills", async ({ page }) => {
+    const problems = await openApp(page, RECORDED_A);
+    await waitForBody(page);
+    const physical = page.getByRole("region", { name: "Physical health" });
+    await expect(physical.getByRole("group", { name: "Steps", exact: true })).toHaveAttribute("data-status", "amber");
+    const forecast = page.getByRole("region", { name: "Readiness forecast" });
+    await expect(forecast).toContainText("of 10");
+    await expect(forecast).toContainText("Re-measure: the range is too wide to trust.");
+    await page.getByRole("button", { name: "Why this forecast?" }).click();
+    await expect(page.getByRole("list", { name: "Drivers" }).getByRole("listitem")).toHaveCount(7);
+    await page.getByRole("button", { name: "Back to body" }).click();
+    // Day 55 (t = 4,690,800 s): resting heart rate's drift Alert is red.
+    await page.getByRole("slider", { name: "Mission clock" }).fill(String(4_690_800 + 3600));
+    await expect(physical.getByRole("group", { name: "Resting heart rate", exact: true })).toHaveAttribute("data-status", "red");
+    await expect(physical.getByRole("group", { name: "Resting heart rate", exact: true })).toContainText("Alert");
+    await page.screenshot({ path: "test-results/recorded-crew-A.png" });
+    expect(problems).toEqual([]);
+  });
+
+  test("emergency crew B: the Safety-bound Alert turns heart rate red", async ({ page }) => {
+    const problems = await openApp(page, "/?replay=/replay/shared/recorded/emergency-crew-B.json");
+    await waitForBody(page);
+    await page.getByRole("slider", { name: "Mission clock" }).fill(String(13_134_941 + 5));
+    const physical = page.getByRole("region", { name: "Physical health" });
+    await expect(physical.getByRole("group", { name: "Heart rate", exact: true })).toHaveAttribute("data-status", "red");
+    await expect(physical.getByRole("group", { name: "Systolic", exact: false })).toHaveAttribute("data-status", "red");
+    expect(problems).toEqual([]);
+  });
+});

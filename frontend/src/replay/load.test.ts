@@ -134,3 +134,23 @@ describe("adding the cabin replay (&cabin=)", () => {
     expect(result).toEqual({ ok: false, error: "cabin replay: file not found (404)" });
   });
 });
+
+describe("recorded replays (replay/recorded/, Spec 3)", () => {
+  it("finds crew-records.json one folder up when it is not beside the replay", async () => {
+    const asked: string[] = [];
+    const fetchFn: typeof fetch = async (input) => {
+      const path = new URL(String(input)).pathname;
+      asked.push(path);
+      if (path === "/replay/shared/recorded/crew-records.json") return new Response("", { status: 404 });
+      const body = path.endsWith("crew-records.json") ? [crew] : replay;
+      return new Response(JSON.stringify(body), { headers: { "content-type": "application/json" } });
+    };
+    const result = await loadMission("/replay/shared/recorded/crew-A.json", ORIGIN, fetchFn);
+    expect(result).toEqual({ ok: true, replay, crew });
+    expect(asked).toEqual([
+      "/replay/shared/recorded/crew-A.json",
+      "/replay/shared/recorded/crew-records.json",
+      "/replay/shared/crew-records.json",
+    ]);
+  });
+});

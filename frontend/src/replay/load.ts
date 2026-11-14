@@ -7,7 +7,7 @@ const CREW_RECORDS = "crew-records.json";
 
 /**
  * Fetches a replay file named by `?replay=` and its Crew record from the crew-records.json
- * beside it (where Spec 1's generators write both). An optional cabin replay (`&cabin=`, the
+ * beside it (where Spec 1's generators write both), or one folder up (recorded replays). An optional cabin replay (`&cabin=`, the
  * habitat's CO₂, temperature and dose) is merged in by time. Only files served from the app's
  * own address are accepted, so a link cannot make the app show readings from elsewhere.
  * Every failure comes back as a plain-language message.
@@ -27,7 +27,12 @@ export async function loadMission(
   if (!parsed.ok) return parsed;
 
   const where = `${CREW_RECORDS} beside the replay`;
-  const crewJson = await fetchJson(new URL(CREW_RECORDS, url.url), fetchFn, CREW_RECORDS, "is it there?");
+  let crewJson = await fetchJson(new URL(CREW_RECORDS, url.url), fetchFn, CREW_RECORDS, "is it there?");
+  // Recorded replays (replay/recorded/, Spec 3) keep their Crew records one folder up.
+  if (!crewJson.ok) {
+    const above = await fetchJson(new URL(`../${CREW_RECORDS}`, url.url), fetchFn, CREW_RECORDS, "is it there?");
+    if (above.ok) crewJson = above;
+  }
   if (!crewJson.ok) return { ok: false, error: `${where}: ${crewJson.error}` };
   const mission = missionFrom(parsed.replay, crewJson.json, where);
   if (!mission.ok || !cabinAddress) return mission;
