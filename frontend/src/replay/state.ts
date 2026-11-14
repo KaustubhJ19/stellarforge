@@ -40,11 +40,11 @@ export function replayRange(replay: ReplayFile): [MissionTime, MissionTime] {
 
 /**
  * Whether an event's payload belongs on this crew member's screen: their own, plus the
- * habitat's (cabin, dose). Quarantined Readings are held back by the service and never shown.
+ * habitat's (cabin, dose). Quarantined Readings are shown: Spec 3 holds Readings out of the
+ * baseline while an Alert is open, so they are the abnormal values the crew must see.
  */
 function shows(replay: ReplayFile, e: ReplayEvent): boolean {
   if (e.type !== "reading" && e.type !== "alert") return true;
-  if (e.type === "reading" && e.payload.state === "quarantined") return false;
   return e.payload.crew === replay.crew || HABITAT_INDICATORS.includes(e.payload.indicator);
 }
 

@@ -39,7 +39,9 @@ export function missionWith(readings: ReadingInput[]): Mission {
 
 export function alertFor(reading: Reading, status: Status, n = 0, kind: Alert["kind"] = "acute"): Alert {
   return {
-    id: `test-${n}`, kind, crew: reading.crew, indicator: reading.indicator, deviation: 3,
-    status, urgency: status === "red" ? "ACT_NOW" : "MONITOR", likely_causes: [], t: reading.t,
+    id: `test-${n}`, kind, crew: reading.crew, indicator: reading.indicator,
+    deviation: { sigma: 5, cusum: null, combined: 3 }, status,
+    urgency: kind === "acute" && status === "red" ? "ESCALATE_TO_GROUND" : status === "green" ? "ROUTINE" : "MONITOR",
+    likely_causes: [], t: reading.t,
   };
 }

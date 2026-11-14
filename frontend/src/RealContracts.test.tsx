@@ -91,14 +91,16 @@ describe("body follows the Crew record", () => {
   });
 });
 
-describe("review fixes for real replay files", () => {
-  it("skips quarantined Readings: the last released value stays on show", () => {
+describe("real replay file details", () => {
+  it("shows quarantined Readings: Spec 3 holds them while an Alert is open, they are the abnormal values", () => {
     const mission = missionWith([
       { indicator: "heart_rate", value: 70, t: 8 * HOUR },
-      { indicator: "heart_rate", value: 0, t: 9 * HOUR, state: "quarantined" },
+      { indicator: "heart_rate", value: 131, t: 9 * HOUR, state: "quarantined", status: "red" },
     ]);
     render(<App {...mission} bodyScene={fakeBodyScene().factory} />);
-    expect(screen.getByRole("group", { name: "Heart rate" })).toHaveTextContent("70");
+    const hr = screen.getByRole("group", { name: "Heart rate" });
+    expect(hr).toHaveTextContent("131");
+    expect(hr).toHaveAttribute("data-status", "red");
   });
 
   it("ignores another crew member's Alerts", () => {

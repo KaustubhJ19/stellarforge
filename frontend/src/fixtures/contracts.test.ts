@@ -61,3 +61,29 @@ describe.each(crewDocs)("%s", (_name, records) => {
     for (const r of records as unknown as Json[]) expect(problems(crewRecord, r)).toBe("");
   });
 });
+
+/** Spec 3 (backend/baseline_a.py urgency): only a red Acute escalates; emergency is always ACT_NOW. */
+function spec3Urgency(kind: string, status: string): string {
+  if (kind === "emergency") return "ACT_NOW";
+  if (kind === "acute" && status === "red") return "ESCALATE_TO_GROUND";
+  return status === "amber" || status === "red" ? "MONITOR" : "ROUTINE";
+}
+
+describe.each(replayDocs)("%s Alerts as Spec 3 emits them", (_name, raw) => {
+  const alerts = (raw as { events: { type: string; payload: Json }[] }).events
+    .filter((e) => e.type === "alert")
+    .map((e) => e.payload);
+
+  it("has Alerts to check", () => expect(alerts.length).toBeGreaterThan(0));
+
+  it("gives deviation as an object: {sigma, cusum, combined} or {value, bound}", () => {
+    for (const a of alerts) {
+      const keys = Object.keys(a.deviation as Json).sort();
+      expect([["combined", "cusum", "sigma"], ["bound", "value"]]).toContainEqual(keys);
+    }
+  });
+
+  it("sets urgency by Spec 3's rule", () => {
+    for (const a of alerts) expect(a.urgency, String(a.id)).toBe(spec3Urgency(String(a.kind), String(a.status)));
+  });
+});

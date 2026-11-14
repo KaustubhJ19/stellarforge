@@ -19,17 +19,25 @@ const HABITAT = "habitat"; // cabin and dose Readings are the habitat's, not a c
 function day3(crew) {
   const events = [];
   const at = (h) => START + h * HOUR;
-  const reading = (t, indicator, value, unit, source = "sensor", who = crew) =>
+  const reading = (t, indicator, value, unit, source = "sensor", who = crew, state = "released") =>
     events.push({
       t,
       type: "reading",
-      payload: { crew: who, indicator, value, unit, t, source, confidence: 0.9, state: "released" },
+      payload: { crew: who, indicator, value, unit, t, source, confidence: 0.9, state },
     });
-  const alert = (h, id, kind, indicator, deviation, status, urgency, likely_causes = []) =>
+  // As Spec 3 (backend/baseline_a.py) emits them: deviation is an object, urgency follows its rule.
+  const urgency = (kind, status) =>
+    kind === "emergency" ? "ACT_NOW"
+      : kind === "acute" && status === "red" ? "ESCALATE_TO_GROUND"
+      : status === "amber" || status === "red" ? "MONITOR" : "ROUTINE";
+  const alert = (h, id, kind, indicator, sigma, status, likely_causes = []) =>
     events.push({
       t: at(h),
       type: "alert",
-      payload: { id, kind, crew, indicator, deviation, status, urgency, likely_causes, t: at(h) },
+      payload: {
+        id, kind, crew, indicator, status, urgency: urgency(kind, status), likely_causes, t: at(h),
+        deviation: { sigma, cusum: kind === "drift" ? +(sigma * 3).toFixed(1) : null, combined: +(sigma * 0.6).toFixed(2) },
+      },
     });
 
   // Daily wearable values at 07:00 (as tools/crew_replays.py writes them).
@@ -42,7 +50,8 @@ function day3(crew) {
   for (let h = 0; h < 24; h++) {
     // Heart rate: normal, then an acute spike at 14:00.
     const hr = h === 14 ? 128 : h === 15 ? 96 : 62 + ((h * 7) % 9);
-    reading(at(h), "heart_rate", hr, "bpm");
+    // Spec 3 holds Readings while the heart-rate Alert is open (14:00 to 16:00): "quarantined".
+    reading(at(h), "heart_rate", hr, "bpm", "sensor", crew, h === 14 || h === 15 ? "quarantined" : "released");
     reading(at(h), "respiration_rate", 14 + (h % 3), "1/min");
     reading(at(h), "spo2", h % 2 ? 0.98 : 0.97, "fraction");
     reading(at(h), "radiation_dose_accumulated", +(41.2 + h * 0.03).toFixed(2), "mGy", "sensor", HABITAT);
@@ -55,15 +64,15 @@ function day3(crew) {
   reading(at(8), "mood", 3, "score 1-5", "manual");
 
   // Alerts as Spec 3 would emit them (placeholders, not medical content).
-  alert(11, "a-drift-stress", "drift", "stress", 1.8, "amber", "MONITOR", [
+  alert(11, "a-drift-stress", "drift", "stress", 1.8, "amber", [
     { indicator: "sleep_duration", direction: "down", note: "Example: shorter sleep over three days" },
   ]);
-  alert(14, "a-acute-hr", "acute", "heart_rate", 4.2, "red", "ACT_NOW");
-  alert(15, "a-acute-hr-2", "acute", "heart_rate", 2.1, "amber", "MONITOR");
+  alert(14, "a-acute-hr", "acute", "heart_rate", 5.4, "red");
+  alert(15, "a-acute-hr-2", "acute", "heart_rate", 4.1, "amber");
   // ASSUMED: Spec 3 clears an Indicator with a green Alert.
-  alert(16, "a-acute-hr-3", "acute", "heart_rate", 0.4, "green", "ROUTINE");
-  alert(8, "a-drift-bone", "drift", "bone_density", 1.2, "amber", "ROUTINE");
-  alert(18, "a-drift-fatigue", "drift", "fatigue", 1.6, "amber", "MONITOR");
+  alert(16, "a-acute-hr-3", "acute", "heart_rate", 0.4, "green");
+  alert(8, "a-drift-bone", "drift", "bone_density", 1.2, "amber");
+  alert(18, "a-drift-fatigue", "drift", "fatigue", 1.6, "amber");
 
   // APP-SIDE: today's checks (no contract carries tasks yet).
   for (const [id, title, done] of [

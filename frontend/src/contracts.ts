@@ -38,13 +38,21 @@ export interface LikelyCause {
   note: string;
 }
 
+/**
+ * Alert.deviation as Spec 3 sends it (the schema leaves it open): drift and acute Alerts
+ * carry sigmas and the CuSum level; Safety-bound Alerts carry the value and the bound.
+ */
+export type Deviation =
+  | { sigma: number; cusum: number | null; combined: number | null }
+  | { value: number; bound: Record<string, unknown> };
+
 export interface Alert {
   schema_version?: string;
   id: string;
   kind: AlertKind;
   crew: string;
   indicator: IndicatorId;
-  deviation: number;
+  deviation: Deviation;
   status: Status;
   urgency: Urgency;
   likely_causes: LikelyCause[];
