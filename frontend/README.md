@@ -78,10 +78,14 @@ The app reads Spec 1's frozen shapes: the JSON Schemas in `contracts/` at the re
   its `related_indicators`. Fields in another shape read "Not added yet."
 - **Habitat Readings** (`radiation_dose_*`, `cabin_*`) stay out of the health summaries; the
   mission bar shows `radiation_dose_accumulated`.
-- **Readiness forecast** (`forecast` events, un-contracted: Spec 3's proposed recorded
-  output) shows tomorrow's readiness with its range and label. "Why this forecast?" draws
-  what drove the general model as a violet heat-map on the body (`--explain`, never a Status
-  colour) with the drivers in words; it says the personal adjustment comes on top.
+- **Readiness forecast** (`forecast` events, Spec 3's recorded output, checked against Spec 1's
+  provisional `contracts/provisional/forecast.schema.json`) shows tomorrow's readiness with its
+  range and label. "Why this forecast?" draws what drove the general model as a violet
+  heat-map on the body (`--explain`, never a Status colour) with the drivers in words; it says
+  the personal adjustment comes on top.
+- **Stand test** compares with the astronaut's own pre-flight test, then the Apollo AP005
+  after-landing group shift, read from Spec 3's `content/profiles/detection-cut-offs.json`
+  (`return_to_gravity_shift`) with its label and source.
 - **CO₂ banner** shows while the latest cabin CO₂ is over 5,000 ppm, a team value (not yet
   researched) kept in `src/teamValues.ts` and labelled on screen.
 - **Tasks** (`task` events) are app-side; no contract carries them yet. `trigger` and

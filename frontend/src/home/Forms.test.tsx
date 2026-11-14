@@ -62,6 +62,11 @@ describe("stand test form", () => {
     expect(dialog).toHaveTextContent("group averages after landing, not limits");
   });
 
+  it("takes the Apollo shift and its source from Spec 3's content file, not a copy", async () => {
+    const { dialog } = await logStandTest();
+    expect(dialog).toHaveTextContent("NASA Apollo AP005, Table 6, first postflight minus preflight");
+  });
+
   it("says so when there is no pre-flight test on record", async () => {
     const { dialog } = await logStandTest();
     const row = within(dialog).getByRole("row", { name: /Standing systolic BP/ });

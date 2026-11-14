@@ -84,10 +84,10 @@ export interface Task {
 }
 
 /**
- * UN-CONTRACTED: tomorrow's readiness forecast (0-10) as Spec 3 proposes to record it into
- * replay files, one per crew per day (their message of 2026-11-15). `base` + the drivers =
- * `population`, the general model's forecast; `value` adds `personal_correction` on top.
- * Replace with the Forecast schema if the data lead adds one.
+ * PROVISIONAL: tomorrow's readiness forecast (0-10), one per crew per day, as Spec 3 records
+ * it into replay files. Mirrors Spec 1's contracts/provisional/forecast.schema.json (not one
+ * of the seven frozen contracts; needs team agreement). `base` + the drivers = `population`,
+ * the general model's forecast; `value` adds `personal_correction` on top.
  */
 export interface Forecast {
   crew: string;
@@ -96,7 +96,7 @@ export interface Forecast {
   low: number;
   high: number;
   /** "" (normal), "learning your pattern" (range is the whole 0-10) or "re-measure" (range too wide). */
-  label: string | null;
+  label: string;
   population: number;
   personal_correction: number;
   base: number;
@@ -106,8 +106,8 @@ export interface Forecast {
 
 /**
  * Event types the web app reads. A ReplayFile may carry others (trigger, crew_report);
- * the app ignores them. "alert" events carry Spec 3's Alerts; "forecast" is Spec 3's proposed
- * recorded event (un-contracted); "task" is APP-SIDE.
+ * the app ignores them. "alert" events carry Spec 3's Alerts; "forecast" is Spec 3's
+ * recorded event (provisional schema); "task" is APP-SIDE.
  */
 export type ReplayEvent =
   | { t: MissionTime; type: "reading"; payload: Reading }
