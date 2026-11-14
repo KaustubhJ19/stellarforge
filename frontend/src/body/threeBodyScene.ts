@@ -47,8 +47,8 @@ export const threeBodyScene: BodySceneFactory = (host, events) => {
   controls.enablePan = false;
 
   const status: Record<Status, THREE.Color> = {
-    green: cssColor("--status-green", "#3ccf7a"),
-    amber: cssColor("--status-amber", "#f5b53d"),
+    green: cssColor("--status-green", "#29c0b1"),
+    amber: cssColor("--status-amber", "#ffcc33"),
     red: cssColor("--status-red", "#ff5a5a"),
   };
   // Read theme colours once; apply() runs on every scrub step.

@@ -152,6 +152,19 @@ test.describe("home screen in a real browser, no service", () => {
     await expect(page.getByText("Could not load replay file: missing crew, profile, events")).toBeVisible();
   });
 
+  test("a replay address that returns a web page gets a plain explanation", async ({ page }) => {
+    await page.goto("/?replay=/does-not-exist.json"); // the static server answers with index.html
+    await expect(page.getByText(/returned a web page, not a replay file/)).toBeVisible();
+  });
+
+  test("a replay from another address is refused without being fetched", async ({ page }) => {
+    const offOrigin: string[] = [];
+    page.on("request", (r) => !r.url().startsWith("http://localhost") && offOrigin.push(r.url()));
+    await page.goto("/?replay=https://example.com/fake.json");
+    await expect(page.getByText("replay files must come from this app's own address")).toBeVisible();
+    expect(offOrigin).toEqual([]);
+  });
+
   test("a missing replay file shows a message", async ({ page }) => {
     await page.goto("/?replay=/nope.json");
     await expect(page.getByText(/Could not load replay file/)).toBeVisible();

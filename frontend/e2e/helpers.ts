@@ -42,8 +42,8 @@ export async function statusPixels(page: Page) {
       let h = max === r ? ((g - b) / l) % 6 : max === g ? (b - r) / l + 2 : (r - g) / l + 4;
       h *= 60;
       if (h < 0) h += 360;
-      if (h >= 125 && h <= 160) counts.green++;
-      else if (h >= 32 && h <= 50) counts.amber++;
+      if (h >= 160 && h <= 185) counts.green++; // teal-green #29c0b1
+      else if (h >= 38 && h <= 56) counts.amber++; // #ffcc33
       else if (h <= 10 || h >= 350) counts.red++;
     }
     return counts;

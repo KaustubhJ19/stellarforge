@@ -2,7 +2,7 @@ import { Component, StrictMode, useEffect, useState, type ReactNode } from "reac
 import { createRoot } from "react-dom/client";
 import type { ReplayFile } from "./contracts";
 import { App } from "./App";
-import { parseReplay } from "./replay/parse";
+import { loadReplay } from "./replay/load";
 import marsDay3 from "./fixtures/mars-day3.replay.json";
 import "./theme.css";
 
@@ -22,7 +22,7 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
 
 /**
  * The app never talks to the service: it renders a replay file. By default the
- * bundled Mars fixture; `?replay=<url>` loads any static replay file instead.
+ * bundled Mars fixture; `?replay=<path>` loads another replay file served by the app itself.
  */
 function Root() {
   const url = new URLSearchParams(location.search).get("replay");
@@ -31,14 +31,10 @@ function Root() {
 
   useEffect(() => {
     if (!url) return;
-    fetch(url)
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`${r.status} ${r.statusText}`))))
-      .then((json: unknown) => {
-        const parsed = parseReplay(json);
-        if (parsed.ok) setReplay(parsed.replay);
-        else setError(parsed.error);
-      })
-      .catch((e: Error) => setError(e.message));
+    void loadReplay(url, location.origin).then((result) => {
+      if (result.ok) setReplay(result.replay);
+      else setError(result.error);
+    });
   }, [url]);
 
   if (error) return <p className="load-message">Could not load replay file: {error}</p>;
