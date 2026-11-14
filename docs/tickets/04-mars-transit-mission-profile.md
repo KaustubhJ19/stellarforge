@@ -11,4 +11,4 @@
 - [x] The 28.5 min delay is labelled a team value that exceeds NASA's stated 20 min maximum
 - [x] Linter rule added: fails on any profile value that is neither sourced nor labelled (test d)
 - [x] Linter green
-- [ ] (P1) Station, Moon base, Mars base and rover profiles only if time allows. Not done
+- [ ] (P1) Station, Moon base, Mars base and rover profiles only if time allows. Station (ISS) done: content/profiles/station.json, 8 of 10 values NASA-sourced, tests in tools/tests/test_station_profile.py (requested by Spec 2 for the profile switcher). Moon base, Mars base and rover not done

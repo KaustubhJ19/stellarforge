@@ -1,0 +1,64 @@
+{
+  "id": "station",
+  "name": "Space station (ISS)",
+  "gravity": {
+    "value": "weightless",
+    "status": "sourced",
+    "source": "https://www.nasa.gov/hrp/hazard-gravity-fields/",
+    "note": "NASA HRP gravity page: research on the space station helps manage the health effects of microgravity."
+  },
+  "radiation_rate": {
+    "value": 0.5,
+    "unit": "mSv/day",
+    "status": "sourced",
+    "source": "https://www.nasa.gov/wp-content/uploads/2023/10/lsah-newsletter-2023-vol28-issue2.pdf",
+    "note": "NASA LSAH Newsletter, Oct 2023, Vol 28 Issue 2, p. 6: ISS astronauts receive doses in the order of 0.5 mSv/day. Order of magnitude; it varies with solar activity and shielding."
+  },
+  "comm_delay": {
+    "value": 0,
+    "unit": "min one way",
+    "status": "sourced",
+    "source": "https://www.nasa.gov/missions/station/the-space-network-cell-towers-for-astronauts/",
+    "note": "NASA: the relay through the Space Network happens in milliseconds, so there is no noticeable delay. Shown as 0 min to compare with the Mars profile."
+  },
+  "evacuation": {
+    "value": "return to Earth within 24 hours of deciding to return early",
+    "status": "sourced",
+    "source": "https://ntrs.nasa.gov/api/citations/20170001943/downloads/20170001943.pdf",
+    "note": "NASA CCT-REQ-1130 Rev E-1 (ISS Crew Transportation and Services Requirements, 2016), p. 6: the crew will return to Earth within 24 hours of a declaration of an intention to return early, for example for a medical event. A requirement on the crew vehicle, not a promise for every case."
+  },
+  "medical_kit": {
+    "value": ["on-board medical kit (contents not listed)"],
+    "status": "not confirmed: team value",
+    "note": "No public kit list was read for this profile. Contents are not listed so no drug name appears in content."
+  },
+  "exercise_kit": {
+    "value": ["T2/COLBERT treadmill", "CEVIS cycle ergometer", "ARED resistive exercise device"],
+    "status": "sourced",
+    "source": "https://www.nasa.gov/reference/jsc-exercise-countermeasures/",
+    "note": "Devices NASA JSC lists for the ISS."
+  },
+  "crew_size": {
+    "value": 7,
+    "status": "sourced",
+    "source": "https://www.nasa.gov/international-space-station/space-station-facts-and-figures/",
+    "note": "NASA: an international crew of seven people live and work on the station."
+  },
+  "duration": {
+    "value": "about 6 months",
+    "status": "sourced",
+    "source": "https://www.nasa.gov/blogs/spacestation/2024/03/05/four-crew-8-members-enter-station-for-six-month-mission/",
+    "note": "NASA Crew-8: a six-month mission. Some crew stay about a year."
+  },
+  "dust": {
+    "value": "none",
+    "status": "not confirmed: team value",
+    "note": "Planetary dust is a surface hazard; no source read states the station value."
+  },
+  "closed_habitat": {
+    "value": true,
+    "status": "sourced",
+    "source": "https://www.nasa.gov/hrp/hazards/",
+    "note": "NASA HRP hazards: isolation and confinement, and hostile closed environments inside a spacecraft."
+  }
+}
