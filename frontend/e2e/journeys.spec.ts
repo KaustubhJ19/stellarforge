@@ -137,6 +137,10 @@ test.describe("home screen in a real browser, no service", () => {
     await details.click();
     const card = page.getByRole("dialog", { name: "Heart rate" });
     await expect(card).toContainText("70 bpm");
+    // Spec 5's structured card, bundled from content/cards/heart_rate.json.
+    await expect(card.getByRole("region", { name: "Why it matters" })).toContainText("Risk of Cardiovascular Adaptations");
+    await expect(card.getByRole("region", { name: "If abnormal" }).getByRole("term")).toHaveCount(4);
+    await card.screenshot({ path: "test-results/card-heart-rate.png" });
     for (let i = 0; i < 4; i++) {
       await page.keyboard.press("Tab");
       expect(await card.evaluate((c) => c.contains(document.activeElement))).toBe(true);

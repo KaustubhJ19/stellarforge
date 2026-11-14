@@ -9,17 +9,22 @@ export function MissionBar({ replay, state }: { replay: ReplayFile; state: Missi
     <section aria-label="Mission" className="mission-bar">
       <Item label="Mission day" value={`Day ${state.missionDay}`} />
       <Item label="Profile" value={profile.name} />
-      <Item label="Ground delay" value={profile.groundDelayMin === null ? "Not known" : `${profile.groundDelayMin} min`} />
+      <Item
+        label="Ground delay"
+        value={profile.delay ?? "Not known"}
+        note={profile.delayNote ?? undefined}
+      />
       <Item label="Radiation dose" value={dose ? `${dose.value} ${dose.unit}` : "No reading"} />
     </section>
   );
 }
 
-function Item({ label, value }: { label: string; value: string }) {
+function Item({ label, value, note }: { label: string; value: string; note?: string }) {
   return (
     <div className="mission-bar__item">
       <span className="mission-bar__label">{label}</span>
       <span className="mission-bar__value">{value}</span>
+      {note && <span className="mission-bar__note">{note}</span>}
     </div>
   );
 }

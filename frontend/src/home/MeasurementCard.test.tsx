@@ -5,12 +5,15 @@ import { marsMission } from "../test/replay";
 import { fakeBodyScene } from "../test/fakeBodyScene";
 import type { CardContent } from "../contracts";
 
-// Placeholder text standing in for Spec 5's card content.
+// Placeholder text in Spec 5's structured card shape (content/cards/*.json).
 const heartCard: CardContent = {
   indicator: "heart_rate",
-  how: "HOW placeholder",
-  why: "WHY placeholder",
-  ifAbnormal: "IF-ABNORMAL placeholder",
+  related_indicators: ["resting_heart_rate"],
+  unit: "bpm",
+  how: ["HOW step one", "HOW step two"],
+  why: { text: "WHY placeholder", hrp_risk: "Risk of Placeholder", source: "https://example.org/hrp" },
+  if_abnormal: { now: "NOW placeholder", remeasure: "REMEASURE placeholder", tell_crew: "CREW placeholder", tell_ground: "GROUND placeholder" },
+  space_note: "SPACE placeholder",
   labels: ["Earth reference, no space data"],
   sources: ["SOURCE placeholder"],
 };
@@ -37,18 +40,36 @@ describe("measurement card", () => {
     expect(screen.getByRole("dialog")).toHaveTextContent("Source: Simulated");
   });
 
-  it("renders How, Why and If abnormal from the content", async () => {
+  it("shows How as steps, Why with its NASA risk and space note, and If abnormal in four parts", async () => {
     const card = await openCard("Heart rate");
-    for (const [heading, text] of [
-      ["How it is measured", "HOW placeholder"],
-      ["Why it matters", "WHY placeholder"],
-      ["If abnormal", "IF-ABNORMAL placeholder"],
-    ]) {
-      const section = within(card).getByRole("region", { name: heading });
-      expect(section).toHaveTextContent(text);
-    }
+    const how = within(card).getByRole("region", { name: "How it is measured" });
+    expect(within(how).getAllByRole("listitem").map((li) => li.textContent)).toEqual(["HOW step one", "HOW step two"]);
+    const why = within(card).getByRole("region", { name: "Why it matters" });
+    expect(why).toHaveTextContent("WHY placeholder");
+    expect(why).toHaveTextContent("NASA HRP risk: Risk of Placeholder");
+    expect(why).toHaveTextContent("In space: SPACE placeholder");
+    expect(within(why).getByRole("link", { name: "https://example.org/hrp" })).toHaveAttribute("href", "https://example.org/hrp");
+    const abnormal = within(card).getByRole("region", { name: "If abnormal" });
+    const terms = within(abnormal).getAllByRole("term").map((t) => t.textContent);
+    const defs = within(abnormal).getAllByRole("definition").map((d) => d.textContent);
+    expect(terms).toEqual(["Now", "Measure again", "Tell the crew", "Tell the ground"]);
+    expect(defs).toEqual(["NOW placeholder", "REMEASURE placeholder", "CREW placeholder", "GROUND placeholder"]);
     expect(card).toHaveTextContent("Earth reference, no space data");
     expect(card).toHaveTextContent("SOURCE placeholder");
+  });
+
+  it("says when no NASA HRP risk covers the Indicator, and why", async () => {
+    const uncovered: CardContent = {
+      ...heartCard,
+      why: { text: "WHY", hrp_risk: "uncovered", uncovered_reason: "No HRP risk names this.", source: "x" },
+    };
+    const why = within(await openCard("Heart rate", [uncovered])).getByRole("region", { name: "Why it matters" });
+    expect(why).toHaveTextContent("NASA HRP risk: not covered. No HRP risk names this.");
+  });
+
+  it("uses a card for its related Indicators too (heart rate's card for resting heart rate)", async () => {
+    const card = await openCard("Resting heart rate");
+    expect(within(card).getByRole("region", { name: "Why it matters" })).toHaveTextContent("WHY placeholder");
   });
 
   it("still renders when content is missing", async () => {

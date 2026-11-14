@@ -112,6 +112,10 @@ input:focus-visible {
   min-width: 140px;
 }
 
+.mission-bar__note {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
 .mission-bar__label {
   font-size: var(--font-size-sm);
   color: var(--text-muted);
@@ -747,6 +751,13 @@ h2 {
   stroke: var(--surface);
   stroke-width: 2;
 }
+
+/* Measurement card: structured content */
+.card__steps { margin: 0; padding-left: 1.4em; }
+.card__steps li { margin-bottom: 6px; }
+.card__abnormal { margin: 0; display: grid; gap: 10px; }
+.card__abnormal dt { font-weight: 700; }
+.card__abnormal dd { margin: 2px 0 0; }
 
 /* Measurement card */
 .card-backdrop {

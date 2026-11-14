@@ -48,7 +48,7 @@ export const INDICATORS: Record<IndicatorId, IndicatorInfo> = {
   skin_irritation: { label: "Skin itch or rash", kind: "physical", place: [] },
   tingling: { label: "Tingling or numbness", kind: "physical", place: [] },
   radiation_dose_accumulated: { label: "Radiation dose", kind: "physical", place: "whole-body" },
-  temperature: { label: "Temperature", kind: "physical", place: "whole-body" },
+  body_temperature: { label: "Body temperature", kind: "physical", place: "whole-body" },
   // Mental
   stress: { label: "Stress", kind: "mental", place: ["brain.prefrontal", "brain.amygdala"] },
   fatigue: {
