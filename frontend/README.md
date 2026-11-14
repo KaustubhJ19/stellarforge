@@ -126,7 +126,7 @@ src/
   fixtures/           hand-made Mars replay and Crew records in Spec 1's shapes
 e2e/                  Playwright browser tests
 public/models/        male and female body GLBs built by tools/anatomy/export_body.py (CC BY-SA 4.0)
-public/draco/         vendored Draco decoder so models load offline
+public/draco/         vendored Draco decoder so models load offline (Google, Apache 2.0, see its LICENSE)
 ```
 
 ## Hooks for other specs
