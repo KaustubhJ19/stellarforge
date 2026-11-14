@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "id": "chest-pain",
+  "title": "Chest pain, before any collapse (crew-reported symptom)",
+  "steps": [
+    {
+      "id": "cp-1-ecg",
+      "text": "Record an ECG immediately.",
+      "source": {
+        "guideline": "Byrne RA, Rossello X, et al. 2023 ESC Guidelines for the management of acute coronary syndromes. Eur Heart J. 2023;44(38):3720-3826. doi:10.1093/eurheartj/ehad191 (Earth reference, no space data)",
+        "section": "3.2 Diagnostic tools, Electrocardiogram"
+      },
+      "equipment": [
+        "ECG recorder"
+      ],
+      "rescuers": 1
+    },
+    {
+      "id": "cp-2-defibrillator-ready",
+      "text": "Have defibrillation equipment ready: everyone caring for a patient with suspected acute coronary syndrome should have access to it.",
+      "source": {
+        "guideline": "Byrne RA, Rossello X, et al. 2023 ESC Guidelines for the management of acute coronary syndromes. Eur Heart J. 2023;44(38):3720-3826. doi:10.1093/eurheartj/ehad191 (Earth reference, no space data)",
+        "section": "4.1 Pre-hospital logistics of care"
+      },
+      "equipment": [
+        "automated external defibrillator (AED)",
+        "self-adhesive defibrillation pads"
+      ],
+      "rescuers": 1
+    },
+    {
+      "id": "cp-3-restrain",
+      "text": "A defibrillator should only be used on a patient restrained to an electrically isolated, safe surface, such as the Crew Medical Restraint System.",
+      "source": {
+        "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+        "section": "Defibrillation, Recommendation 10 and its rationale"
+      },
+      "equipment": [
+        "Crew Medical Restraint System"
+      ],
+      "rescuers": 1
+    },
+    {
+      "id": "cp-4-mission-control",
+      "text": "Inform Mission Control of the ongoing medical emergency.",
+      "source": {
+        "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+        "section": "Telemedicine, rationale for Recommendation 21"
+      },
+      "equipment": [
+        "communication link to Mission Control"
+      ],
+      "rescuers": 1
+    },
+    {
+      "id": "cp-5-medication",
+      "text": "Medication: per flight surgeon / onboard medical checklist.",
+      "source": {
+        "guideline": "team rule (Spec 5): medication stays with the flight surgeon; protocols never name a drug or dose",
+        "section": "Spec 5, Protocol content rules"
+      },
+      "equipment": [],
+      "rescuers": 1
+    }
+  ]
+}

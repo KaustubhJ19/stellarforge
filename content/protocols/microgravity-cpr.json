@@ -4,11 +4,159 @@
   "title": "CPR in microgravity (weightless only; see coverage.json for each environment)",
   "steps": [
     {
-      "id": "cpr-1-er-compressions",
+      "id": "cpr-1-start",
+      "text": "Start CPR in a crewmember who appears to be in cardiac arrest, even if no defibrillator is available.",
+      "source": {
+        "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+        "section": "Defibrillation, Recommendation 14"
+      },
+      "equipment": [],
+      "rescuers": 1
+    },
+    {
+      "id": "cpr-2-er-compressions",
       "text": "For initial Basic Life Support at the site of the emergency, apply the Evetts-Russomano (ER) method first. If you cannot give adequate chest compressions with ER, switch to the Reverse-Bear-Hug (RBH) method.",
       "source": {
         "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
         "section": "Results and recommendations, Recommendation 2 (one rescuer, no restraint, no equipment: rationale for Recommendation 1)"
+      },
+      "equipment": [],
+      "rescuers": 1
+    },
+    {
+      "id": "cpr-3-hs-on-cmrs",
+      "text": "As soon as the patient is restrained on the Crew Medical Restraint System, give chest compressions with the Handstand method (HS), if the spacecraft dimensions and the rescuer's height allow it.",
+      "source": {
+        "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+        "section": "Results and recommendations, Recommendation 3"
+      },
+      "equipment": [
+        "Crew Medical Restraint System"
+      ],
+      "rescuers": 1
+    },
+    {
+      "id": "cpr-4-restrained-alternative",
+      "text": "If the HS method seems impossible, use restrained CPR in the standard or the straddling position.",
+      "source": {
+        "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+        "section": "Results and recommendations, Recommendation 4"
+      },
+      "equipment": [
+        "Crew Medical Restraint System"
+      ],
+      "rescuers": 1
+    },
+    {
+      "id": "cpr-5-accd",
+      "text": "An automated chest compression device could be used on a restrained patient, if available. Installing it should not delay high-quality chest compressions.",
+      "source": {
+        "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+        "section": "Results and recommendations, Recommendation 5"
+      },
+      "equipment": [
+        "automated chest compression device (if available)",
+        "Crew Medical Restraint System"
+      ],
+      "rescuers": 1
+    },
+    {
+      "id": "cpr-6-aed",
+      "text": "Use the AED only when the patient is restrained to an electrically isolated, safe surface such as the Crew Medical Restraint System. Use self-adhesive defibrillation pads.",
+      "source": {
+        "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+        "section": "Defibrillation, Recommendations 10 and 11"
+      },
+      "equipment": [
+        "automated external defibrillator (AED)",
+        "self-adhesive defibrillation pads",
+        "Crew Medical Restraint System"
+      ],
+      "rescuers": 1
+    },
+    {
+      "id": "cpr-7-defibrillate",
+      "text": "Defibrillation should take place when appropriate, even if survival is likely to be reduced.",
+      "source": {
+        "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+        "section": "Defibrillation, Recommendation 15"
+      },
+      "equipment": [
+        "automated external defibrillator (AED)",
+        "self-adhesive defibrillation pads",
+        "Crew Medical Restraint System"
+      ],
+      "rescuers": 1
+    },
+    {
+      "id": "cpr-8-airway-gate",
+      "text": "Manage the airway only if at least two rescuers are present and the patient has been restrained.",
+      "source": {
+        "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+        "section": "Abstract (Results)"
+      },
+      "equipment": [
+        "Crew Medical Restraint System"
+      ],
+      "rescuers": 2
+    },
+    {
+      "id": "cpr-9-supraglottic",
+      "text": "If no rescuer with extensive training in tracheal intubation is present, use a second-generation supraglottic airway device for airway management. Keep a manual suction device ready.",
+      "source": {
+        "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+        "section": "Airway management, Recommendations 6 and 9"
+      },
+      "equipment": [
+        "second-generation supraglottic airway device",
+        "manual suction device",
+        "Crew Medical Restraint System"
+      ],
+      "rescuers": 2
+    },
+    {
+      "id": "cpr-10-intubation",
+      "text": "Tracheal intubation remains the gold standard if a skilled provider performs it. Restrain patient and rescuer on the Crew Medical Restraint System during the attempt. Keep a manual suction device ready.",
+      "source": {
+        "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+        "section": "Airway management, Recommendations 7, 8 and 9"
+      },
+      "equipment": [
+        "tracheal intubation equipment",
+        "manual suction device",
+        "Crew Medical Restraint System"
+      ],
+      "rescuers": 2
+    },
+    {
+      "id": "cpr-11-venous-access",
+      "text": "Attempt venous access only if more than two rescuers are present and high-quality CPR is being performed. Use a peripheral vein first; if that fails, use the intraosseous tibial route.",
+      "source": {
+        "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+        "section": "Intravenous access, Recommendations 16, 17 and 18"
+      },
+      "equipment": [
+        "peripheral venous cannula",
+        "intraosseous access device"
+      ],
+      "rescuers": 3
+    },
+    {
+      "id": "cpr-12-medication",
+      "text": "Medication: per flight surgeon / onboard medical checklist.",
+      "source": {
+        "guideline": "team rule (Spec 5): medication stays with the flight surgeon; protocols never name a drug or dose",
+        "section": "Spec 5, Protocol content rules"
+      },
+      "equipment": [],
+      "rescuers": 1
+    },
+    {
+      "id": "cpr-13-termination",
+      "text": "The crewmember with the highest medical qualification decides whether to stop resuscitation, after consulting telemedicine support. If telemedicine is unavailable or the time delay prevents prompt feedback, they decide alone.",
+      "source": {
+        "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+        "section": "Termination of CPR, Recommendation 22"
       },
       "equipment": [],
       "rescuers": 1

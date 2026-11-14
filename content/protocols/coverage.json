@@ -53,5 +53,48 @@
         ]
       }
     }
+  },
+  "chest-pain": {
+    "source": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y ; Byrne RA, Rossello X, et al. 2023 ESC Guidelines for the management of acute coronary syndromes. Eur Heart J. 2023;44(38):3720-3826. doi:10.1093/eurheartj/ehad191 (Earth reference, no space data)",
+    "environments": {
+      "spacecraft-transit": {
+        "covered": true,
+        "basis": "Hinkelbein 2020 Recommendations 10 and 21 (microgravity); ECG and defibrillator steps are ESC 2023, Earth reference, no space data"
+      },
+      "station": {
+        "covered": true,
+        "basis": "Hinkelbein 2020 Recommendation 10 (microgravity); ECG and defibrillator steps are ESC 2023, Earth reference, no space data"
+      },
+      "moon-base": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "No published space guidance covers partial gravity. The steps here come from a microgravity guideline and an Earth guideline.",
+            "section": "Hinkelbein 2020, Aims and scope; ESC 2023 is terrestrial"
+          }
+        ]
+      },
+      "mars-base": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "No published space guidance covers partial gravity. The steps here come from a microgravity guideline and an Earth guideline.",
+            "section": "Hinkelbein 2020, Aims and scope; ESC 2023 is terrestrial"
+          }
+        ]
+      },
+      "rover": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "No published space guidance covers partial gravity. The steps here come from a microgravity guideline and an Earth guideline.",
+            "section": "Hinkelbein 2020, Aims and scope; ESC 2023 is terrestrial"
+          }
+        ]
+      }
+    }
   }
 }
