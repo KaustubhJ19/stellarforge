@@ -1,0 +1,10 @@
+{
+  "protocol": "stub-protocol",
+  "stub": true,
+  "note": "STUB role map (Rescuer 1 / Rescuer 2). Real map supplied by Spec 5.",
+  "roles": {
+    "stub-1": "R1",
+    "stub-2": "R2",
+    "stub-3": "R2"
+  }
+}

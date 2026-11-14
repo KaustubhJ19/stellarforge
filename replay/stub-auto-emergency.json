@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0.0",
+  "crew": "cmdr",
+  "profile": "stub-mars",
+  "id": "stub-auto-emergency",
+  "stub": true,
+  "note": "Test double for the Spec 1 emergency replay. Pulse-simulated values are estimates, not validated.",
+  "events": [
+    {
+      "t": 0,
+      "type": "reading",
+      "payload": {
+        "crew": "cmdr",
+        "t": 0,
+        "indicator": "heart_rate",
+        "value": 41,
+        "unit": "bpm",
+        "schema_version": "1.0.0",
+        "source": "sim",
+        "confidence": 0.5,
+        "state": "released"
+      }
+    },
+    {
+      "t": 1,
+      "type": "alert",
+      "payload": {
+        "id": "al-1",
+        "kind": "emergency",
+        "crew": "cmdr",
+        "indicator": "STUB-indicator",
+        "deviation": {
+          "sigma": 4.0
+        },
+        "status": "red",
+        "urgency": "ACT_NOW",
+        "likely_causes": [
+          {
+            "indicator": "STUB_indicator",
+            "direction": "down",
+            "note": "STUB cause 1 (suggestion, not diagnosis)"
+          },
+          {
+            "indicator": "STUB_indicator",
+            "direction": "down",
+            "note": "STUB cause 2 (suggestion, not diagnosis)"
+          },
+          {
+            "indicator": "STUB_indicator",
+            "direction": "down",
+            "note": "STUB cause 3 (suggestion, not diagnosis)"
+          }
+        ],
+        "t": 1,
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "t": 1,
+      "type": "trigger",
+      "payload": {
+        "kind": "auto",
+        "crew": "cmdr",
+        "t": 1,
+        "reason": "STUB collapse detected (test double for Spec 3)",
+        "schema_version": "1.0.0"
+      }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# Drug-name deny-list for the content linter (one term per line, case-insensitive).
+# Used ONLY to block content; never displayed to users.
+# Intentionally EMPTY: the real list is supplied by the integration lead (Spec 5).
+# Until then drug names are NOT checked; doses are always checked.

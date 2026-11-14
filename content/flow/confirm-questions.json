@@ -1,0 +1,48 @@
+{
+  "stub": true,
+  "note": "Question wording is a placeholder pending Spec 5 (integration lead).",
+  "patient": [
+    {
+      "id": "status",
+      "text": "Are you OK?",
+      "choices": [
+        {
+          "id": "false_alarm",
+          "label": "I'm OK - false alarm"
+        },
+        {
+          "id": "need_help",
+          "label": "I need help"
+        }
+      ]
+    },
+    {
+      "id": "chest_pain",
+      "text": "Do you have chest pain?",
+      "choices": [
+        {
+          "id": "yes",
+          "label": "Yes"
+        },
+        {
+          "id": "no",
+          "label": "No"
+        }
+      ]
+    }
+  ],
+  "observer": {
+    "id": "responds",
+    "text": "Does the patient respond?",
+    "choices": [
+      {
+        "id": "yes",
+        "label": "Yes, responds"
+      },
+      {
+        "id": "no",
+        "label": "No response"
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "id": "stub-protocol",
+  "title": "STUB protocol — NON-CLINICAL TEST DATA",
+  "stub": true,
+  "steps": [
+    {
+      "id": "stub-1",
+      "text": "STUB step 1. Non-clinical placeholder text for testing the engine.",
+      "source": {
+        "guideline": "STUB-GUIDELINE (not a real source)",
+        "section": "STUB-S1"
+      },
+      "equipment": [],
+      "rescuers": 1
+    },
+    {
+      "id": "stub-2",
+      "text": "STUB step 2. Placeholder that needs stub equipment A.",
+      "source": {
+        "guideline": "STUB-GUIDELINE (not a real source)",
+        "section": "STUB-S2"
+      },
+      "equipment": [
+        "STUB-EQUIP-A"
+      ],
+      "rescuers": 1
+    },
+    {
+      "id": "stub-3",
+      "text": "STUB step 3. Placeholder for a two-rescuer task.",
+      "source": {
+        "guideline": "STUB-GUIDELINE (not a real source)",
+        "section": "STUB-S3"
+      },
+      "equipment": [],
+      "rescuers": 2
+    }
+  ]
+}

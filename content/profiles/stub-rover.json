@@ -1,0 +1,12 @@
+{
+  "id": "stub-rover",
+  "name": "STUB two-person rover profile (test double for Spec 5)",
+  "stub": true,
+  "crew": [
+    "cmdr",
+    "eng"
+  ],
+  "equipment": [],
+  "delay_one_way_s": 1710,
+  "delay_label": "team value: 28.5 min one way / 57 min round trip"
+}

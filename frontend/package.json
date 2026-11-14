@@ -10,6 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:e2e:emergency": "playwright test -c playwright.emergency.config.ts",
+    "lint:content": "python3 ../tools/lint_content.py",
     "audit:a11y": "node scripts/a11y-audit.mjs",
     "dev:female": "node scripts/sync-replays.mjs && vite --open \"/?replay=/replay/mars-day3-female.json&cabin=/replay/iss-cabin-day3.json\"",
     "dev:real": "node scripts/sync-replays.mjs && vite --open \"/?replay=/replay/shared/crew-A.json&cabin=/replay/shared/iss-cabin-dose-RR-1.json\"",
