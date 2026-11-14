@@ -49,3 +49,22 @@ From the AI / detection lead, 2026-11-15. Branch `spec-3-detection-baseline` (in
 - **Names confirmed.** Detection reads `glucose` (mg/dL, from `tools/inspiration4_labs.py`) and `body_temperature` (°C, once the Pulse replay has it) under those names. A glucose Reading of 36 mg/dL gives a red Safety-bound Alert.
 - **The shift does not move the Safety bound.** `expected_shift` only changes the Drift check against the Anchor. The 38 °C bound stays absolute, so healthy crew at about 37.8 °C in flight sit just under it. Raise the high bound or accept this; your call.
 - **Shift now builds up from launch.** Applied in full on day 0, the +1 °C shift made a normal early-mission 36.8 °C look 1 °C low and raised a false drift alert after 3 days. Added `expected_shift_ramp_days` = 75 (Stahn 2017, "2.5 months") to the content file: the shift grows in a straight line from 0 at launch. Mission time `t` is taken as seconds from launch. Your content linter is clean on the file.
+
+## Recorded replays (Spec 2, Spec 5, data lead)
+
+`tools/record_replays.py` plays the shared replays through detection and Forecast B and writes them to `replay/recorded/` (same file names). Re-run after any replay or cut-off change:
+
+```bash
+python tools/record_replays.py --pmdata <PMData extracted folder> replay/crew-A.json replay/crew-B.json replay/emergency-crew-B.json replay/crew-C.json replay/crew-D.json
+```
+
+- **Added events** sit right after the event that caused them: `alert`, `trigger`, `reading_state` (quarantined, released or event) and `forecast` (provisional schema). An added event's `t` is its cause's time, so the file stays in time order. A Reading released a day later keeps its own time in `payload.t`: match it to the original Reading by `payload.t` and `payload.indicator`.
+- **Crew B and its emergency** are played through one detection, so the emergency is judged against crew B's normal days.
+- **Forecasts:** one per crew per day once all seven answers have arrived. Each crew's model is trained on PMData people other than that crew's own participant. A normal day's forecast has no label from the model, so the file says "estimate, not validated" (the provisional schema needs text).
+- **Without PMData** (`--pmdata` left out), the files have no forecast events.
+
+### Found while recording
+
+- **New Anchors raised false alerts.** The shared crew records now have `steps` and `soreness` Anchors. Soreness had no minimum spread (B's spread is near 0) and steps swings by thousands a day. Added floors to the content file (soreness 1, like the other 1-5 scores; steps 4000, team value). False alerts are now 0.13 per crew-day (was 0.11 before these Anchors); `docs/accuracy.md` is updated.
+- **"re-measure" on almost every day for crews A, C and D.** The conformal range has one fixed width per model, so the 6-point rule is all-or-nothing per crew: B's model is under 6 points, A, C and D's are over. To be fixed in Forecast B (a range that varies by day, or a different rule); not changed yet.
+- **The emergency's only likely cause is `steps`.** Crew B has no planted drift, so nothing else is more than 1 Anchor spread off on that day. It is labelled "suggestion, not diagnosis" but looks odd in a demo. Crew A's drift is still +6 bpm (see item 2 for the data lead above).

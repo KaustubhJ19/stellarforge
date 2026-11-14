@@ -2,7 +2,7 @@
 
 Message shape (backend/service.py): {"t": <mission seconds>, "type": <str>, "payload": <obj>}.
 Out: "alert" (Alert), "trigger" (Trigger, kind auto) and "reading_state" (Reading with its new state).
-Golden replays: the generated crew replays (replay/generated/, git-ignored; run tools/crew_replays.py)
+Golden replays: the shared crew replays in replay/ (Spec 1, tracked in git)
 and an emergency stream in the exact format of tools/emergency_replay.py (Pulse needs Windows).
 Run the false-alert report: PYTHONPATH=. python tools/test_detection.py
 """
@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "contracts"))
 from validate import validate  # noqa: E402
 
-GENERATED = ROOT / "replay" / "generated"
+GENERATED = ROOT / "replay"  # the shared, tracked crew replays (Spec 1)
 CONTRACT = {"alert": "Alert", "trigger": "Trigger", "reading_state": "Reading"}
 # Starting values from docs/cut-offs-needed.md (checked sources); team values until content/ holds them.
 CUTOFFS = {"cusum_k": 0.5, "drift_amber": 4, "drift_red": 8, "acute_amber": 3, "acute_red": 4, "min_window": 7,
@@ -143,7 +143,7 @@ def false_alert_report(cutoffs=CUTOFFS, bounds=()):
     return out, {"crew_days": round(days), **by_kind, "alerts_per_crew_day": len(alerts) / days}
 
 
-@pytest.mark.skipif(not (GENERATED / "crew-A.json").exists(), reason="crew replays not generated (tools/crew_replays.py)")
+@pytest.mark.skipif(not (GENERATED / "crew-A.json").exists(), reason="shared crew replays missing (replay/)")
 def test_crew_replays_give_only_contract_valid_messages():
     out, report = false_alert_report()
     assert_valid(out)
