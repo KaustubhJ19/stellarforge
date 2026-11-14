@@ -34,9 +34,10 @@ export function buildBodyView(input: {
   layers: Record<LayerId, LayerView>;
   glow: Glow;
   heartRate: number | null;
+  breathRate: number | null;
   insight: IndicatorId | null;
 }): BodyView {
-  const { focus, layers, glow, heartRate, insight } = input;
+  const { focus, layers, glow, heartRate, breathRate, insight } = input;
   const ids = insight ? insightStructures(insight) : [];
 
   if (ids.length === 0) {
@@ -48,6 +49,7 @@ export function buildBodyView(input: {
       ),
       wholeBody: glow.wholeBody,
       heartRate,
+      breathRate,
     };
   }
 
@@ -79,5 +81,6 @@ export function buildBodyView(input: {
     ),
     wholeBody: null,
     heartRate,
+    breathRate,
   };
 }
