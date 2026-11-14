@@ -20,9 +20,16 @@ def stream(det, readings):
 
 def test_shockable_or_non_perfusing_rhythm_raises_an_auto_trigger_at_once():
     for rhythm in ("VT", "VF", "PEA", "asystole"):
-        found = stream(AutoDetect("C001", ETH), [(0, "rhythm", "sinus"), (5, "rhythm", rhythm)])
+        found = stream(AutoDetect("C001", ETH), [(0, "cardiac_rhythm", "sinus"), (5, "cardiac_rhythm", rhythm)])
         assert len(found) == 1
         assert found[0]["kind"] == "auto" and found[0]["t"] == 5 and rhythm in found[0]["reason"]
+
+
+@pytest.mark.parametrize("pulse_name,short", [("UnstableVentricularTachycardia", "VT"),
+                                               ("CoarseVentricularFibrillation", "VF"), ("Asystole", "asystole")])
+def test_pulse_rhythm_names_are_understood(pulse_name, short):
+    found = stream(AutoDetect("C001", ETH), [(0, "cardiac_rhythm", "SinusTachycardia"), (5, "cardiac_rhythm", pulse_name)])
+    assert len(found) == 1 and f"rhythm {short}" in found[0]["reason"]
 
 
 def test_normal_stream_raises_nothing():
@@ -49,7 +56,7 @@ def test_extreme_heart_rate_with_normal_pressure_is_not_enough():
 
 
 def test_manual_and_auto_triggers_have_the_same_shape():
-    auto = stream(AutoDetect("C001", ETH), [(5, "rhythm", "VF")])[0]
+    auto = stream(AutoDetect("C001", ETH), [(5, "cardiac_rhythm", "VF")])[0]
     manual = manual_trigger("C001", 5, "Emergency button")
     assert set(auto) == set(manual) == {"kind", "crew", "t", "reason", "confirmed"}
     assert manual["kind"] == "manual" and manual["confirmed"] is None
