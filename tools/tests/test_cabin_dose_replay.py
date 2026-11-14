@@ -90,7 +90,71 @@ def test_t_is_seconds_since_the_first_telemetry_sample(data):
 
 def test_ground_control_series_are_not_included(data):
     assert all(r["value"] != 1 for r in readings(build_replay(data)))
-    assert len(readings(build_replay(data))) == 2 * 3 + 1 * 4
+    original = [r for r in readings(build_replay(data)) if not r["indicator"].startswith("cabin_pco2")]
+    assert len(original) == 2 * 3 + 1 * 4
+
+
+# ---- derived CO2 partial pressure (NASA-STD-3001 V2 6004 limits the 1-h average ppCO2 to 3 mmHg) ----
+
+def co2_series(values, start="2014-09-20 00:00:00", step_min=5, times=None):
+    import datetime as dt
+    t0 = dt.datetime.fromisoformat(start)
+    stamps = times or [(t0 + dt.timedelta(minutes=step_min * i)).strftime("%Y-%m-%d %H:%M:%S") for i in range(len(values))]
+    n = len(values)
+    return parse_dashboard(dashboard_html(
+        {"time": stamps, "temperature_iss": [None] * n, "rh_iss": [None] * n, "co2_iss": values, "milestones": {}},
+        {"time": [], "gcr": [], "saa": [], "total": [], "accumulated": [], "milestones": {}}))
+
+
+def series(replay, indicator):
+    return [(r["t"], r["value"]) for r in readings(replay) if r["indicator"] == indicator]
+
+
+def test_pco2_is_ppm_times_iss_nominal_pressure(data):
+    pco2 = series(build_replay(data), "cabin_pco2")
+    assert pco2 == [(0, round(2641 * 760 / 1e6, 4)), (300, round(2650 * 760 / 1e6, 4))]
+    r = next(r for r in readings(build_replay(data)) if r["indicator"] == "cabin_pco2")
+    assert r["unit"] == "mmHg" and r["source"] == "sensor"
+
+
+def test_one_hour_average_needs_at_least_9_of_12_samples():
+    replay = build_replay(co2_series([3947] * 12))  # 3947 ppm at 760 mmHg = 3.0 mmHg
+    avg = series(replay, "cabin_pco2_1h")
+    assert [t for t, _ in avg] == [8 * 300, 9 * 300, 10 * 300, 11 * 300]  # from the 9th sample on
+    assert all(v == pytest.approx(3947 * 760 / 1e6, abs=1e-4) for _, v in avg)
+
+
+def test_one_hour_average_is_a_trailing_window():
+    replay = build_replay(co2_series([2000] * 12 + [4000] * 12))
+    avg = dict(series(replay, "cabin_pco2_1h"))
+    assert avg[23 * 300] == pytest.approx(4000 * 760 / 1e6, abs=1e-4)   # only the last hour counts
+    assert avg[17 * 300] == pytest.approx((6 * 2000 + 6 * 4000) / 12 * 760 / 1e6, abs=1e-4)
+
+
+def test_a_gap_suppresses_the_one_hour_average_instead_of_faking_it():
+    import datetime as dt
+    t0 = dt.datetime(2014, 9, 20)
+    minutes = [5 * i for i in range(12)] + [60 + 40 + 5 * i for i in range(12)]  # 40-min gap after the first hour
+    times = [(t0 + dt.timedelta(minutes=m)).strftime("%Y-%m-%d %H:%M:%S") for m in minutes]
+    replay = build_replay(co2_series([3000] * 24, times=times))
+    avg_t = {t for t, _ in series(replay, "cabin_pco2_1h")}
+    assert 105 * 60 not in avg_t           # just after the gap: too few samples in the last hour
+    assert (60 + 40 + 55) * 60 in avg_t    # a full hour after the gap again
+
+
+def test_missing_co2_gives_no_pco2():
+    replay = build_replay(co2_series([None, 2650]))
+    assert [t for t, _ in series(replay, "cabin_pco2")] == [300]
+
+
+def test_source_record_documents_the_pressure_assumption(data):
+    rec = source_record(data, raw_bytes=b"", url="u", downloaded="d")
+    d = rec["derived"]
+    assert d["pressure_mmHg"] == 760 and d["pressure_psia"] == 14.7
+    assert d["window_s"] == 3600 and d["min_samples"] == 9
+    assert "V2 6004" in d["limit_reference"]
+    assert rec["units"]["cabin_pco2"] == "mmHg" and rec["units"]["cabin_pco2_1h"] == "mmHg"
+    assert any("not the mission profile" in n for n in rec["notes"])
 
 
 def test_missing_values_are_skipped_not_filled():
@@ -144,7 +208,7 @@ def test_command_line_writes_replay_and_source_record(tmp_path):
     replay = json.loads((out / "iss-cabin-dose-RR-X.json").read_text(encoding="utf-8"))
     validate("ReplayFile", replay)
     rec = json.loads((out / "iss-cabin-dose-RR-X.source.json").read_text(encoding="utf-8"))
-    assert rec["readings"] == len(replay["events"]) == 10
+    assert rec["readings"] == len(replay["events"]) == 10 + 2  # + one cabin_pco2 per CO2 sample (no 1-h yet)
 
 
 @pytest.mark.skipif(not REAL.exists(), reason="real EDA download not present (data/ is git-ignored)")
@@ -152,6 +216,15 @@ def test_real_rr1_download_builds_a_valid_complete_replay():
     data = parse_dashboard(REAL.read_text(encoding="utf-8"))
     replay = build_replay(data)
     validate("ReplayFile", replay)
-    assert len(replay["events"]) == 12087 * 3 + 39 * 4
+    by = {}
+    for r in readings(replay):
+        by.setdefault(r["indicator"], []).append(r)
+    assert sum(len(v) for k, v in by.items() if not k.startswith("cabin_pco2")) == 12087 * 3 + 39 * 4
+    assert len(by["cabin_pco2"]) == 12087
+    # 1-h averages exist only where the window holds 9+ of 12 samples (the data has two long gaps)
+    assert 12000 < len(by["cabin_pco2_1h"]) < 12087
+    over = sum(r["value"] > 3.0 for r in by["cabin_pco2_1h"])
+    assert 0.08 < over / len(by["cabin_pco2_1h"]) < 0.10  # about 9.2% at ISS nominal 14.7 psia
     first = {r["indicator"]: r["value"] for r in readings(replay) if r["t"] == 0}
-    assert first == {"cabin_temperature": 24.1, "cabin_relative_humidity": 39, "cabin_co2": 2641}
+    assert first == {"cabin_temperature": 24.1, "cabin_relative_humidity": 39, "cabin_co2": 2641,
+                     "cabin_pco2": round(2641 * 760 / 1e6, 4)}
