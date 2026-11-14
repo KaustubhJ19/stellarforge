@@ -145,6 +145,8 @@ describe("post-EVA check form", () => {
     expect(within(screen.getByRole("region", { name: "Mental health" })).getByRole("group", { name: "Fatigue" })).toHaveTextContent(
       "4 of 5",
     );
+    const tasks = screen.getByRole("region", { name: "Today's tasks" });
+    expect(within(tasks).getByRole("listitem", { name: /Post-EVA note/ })).toHaveTextContent("Left index finger sore");
   });
 
   it("asks for fatigue and every symptom before saving: a skipped question is not a 'No'", async () => {

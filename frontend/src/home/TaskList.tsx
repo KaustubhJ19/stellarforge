@@ -1,8 +1,24 @@
-import type { Task } from "../contracts";
+import type { MissionTime, Task } from "../contracts";
+import { formatMissionTime } from "../replay/time";
+
+/** A note the crew typed in a form, shown until the service stores it. */
+export interface CrewNote {
+  t: MissionTime;
+  title: string;
+  text: string;
+}
 
 export type CrewForm = "stand-test" | "post-eva";
 
-export function TaskList({ tasks, onLog }: { tasks: Task[]; onLog?: (form: CrewForm) => void }) {
+export function TaskList({
+  tasks,
+  notes = [],
+  onLog,
+}: {
+  tasks: Task[];
+  notes?: CrewNote[];
+  onLog?: (form: CrewForm) => void;
+}) {
   return (
     <section className="tasks" aria-label="Today's tasks">
       <h2>Today's tasks</h2>
@@ -19,6 +35,18 @@ export function TaskList({ tasks, onLog }: { tasks: Task[]; onLog?: (form: CrewF
               <span className="tasks__state">{t.done ? "Done" : "Due"}</span>
             </li>
           ))}
+        </ul>
+      )}
+      {notes.length > 0 && (
+        <ul className="tasks__notes" aria-label="Notes">
+          {notes.map((n, i) => {
+            const heading = `${n.title}, ${formatMissionTime(n.t)}`;
+            return (
+              <li key={i} aria-label={heading}>
+                <strong>{heading}:</strong> {n.text}
+              </li>
+            );
+          })}
         </ul>
       )}
       {onLog && (

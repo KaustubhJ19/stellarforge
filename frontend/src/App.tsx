@@ -6,7 +6,7 @@ import { CONTENT_CARDS, cardFor } from "./content";
 import { MissionBar } from "./home/MissionBar";
 import { Co2Banner } from "./home/Co2Banner";
 import { HealthSummary } from "./home/HealthSummary";
-import { TaskList, type CrewForm } from "./home/TaskList";
+import { TaskList, type CrewForm, type CrewNote } from "./home/TaskList";
 import { StandTestForm } from "./forms/StandTestForm";
 import { PostEvaForm } from "./forms/PostEvaForm";
 import { Trends } from "./charts/Trends";
@@ -56,6 +56,7 @@ export function App({
 }) {
   // Readings logged on this screen join the replay, so every part of the app shows them.
   const [logged, setLogged] = useState<Reading[]>([]);
+  const [notes, setNotes] = useState<CrewNote[]>([]);
   const replay = useMemo<ReplayFile>(
     () =>
       logged.length === 0
@@ -73,6 +74,7 @@ export function App({
   // Logged at the mission time now (the end of the replay), and the screen returns to now.
   const log = (readings: Reading[], note?: string) => {
     setLogged((l) => [...l, ...readings]);
+    if (note) setNotes((n) => [...n, { t: range[1], title: "Post-EVA note", text: note }]);
     setT(range[1]);
     onReadings(readings, note);
   };
@@ -134,7 +136,7 @@ export function App({
             <HealthSummary kind="mental" latest={state.latest} onDetails={setOpenCard} />
           </div>
           <Trends replay={replay} crew={crew} state={state} range={range} onScrub={setT} />
-          <TaskList tasks={state.tasks} onLog={setForm} />
+          <TaskList tasks={state.tasks} notes={notes} onLog={setForm} />
         </div>
       </main>
       {cardReading && (
