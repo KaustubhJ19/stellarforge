@@ -1,0 +1,32 @@
+{
+  "dataset": "NASA OSDR Environmental Data App (EDA)",
+  "mission": "RR-1",
+  "mission_title": "Rodent Research 1 (SpaceX-4)",
+  "mission_link": "https://osdr.nasa.gov/bio/repo/data/payloads/RR-1",
+  "url": "https://visualization.osdr.nasa.gov/eda/dashboard_RR-1",
+  "downloaded": "2026-11-14",
+  "sha256": "d7284e1d82a9ca6fe56670fa7ac48fcff4fb361c4f6a6025ede7087352a7c0aa",
+  "t0_utc": "2014-09-20 03:59:00",
+  "units": {
+    "cabin_temperature": "degC",
+    "cabin_relative_humidity": "%",
+    "cabin_co2": "ppm",
+    "radiation_dose_gcr": "mGy/day",
+    "radiation_dose_saa": "mGy/day",
+    "radiation_dose_total": "mGy/day",
+    "radiation_dose_accumulated": "mGy"
+  },
+  "citation": "NASA OSDR Environmental Data App, https://visualization.osdr.nasa.gov/eda/ ; radiation data cited as visualization (not a primary dataset).",
+  "terms": "https://www.nasa.gov/reference/osdr-help-terms-and-conditions/",
+  "notes": [
+    "Values copied unchanged from the EDA; missing values skipped, never filled.",
+    "Units from the EDA chart axis labels; accumulated dose is the running sum of daily total dose (EDA tooltip), unit mGy.",
+    "EDA timestamps have no time zone; treated as UTC.",
+    "confidence = 1 because the EDA gives no quality score; it is not a validated quality measure.",
+    "Telemetry is from ISS cabin sensors recorded during this Rodent Research mission; ground-control series excluded."
+  ],
+  "readings": 36417,
+  "crew": "habitat",
+  "profile": "mars_transit",
+  "offset": 0
+}

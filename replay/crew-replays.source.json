@@ -1,0 +1,39 @@
+{
+  "dataset": "PMData (Simula Metropolitan Center), https://datasets.simula.no/pmdata/ , files from https://osf.io/vx4bk",
+  "licence": "CC BY 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+  "citation": "Thambawita V. et al., PMData: A Sports Logging Dataset, MMSys '20, doi:10.1145/3339825.3394926",
+  "changes": "Daily values reshaped into StellarForge Readings; crew A has a planted drift.",
+  "seed": 1,
+  "mapping": {
+    "A": "p09",
+    "B": "p01",
+    "C": "p06",
+    "D": "p16"
+  },
+  "start_date": "2019-11-01",
+  "anchor_days": 14,
+  "planted_drift": {
+    "crew": "A",
+    "days": 9,
+    "resting_heart_rate": 6.0,
+    "sleep_duration": -90.0,
+    "shape": "linear ramp over the last 9 days with a resting HR",
+    "source": "sim"
+  },
+  "emergency_offset_suggestion": 13132800,
+  "notes": [
+    "Earth wearable data (PMData, Fitbit Versa 2 and PMSys) shaped to look like a crew; no open astronaut wearable stream exists.",
+    "Values copied unchanged except crew A's planted drift (source 'sim'); steps are per-minute values summed per day.",
+    "Planted drift: linear ramp to +6 bpm resting HR and -90 min sleep over the last 9 days (spec example; ramp shape is a team value).",
+    "Planted sleep is floored at 0 min (a short tracked night minus the drift cannot go negative).",
+    "Anchor window 14 days and the 07:00 reading time are team values.",
+    "confidence = 1: PMData gives no per-reading quality score; it is not a validated quality measure."
+  ],
+  "readings": {
+    "A": 1177,
+    "B": 1432,
+    "C": 1480,
+    "D": 1088
+  }
+}

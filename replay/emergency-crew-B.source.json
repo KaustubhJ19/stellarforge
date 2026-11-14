@@ -1,0 +1,291 @@
+{
+  "label": "estimate, not validated",
+  "engine": "Pulse Physiology Engine 4.3.1 (Kitware PulseExplorer-3.3.0-Windows-AMD64 bundle), Apache 2.0",
+  "run_date": "2026-11-14",
+  "csv_sha256": "a74b3c5231037f47cc279674d9ccc9d42b863eb54eab6f7636504614c1aa893b",
+  "arrest_t": 2160.12,
+  "phases": [
+    {
+      "t": 0,
+      "action": "baseline"
+    },
+    {
+      "t": 60,
+      "action": "stroke_volume",
+      "multiplier": 0.9,
+      "chest_pain": true
+    },
+    {
+      "t": 120,
+      "action": "stroke_volume",
+      "multiplier": 0.8
+    },
+    {
+      "t": 180,
+      "action": "stroke_volume",
+      "multiplier": 0.7
+    },
+    {
+      "t": 240,
+      "action": "rhythm",
+      "rhythm": "SinusTachycardia"
+    },
+    {
+      "t": 300,
+      "action": "rhythm",
+      "rhythm": "UnstableVentricularTachycardia"
+    },
+    {
+      "t": 360,
+      "action": "rhythm",
+      "rhythm": "CoarseVentricularFibrillation"
+    },
+    {
+      "t": 420,
+      "action": "compressions"
+    },
+    {
+      "t": 540,
+      "action": "end"
+    }
+  ],
+  "applied_phases": [
+    {
+      "t": 0,
+      "action": "baseline"
+    },
+    {
+      "t": 60,
+      "action": "stroke_volume",
+      "multiplier": 0.9,
+      "chest_pain": true
+    },
+    {
+      "t": 720,
+      "action": "stroke_volume",
+      "multiplier": 0.8
+    },
+    {
+      "t": 1379.98,
+      "action": "stroke_volume",
+      "multiplier": 0.7
+    },
+    {
+      "t": 2039.96,
+      "action": "rhythm",
+      "rhythm": "SinusTachycardia"
+    },
+    {
+      "t": 2099.96,
+      "action": "rhythm",
+      "rhythm": "UnstableVentricularTachycardia"
+    },
+    {
+      "t": 2159.96,
+      "action": "rhythm",
+      "rhythm": "CoarseVentricularFibrillation"
+    },
+    {
+      "t": 2219.96,
+      "action": "compressions"
+    },
+    {
+      "t": 2339.96,
+      "action": "end"
+    }
+  ],
+  "scenario": {
+    "Description": "StellarForge emergency episode for crew B: estimate, not validated",
+    "PatientConfiguration": {
+      "PatientFile": "StandardMale.json"
+    },
+    "DataRequestFile": [
+      "StandardDataRequests.json",
+      "ACLSDataRequests.json"
+    ],
+    "AnyAction": [
+      {
+        "AdvanceTime": {
+          "Time": {
+            "ScalarTime": {
+              "Value": 60,
+              "Unit": "s"
+            }
+          }
+        }
+      },
+      {
+        "PatientAction": {
+          "CardiovascularMechanicsModification": {
+            "Modifiers": {
+              "StrokeVolumeMultiplier": {
+                "ScalarUnsigned": {
+                  "Value": 0.9
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "AdvanceTime": {
+          "Time": {
+            "ScalarTime": {
+              "Value": 60,
+              "Unit": "s"
+            }
+          }
+        }
+      },
+      {
+        "PatientAction": {
+          "CardiovascularMechanicsModification": {
+            "Modifiers": {
+              "StrokeVolumeMultiplier": {
+                "ScalarUnsigned": {
+                  "Value": 0.8
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "AdvanceTime": {
+          "Time": {
+            "ScalarTime": {
+              "Value": 60,
+              "Unit": "s"
+            }
+          }
+        }
+      },
+      {
+        "PatientAction": {
+          "CardiovascularMechanicsModification": {
+            "Modifiers": {
+              "StrokeVolumeMultiplier": {
+                "ScalarUnsigned": {
+                  "Value": 0.7
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "AdvanceTime": {
+          "Time": {
+            "ScalarTime": {
+              "Value": 60,
+              "Unit": "s"
+            }
+          }
+        }
+      },
+      {
+        "PatientAction": {
+          "Arrhythmia": {
+            "Rhythm": "SinusTachycardia"
+          }
+        }
+      },
+      {
+        "AdvanceTime": {
+          "Time": {
+            "ScalarTime": {
+              "Value": 60,
+              "Unit": "s"
+            }
+          }
+        }
+      },
+      {
+        "PatientAction": {
+          "Arrhythmia": {
+            "Rhythm": "UnstableVentricularTachycardia"
+          }
+        }
+      },
+      {
+        "AdvanceTime": {
+          "Time": {
+            "ScalarTime": {
+              "Value": 60,
+              "Unit": "s"
+            }
+          }
+        }
+      },
+      {
+        "PatientAction": {
+          "Arrhythmia": {
+            "Rhythm": "CoarseVentricularFibrillation"
+          }
+        }
+      },
+      {
+        "AdvanceTime": {
+          "Time": {
+            "ScalarTime": {
+              "Value": 60,
+              "Unit": "s"
+            }
+          }
+        }
+      },
+      {
+        "PatientAction": {
+          "ChestCompressionAutomated": {
+            "PatientAction": {
+              "Action": {
+                "Comment": "Settings from Kitware ChestCompressionAutomatedVaried.json"
+              }
+            },
+            "Depth": {
+              "ScalarLength": {
+                "Value": 6,
+                "Unit": "cm"
+              }
+            },
+            "CompressionFrequency": {
+              "ScalarFrequency": {
+                "Value": 100,
+                "Unit": "1/min"
+              }
+            },
+            "AppliedForceFraction": {
+              "Scalar0To1": {
+                "Value": 0.8
+              }
+            }
+          }
+        }
+      },
+      {
+        "AdvanceTime": {
+          "Time": {
+            "ScalarTime": {
+              "Value": 120,
+              "Unit": "s"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "notes": [
+    "All physiological values are Pulse model output: estimate, not validated.",
+    "Stroke-volume multipliers (0.9, 0.8, 0.7) and every phase time are team values, not published values.",
+    "Chest pain is crew-reported (crew_report event), not simulated; Pulse has no ischemia model.",
+    "Compression settings copied from Kitware's ChestCompressionAutomatedVaried.json scenario.",
+    "cardiac_rhythm readings come from the scenario's Arrhythmia actions; Pulse's CSV has no rhythm column.",
+    "Readings sampled at whole seconds from Pulse's 0.02 s output, values copied unchanged.",
+    "Pulse re-stabilises for about 600 s of simulated time after each stroke-volume modifier step; phase times in the replay are the times Pulse actually applied each action (from its log), not the plan.",
+    "confidence = 1: model output has no measurement quality score; it is not a validated quality measure."
+  ],
+  "events": 25741,
+  "crew": "B",
+  "profile": "mars_transit",
+  "offset": 13132800
+}
