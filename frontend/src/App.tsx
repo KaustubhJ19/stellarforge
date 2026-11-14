@@ -40,7 +40,9 @@ export function App({
   /** Hand-off to the emergency flow (Spec 4). */
   onEmergency?: (request: EmergencyRequest) => void;
 }) {
-  const state = useMemo(() => missionStateAt(replay, replayRange(replay)[1]), [replay]);
+  const range = useMemo(() => replayRange(replay), [replay]);
+  const [t, setT] = useState(range[1]);
+  const state = useMemo(() => missionStateAt(replay, t), [replay, t]);
   const [layers, setLayers] = useState(DEFAULT_LAYERS);
   const [focus, setFocus] = useState<Focus>({ level: "body" });
   const [insight, setInsight] = useState<IndicatorId | null>(null);
@@ -48,12 +50,14 @@ export function App({
   const glow = useMemo(() => glowFrom(state.latest), [state]);
   const heartRate = state.latest.get("heart_rate")?.value ?? null;
   const breathRate = state.latest.get("respiratory_rate")?.value ?? null;
+  // Insight needs a Reading at the scrubbed time; scrubbing to before one leaves insight.
+  const insightReading = insight ? state.latest.get(insight) : undefined;
+  const activeInsight = insightReading ? insight : null;
   const view = useMemo(
-    () => buildBodyView({ focus, layers, glow, heartRate, breathRate, insight }),
-    [focus, layers, glow, heartRate, breathRate, insight],
+    () => buildBodyView({ focus, layers, glow, heartRate, breathRate, insight: activeInsight }),
+    [focus, layers, glow, heartRate, breathRate, activeInsight],
   );
 
-  const insightReading = insight ? state.latest.get(insight) : undefined;
   return (
     <div className="app">
       <MissionBar replay={replay} state={state} />
@@ -61,7 +65,7 @@ export function App({
         <section className="home__body" aria-label="Body">
           {insightReading && <InsightBanner reading={insightReading} onExit={() => setInsight(null)} />}
           <Body view={view} scene={bodyScene} />
-          {!insight && (
+          {!activeInsight && (
             <>
               <ZoomControls focus={focus} onFocus={setFocus} />
               <FlaggedList latest={state.latest} onShow={setInsight} />
@@ -76,7 +80,7 @@ export function App({
             <HealthSummary kind="physical" latest={state.latest} />
             <HealthSummary kind="mental" latest={state.latest} />
           </div>
-          <Trends replay={replay} state={state} />
+          <Trends replay={replay} state={state} range={range} onScrub={setT} />
           <TaskList tasks={state.tasks} />
         </div>
       </main>
