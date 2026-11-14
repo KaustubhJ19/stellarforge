@@ -10,6 +10,13 @@ Checked 2026-11-14 by the AI / detection lead. Raw files are kept **outside the 
 | OSDR Environmental Data App, mission RR-1 | ISS cabin temperature, humidity, CO₂ replay | https://visualization.osdr.nasa.gov/eda/ (page `dashboard_RR-1`) | Open download; cite as visualization. Terms: https://www.nasa.gov/reference/osdr-help-terms-and-conditions/ |
 | OSDR Inspiration4, OSD-569 | Complete blood count (lab Readings) | https://osdr.nasa.gov/bio/repo/data/studies/OSD-569 | Processed data public |
 | OSDR Inspiration4, OSD-575 | Comprehensive metabolic panel (lab Readings) | https://osdr.nasa.gov/bio/repo/data/studies/OSD-575 | Processed data public |
+| UBFC-rPPG, DATASET_2 (subjects 1, 3, 4, 5, 8) | Webcam heart-rate accuracy (Spike E, ticket 12) | https://sites.google.com/view/ybenezeth/ubfcrppg (downloaded from the authors' OneDrive mirror) | Research use only ("shared for research purpose"). Cite: S. Bobbia, R. Macwan, Y. Benezeth, A. Mansouri, J. Dubois, "Unsupervised skin tissue segmentation for remote photoplethysmography", Pattern Recognition Letters, 2017. |
+
+## UBFC-rPPG (webcam heart rate)
+
+- Per subject: `vid.avi` (uncompressed, 640×480, 30 fps, about 1.3–1.9 GB) and `ground_truth.txt` (line 1 PPG waveform, line 2 oximeter heart rate in bpm, line 3 time in s; one value per frame).
+- Consent: the dataset's `Agreement.xlsx` records each volunteer's consent. We use only subjects who agreed to both data sharing and image use (1, 3, 4, 5, 8). **Never show these faces in the pitch; report error numbers only.**
+- Spike E result (2026-11-14, `tools/test_webcam_hr_ubfc.py`, classic POS method, no training): 12 windows of 20 s from 5 people, **mean absolute error 4.9 bpm**, 67 % of windows within 5 bpm. One person (subject 3) had errors of 8–20 bpm. Small sample: "estimate, not validated".
 
 ## PMData
 
