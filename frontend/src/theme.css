@@ -164,3 +164,108 @@ input:focus-visible {
   font-size: var(--font-size-sm);
   border-top: 1px solid var(--border);
 }
+
+/* App frame */
+.app {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.home {
+  display: grid;
+  grid-template-columns: minmax(320px, 1.1fr) minmax(320px, 1fr);
+  gap: var(--gap);
+  padding: var(--gap);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .home {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Body */
+.home__body {
+  display: grid;
+  gap: var(--gap);
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: var(--gap);
+}
+
+.body-host {
+  position: relative;
+  height: min(70vh, 640px);
+  min-height: 360px;
+  border-radius: var(--radius);
+  background: radial-gradient(ellipse at 50% 40%, #18233a 0%, var(--bg) 75%);
+  overflow: hidden;
+}
+
+.body-host canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.body-host__error {
+  padding: 20px;
+  color: var(--text-muted);
+}
+
+/* Layer panel */
+.layer-panel {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.layer-panel legend {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.layer-panel__row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: center;
+  gap: var(--gap);
+  min-height: var(--tap-min);
+}
+
+.layer-panel__toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.layer-panel__toggle input {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  accent-color: var(--accent);
+}
+
+.layer-panel__swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.layer-panel__row[data-layer="muscles"] .layer-panel__swatch { background: var(--layer-muscles); }
+.layer-panel__row[data-layer="skeleton"] .layer-panel__swatch { background: var(--layer-skeleton); }
+.layer-panel__row[data-layer="vessels"] .layer-panel__swatch { background: var(--layer-vessels); }
+.layer-panel__row[data-layer="organs"] .layer-panel__swatch { background: var(--layer-organs); }
+.layer-panel__row[data-layer="brain"] .layer-panel__swatch { background: var(--layer-brain); }
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
