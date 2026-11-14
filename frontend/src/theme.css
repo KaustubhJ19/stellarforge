@@ -269,3 +269,29 @@ input[type="range"] {
   width: 100%;
   accent-color: var(--accent);
 }
+
+/* Body status list (words + icons beside the glow) */
+.body-status {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 8px;
+}
+
+.body-status__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--tap-min);
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  border-left: 6px solid var(--border);
+}
+
+.body-status__item[data-status="green"] { border-left-color: var(--status-green); }
+.body-status__item[data-status="amber"] { border-left-color: var(--status-amber); }
+.body-status__item[data-status="red"] { border-left-color: var(--status-red); }

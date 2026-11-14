@@ -1,0 +1,26 @@
+import type { Status } from "../contracts";
+import { StatusBadge } from "../status";
+import type { Glow } from "./glow";
+import { STRUCTURES, type StructureId } from "./structures";
+
+const RANK: Record<Status, number> = { red: 0, amber: 1, green: 2 };
+
+/** The body's Status in words and icons, so colour is never the only signal. */
+export function BodyStatusList({ glow }: { glow: Glow }) {
+  const rows: { name: string; status: Status }[] = [];
+  if (glow.wholeBody) rows.push({ name: "Whole body", status: glow.wholeBody });
+  for (const [id, status] of Object.entries(glow.structures) as [StructureId, Status | null][]) {
+    if (status) rows.push({ name: STRUCTURES[id].label, status });
+  }
+  rows.sort((a, b) => RANK[a.status] - RANK[b.status]);
+  return (
+    <ul className="body-status" aria-label="Body status">
+      {rows.map((r) => (
+        <li key={r.name} aria-label={r.name} className="body-status__item" data-status={r.status}>
+          <span>{r.name}</span>
+          <StatusBadge status={r.status} />
+        </li>
+      ))}
+    </ul>
+  );
+}

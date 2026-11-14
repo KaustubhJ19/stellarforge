@@ -95,7 +95,9 @@ export const threeBodyScene: BodySceneFactory = (host) => {
     const size = box.getSize(new THREE.Vector3());
     const centre = box.getCenter(new THREE.Vector3());
     controls.target.copy(centre);
-    camera.position.set(centre.x, centre.y, centre.z + size.y * 1.7);
+    // Distance that fits the whole height in the vertical field of view, with a margin.
+    const fit = size.y / 2 / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    camera.position.set(centre.x, centre.y, centre.z + fit * 1.12);
     controls.minDistance = 0.15;
     controls.maxDistance = size.y * 4;
     controls.update();
@@ -117,6 +119,11 @@ export const threeBodyScene: BodySceneFactory = (host) => {
         p.material.color.copy(status[glow]);
         p.material.emissive.copy(status[glow]);
         p.material.emissiveIntensity = 0.55;
+      } else if (next.wholeBody) {
+        // Whole-body Indicators: a soft tint across everything that is not glowing itself.
+        p.material.color.copy(layerColor(p.layer)).lerp(status[next.wholeBody], 0.45);
+        p.material.emissive.copy(status[next.wholeBody]);
+        p.material.emissiveIntensity = 0.15;
       } else {
         p.material.color.copy(layerColor(p.layer));
         p.material.emissive.setRGB(0, 0, 0);
