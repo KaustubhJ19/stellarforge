@@ -36,7 +36,8 @@ class Detection:
         th = Thresholds(**{k: cutoffs[k] for k in Thresholds.__dataclass_fields__})
         eth = EmergencyThresholds(**{k: cutoffs[k] for k in EmergencyThresholds.__dataclass_fields__})
         self.min_sigma = cutoffs["min_sigma"]
-        shift = cutoffs.get("expected_shift", {})  # "team value"; none known yet
+        shift = cutoffs.get("expected_shift", {})
+        ramp_s = cutoffs.get("expected_shift_ramp_days", 0) * 86_400  # the shift builds up from launch
         floor = cutoffs.get("min_anchor_sd", {})  # a 14-day Anchor spread is too tight for months of real life
         self.bounds = {b["indicator"]: b for b in safety_bounds}
         self.breached: set[tuple[str, str]] = set()
@@ -44,7 +45,7 @@ class Detection:
         for rec in crew_records:
             anchor = {k: {**a, "sd": max(a["sd"], floor.get(k, 0))} for k, a in rec["anchor"].items()}
             anchor = {k: a for k, a in anchor.items() if a["sd"] > 0}  # a zero spread cannot score
-            self.baselines[rec["id"]] = BaselineA(rec["id"], anchor, th, shift)
+            self.baselines[rec["id"]] = BaselineA(rec["id"], anchor, th, shift, ramp_s)
             self.auto[rec["id"]] = AutoDetect(rec["id"], eth)
 
     def on_message(self, message: dict) -> list[dict]:

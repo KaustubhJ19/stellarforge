@@ -43,3 +43,9 @@ From the AI / detection lead, 2026-11-15. Branch `spec-3-detection-baseline` (in
 - **Clearing a Status.** When a drift, acute or Safety-bound tier returns to green, detection sends one Alert with status `green` and urgency `ROUTINE` for that indicator and kind. Treat it as "this Alert is over". A green Alert never quarantines Readings.
 - **Status words.** Normal / Watch / Alert. "ACT NOW" is the urgency word for emergencies only: a red Drift is red but MONITOR.
 - **"Your normal" band.** Trimming mean ± 2 SD to the scale's limits is fine; it is display only. The SD floor (`min_anchor_sd`) is used inside detection; the crew record's Anchor SD is unchanged.
+
+## For the integration lead (Spec 5), after your ticket 05 review
+
+- **Names confirmed.** Detection reads `glucose` (mg/dL, from `tools/inspiration4_labs.py`) and `body_temperature` (°C, once the Pulse replay has it) under those names. A glucose Reading of 36 mg/dL gives a red Safety-bound Alert.
+- **The shift does not move the Safety bound.** `expected_shift` only changes the Drift check against the Anchor. The 38 °C bound stays absolute, so healthy crew at about 37.8 °C in flight sit just under it. Raise the high bound or accept this; your call.
+- **Shift now builds up from launch.** Applied in full on day 0, the +1 °C shift made a normal early-mission 36.8 °C look 1 °C low and raised a false drift alert after 3 days. Added `expected_shift_ramp_days` = 75 (Stahn 2017, "2.5 months") to the content file: the shift grows in a straight line from 0 at launch. Mission time `t` is taken as seconds from launch. Your content linter is clean on the file.

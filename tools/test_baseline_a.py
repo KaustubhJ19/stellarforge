@@ -172,3 +172,27 @@ def test_return_to_green_sends_one_green_routine_alert_that_holds_nothing():
 
 def test_no_green_alert_without_an_earlier_alert():
     assert not [al for al in alerts(feed(crew(), normal_days(60, seed=5))) if al["status"] == "green"]
+
+
+# --- Expected shift builds up from launch (Stahn 2017: about 1 °C over 2.5 months) ------------
+
+def temp_crew() -> BaselineA:
+    return BaselineA("C001", {"body_temperature": {"mean": 36.8, "sd": 0.3}}, TH, {"body_temperature": 1.0}, 75 * DAY)
+
+
+def temps(a, day_values):
+    return [a.process("body_temperature", v, "°C", d * DAY) for d, v in day_values]
+
+
+def test_no_drift_alert_early_in_the_mission_before_the_shift_has_built_up():
+    wobble = [0.0, 0.1, -0.1]
+    assert not alerts(temps(temp_crew(), [(d, 36.8 + wobble[d % 3]) for d in range(20)]), "drift")
+
+
+def test_no_drift_alert_when_temperature_follows_the_expected_rise():
+    rise = [(d, 36.8 + min(d / 75, 1.0) + [0.0, 0.1, -0.1][d % 3]) for d in range(120)]
+    assert not alerts(temps(temp_crew(), rise), "drift")
+
+
+def test_full_shift_on_day_one_is_a_drift():
+    assert alerts(temps(temp_crew(), [(d, 37.8) for d in range(10)]), "drift")
