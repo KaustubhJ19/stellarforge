@@ -466,6 +466,16 @@ h2 {
   border-color: var(--accent);
 }
 
+/* High-contrast mode strips colours; Emergency must still stand apart. */
+@media (forced-colors: active) {
+  .actions__emergency {
+    forced-color-adjust: none;
+    background: #b3141a;
+    color: #ffffff;
+    border: 5px solid CanvasText;
+  }
+}
+
 /* Tasks */
 .tasks ul {
   list-style: none;
