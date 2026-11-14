@@ -35,7 +35,7 @@ tools/       Content linter, replay generator, golden tests
 docs/        SI-use log, credits, write-up
 ```
 
-Folders are empty on purpose. Each spec says what to put in them.
+Folders are empty on purpose; each stream fills its own.
 
 ## Tech stack (from the plan)
 
