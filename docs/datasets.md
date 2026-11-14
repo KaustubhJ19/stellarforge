@@ -26,6 +26,7 @@ Checked 2026-11-14 by the AI / detection lead. Raw files are kept **outside the 
 - `readiness` takes whole values 0–10 in the data, matching the documented scale. **Verified; the fallback (readiness from fatigue and sleep) is not needed.**
 - Data quirk: a few rows have 0 on every 1–5 field (fatigue 2, mood 3, stress 4 rows), which is outside the documented scale. Treat a row as a blank submission and drop it when its 1–5 fields are 0. A `readiness` of 0 on its own is valid (74 rows).
 - Participant details: `participant-overview.xlsx` in the zip root.
+- Forecast B result (2026-11-14, `tools/test_forecast_b.py`, ticket 11): 16 people, 4 folds; each fold trains on 9 people, calibrates the range on 3 and forecasts 4 people never used to train, day by day from day 8. 1,307 forecasts: **mean error 1.12 readiness points** (0-10 scale), the same as simply saying "tomorrow = today" (1.12). **Range coverage 89.6 %** (target about 90 %), mean range width 5.1 points. The tree size was picked after comparing two settings on these same people. "Estimate, not validated".
 
 ## ISS cabin (OSDR Environmental Data App)
 
