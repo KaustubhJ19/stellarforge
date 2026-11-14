@@ -22,6 +22,12 @@
   --layer-organs: #c7a9b8;
   --layer-brain: #d9c7e3;
 
+  /* Charts */
+  --chart-line: #7aa7ff;
+  --chart-grid: #232c3d;
+  --chart-band: rgba(167, 177, 196, 0.12);
+  --chart-future: rgba(11, 15, 23, 0.6);
+
   /* Explanation (never a status colour) */
   --explain: #6ec6ff;
 
@@ -445,4 +451,162 @@ h2 {
 .tasks li[data-done="false"] .tasks__state {
   color: var(--accent);
   font-weight: 600;
+}
+
+/* Trends */
+.trends {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: var(--gap);
+}
+
+.trends__picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.trends__picker button[aria-pressed="true"],
+.trends__picker button[aria-pressed="true"]:hover {
+  border-color: var(--accent);
+  background: #24324d;
+}
+
+.trend {
+  margin: 0;
+}
+
+.trend__title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.trend__unit {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.trend__plot {
+  position: relative;
+}
+
+.trend__plot svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: none;
+}
+
+.trend__grid line {
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+}
+
+.trend__grid text,
+.trend__xtick {
+  fill: var(--text-muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.trend__band {
+  fill: var(--chart-band);
+}
+
+.trend__band-label {
+  fill: var(--text-muted);
+  font-size: 13px;
+}
+
+.trend__line {
+  fill: none;
+  stroke: var(--chart-line);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.trend__end {
+  fill: var(--chart-line);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.trend__end-label {
+  fill: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.trend__future {
+  fill: var(--chart-future);
+}
+
+.trend__alert line {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.trend__alert path,
+.trend__alert rect {
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.trend__alert[data-status="red"] path,
+.trend__alert[data-status="red"] rect { fill: var(--status-red); }
+.trend__alert[data-status="amber"] path,
+.trend__alert[data-status="amber"] rect { fill: var(--status-amber); }
+.trend__alert[data-status="green"] path,
+.trend__alert[data-status="green"] rect { fill: var(--status-green); }
+
+.trend__alert text {
+  fill: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.trend__crosshair line {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.trend__crosshair circle {
+  fill: var(--chart-line);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.trend__tooltip {
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 14px));
+  pointer-events: none;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+  display: grid;
+  gap: 2px;
+}
+
+.trend__table-toggle {
+  margin-top: 8px;
+}
+
+.trend__table {
+  width: 100%;
+  margin-top: 8px;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--font-size-sm);
+}
+
+.trend__table th,
+.trend__table td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--chart-grid);
 }

@@ -4,6 +4,7 @@ import { missionStateAt, replayRange } from "./replay/state";
 import { MissionBar } from "./home/MissionBar";
 import { HealthSummary } from "./home/HealthSummary";
 import { TaskList } from "./home/TaskList";
+import { Trends } from "./charts/Trends";
 import { ActionButtons, type EmergencyRequest } from "./home/ActionButtons";
 import { Body } from "./body/Body";
 import { LayerPanel } from "./body/LayerPanel";
@@ -75,6 +76,7 @@ export function App({
             <HealthSummary kind="physical" latest={state.latest} />
             <HealthSummary kind="mental" latest={state.latest} />
           </div>
+          <Trends replay={replay} state={state} />
           <TaskList tasks={state.tasks} />
         </div>
       </main>
