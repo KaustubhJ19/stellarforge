@@ -317,3 +317,32 @@ input[type="range"] {
   justify-self: start;
   font-weight: 600;
 }
+
+/* Flagged Indicators and insight view */
+.flagged {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.flagged__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border-left-width: 6px;
+}
+
+.flagged__item[data-status="amber"] { border-left-color: var(--status-amber); }
+.flagged__item[data-status="red"] { border-left-color: var(--status-red); }
+
+.insight-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap);
+}
+
+.insight-banner h2 {
+  margin: 0 auto 0 0;
+  font-size: var(--font-size-lg);
+}
