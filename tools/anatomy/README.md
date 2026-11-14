@@ -45,7 +45,19 @@ Mapping notes:
 | Frame rate, laptop GPU (Apple Silicon, Metal) | 60 fps, whole body rotating |
 | Frame rate, software rendering (no GPU) | 10 fps |
 
-No fallback needed. Female layers not yet tried (ticket 18, P1).
+No fallback needed.
+
+## Female body (ticket 18)
+
+`--female data/hra/united-female-v1.5.glb` builds `body-female*.glb`. Download the HRA
+model (about 212 MB, CC BY 4.0) from
+`https://cdn.humanatlas.io/digital-objects/ref-organ/united-female/v1.5/assets/3d-vh-f-united.glb`
+into `data/hra/`. Heart, lungs, liver, kidneys and the organ outline come from HRA; the
+male muscle, skeleton, vessel and brain layers are scaled to the HRA body height
+(1.70 m → 1.67 m, matching outer surfaces because the HRA skeleton is incomplete) and the
+HRA organs are moved so both bodies share the same feet centre. Checked by eye: the organs
+sit inside the rib cage and abdomen. The app shows the female body when the Crew record's
+`sex` is `female`.
 With `--region head|chest|abdomen|legs` the script writes `body-male.<region>.glb`: that
 region's structures only, at up to 60k triangles each. The app loads one the first time the
 astronaut zooms into that region.
@@ -60,9 +72,13 @@ Re-run the check: start `npm run dev` in `frontend/`, then `node spike/run-spike
 > where the model has no separate structure, the nearest containing structure is shown
 > (prefrontal cortex → frontal lobe, suprachiasmatic nucleus → hypothalamus, optic disc →
 > optic nerve and retina, visual cortex → occipital lobe; no fat tissue is shown).
+> **Female organs:** Human Reference Atlas 3D Reference Organ Set, "Body, Female" (United,
+> v1.5), from the Visible Human Female, HuBMAP / Human Reference Atlas
+> (https://humanatlas.io/3d-reference-library), CC BY 4.0. In the female body, muscles,
+> skeleton and vessels are the male model resized and are labelled approximate.
 
 ## Licence
 
 Derived from Z-Anatomy (CC BY-SA 4.0), which derives from BodyParts3D (CC BY 4.0,
-Database Center for Life Science). `body-male.glb` is released under **CC BY-SA 4.0**.
+Database Center for Life Science). `body-male*.glb` and `body-female*.glb` are released under **CC BY-SA 4.0** (the female organs are also CC BY 4.0 from HRA).
 Credits page: Z-Anatomy, BodyParts3D.

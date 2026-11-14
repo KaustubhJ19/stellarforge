@@ -2,7 +2,7 @@ import type { IndicatorId, Status } from "../contracts";
 import { INDICATORS } from "../indicators";
 import type { Glow } from "./glow";
 import { STRUCTURES, type StructureId } from "./structures";
-import type { BodyView, Focus, LayerId, LayerView } from "./view";
+import type { BodyModel, BodyView, Focus, LayerId, LayerView } from "./view";
 
 /** Insight view: muscles, skeleton and vessels faint; organs and brain clearer when relevant. */
 const INSIGHT_FAINT: Record<LayerId, number> = {
@@ -30,6 +30,7 @@ function insightFocus(ids: StructureId[]): Focus {
 }
 
 export function buildBodyView(input: {
+  model: BodyModel;
   focus: Focus;
   layers: Record<LayerId, LayerView>;
   glow: Glow;
@@ -38,11 +39,12 @@ export function buildBodyView(input: {
   /** The Indicator being examined and its own Status, or null outside insight view. */
   insight: { indicator: IndicatorId; status: Status } | null;
 }): BodyView {
-  const { focus, layers, glow, heartRate, breathRate, insight } = input;
+  const { model, focus, layers, glow, heartRate, breathRate, insight } = input;
   const ids = insight ? insightStructures(insight.indicator) : [];
 
   if (ids.length === 0) {
     return {
+      model,
       focus,
       layers,
       structures: Object.fromEntries(
@@ -70,6 +72,7 @@ export function buildBodyView(input: {
   ) as Record<LayerId, LayerView>;
 
   return {
+    model,
     focus: insightFocus(ids),
     layers: insightLayers,
     structures: Object.fromEntries(
