@@ -96,6 +96,29 @@ def lint_coverage(doc, protocol_ids):
     return problems
 
 
+# Spec 5 "Mission profile" shape (agreed with Specs 2 and 4). Each field is
+# {"value", "status", "source"?, "note"?}; status is sourced (needs a link) or the team-value label.
+PROFILE_FIELDS = ["gravity", "radiation_rate", "comm_delay", "evacuation", "medical_kit", "exercise_kit",
+                  "crew_size", "duration", "dust", "closed_habitat"]
+SOURCED = "sourced"
+TEAM_VALUE = "not confirmed: team value"
+
+
+def lint_profile(doc):
+    """Test (d): every profile value is sourced (with a link) or labelled "not confirmed: team value"."""
+    problems = [f"{k}: needs a non-empty string" for k in ("id", "name") if not _filled(doc.get(k))]
+    for field in PROFILE_FIELDS:
+        entry = doc.get(field)
+        if not isinstance(entry, dict) or "value" not in entry:
+            problems.append(f"{field}: missing (needs value and status)")
+        elif entry.get("status") == SOURCED:
+            if not (isinstance(entry.get("source"), str) and entry["source"].startswith(("https://", "http://"))):
+                problems.append(f"{field}: sourced value needs a link (http/https source)")
+        elif entry.get("status") != TEAM_VALUE:
+            problems.append(f"{field}: status must be {SOURCED!r} or {TEAM_VALUE!r}")
+    return problems
+
+
 def _load(path):
     try:
         return json.loads(path.read_text(encoding="utf-8")), []
@@ -124,6 +147,11 @@ def lint_dir(content_dir):
         problems = problems or lint_coverage(cov, ids)
         if problems:
             failures[cov_path] = problems
+    for path in sorted((Path(content_dir) / "profiles").glob("*.json")):
+        doc, problems = _load(path)
+        problems = problems or lint_profile(doc)
+        if problems:
+            failures[path] = problems
     return failures
 
 

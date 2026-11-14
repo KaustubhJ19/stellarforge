@@ -184,6 +184,65 @@ def test_cli_fails_when_coverage_file_missing(tmp_path):
     assert cl.lint_dir(tmp_path)
 
 
+# --- Mission profiles (content/profiles/), test (d) ---
+
+def profile(**changes):
+    sourced = {"value": "x", "status": "sourced", "source": "https://www.nasa.gov/hrp/hazards/"}
+    team = {"value": "y", "status": "not confirmed: team value"}
+    doc = {"id": "test_profile", "name": "Test profile",
+           **{f: dict(sourced) for f in cl.PROFILE_FIELDS}}
+    doc["medical_kit"] = dict(team, value=[])
+    doc.update(changes)
+    return doc
+
+
+def test_good_profile_has_no_problems():
+    assert cl.lint_profile(profile()) == []
+
+
+@pytest.mark.parametrize("field", ["gravity", "comm_delay", "medical_kit", "closed_habitat"])
+def test_missing_profile_field_fails(field):
+    doc = profile()
+    del doc[field]
+    assert any(field in p for p in cl.lint_profile(doc))
+
+
+def test_value_with_no_status_fails():
+    assert cl.lint_profile(profile(gravity={"value": "weightless"}))
+
+
+def test_unknown_status_fails():
+    assert cl.lint_profile(profile(gravity={"value": "weightless", "status": "probably"}))
+
+
+@pytest.mark.parametrize("source", [None, "", "NASA website", "ftp://example.org"])
+def test_sourced_value_needs_a_link(source):
+    value = {"value": "weightless", "status": "sourced"}
+    if source is not None:
+        value["source"] = source
+    assert any("link" in p for p in cl.lint_profile(profile(gravity=value)))
+
+
+def test_team_value_needs_no_link():
+    assert cl.lint_profile(profile(dust={"value": "none", "status": "not confirmed: team value"})) == []
+
+
+def test_profile_needs_id_and_name():
+    doc = profile()
+    doc["name"] = ""
+    assert cl.lint_profile(doc)
+
+
+def test_bad_profile_file_fails_lint_dir(tmp_path):
+    (tmp_path / "profiles").mkdir()
+    (tmp_path / "profiles" / "p.json").write_text(json.dumps(profile(gravity={"value": "x"})))
+    assert tmp_path / "profiles" / "p.json" in cl.lint_dir(tmp_path)
+
+
+def test_repo_has_a_mars_transit_profile():
+    assert (ROOT / "content" / "profiles" / "mars_transit.json").exists()
+
+
 def write_clean(tmp_path):
     (tmp_path / "protocols").mkdir()
     (tmp_path / "protocols" / "p.json").write_text(json.dumps(GOOD))
