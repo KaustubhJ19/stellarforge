@@ -2,11 +2,13 @@ import { useState } from "react";
 import { api, type AccessEntry, type CrewRecord, type Explanation, type View } from "./api";
 import { EmergencyLayout } from "./EmergencyLayout";
 import { ReportPanel } from "./Report";
+import { useAlarmSound } from "./alarm";
 
 type Act = (fn: () => Promise<unknown>) => Promise<void>;
 type Props = { crew: string; view: View | null; offline: boolean; error: string | null; act: Act };
 
 export function Screen({ crew, view, offline, error, act }: Props) {
+  const sound = useAlarmSound(view?.screen === "alarm");
   if (!view) {
     return offline ? <Home crew={crew} offline act={act} /> : <p className="loading">Connecting…</p>;
   }
@@ -57,7 +59,9 @@ export function Screen({ crew, view, offline, error, act }: Props) {
     case "alarm":
       return L(
         `CREW ALARM — ${view.patient_name}`,
-        <div className="alarm" data-ring="true">
+        <div className="alarm" data-ring="true" data-sound={sound}>
+          {sound === "blocked" && <p className="warning" role="alert">Sound blocked by the browser — tap anywhere to enable the alarm sound.</p>}
+          {sound === "unsupported" && <p className="warning">No alarm sound on this device.</p>}
           <p className="lead">{view.patient_name} did not answer. Go now.</p>
           <button className="big primary" onClick={() => act(() => api.accept(crew))}>Accept — I'm going</button>
         </div>,
