@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:stellarforge:contracts:crew-record",
+  "title": "CrewRecord",
+  "description": "One crew member with their Anchor (Spec 1 Contracts table).",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "description": "Contract version. Spec 1: include a schema_version field."
+    },
+    "id": {},
+    "sex": {},
+    "anchor": {
+      "type": "object",
+      "description": "indicator -> {mean, sd}",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "mean": {},
+          "sd": {}
+        },
+        "required": [
+          "mean",
+          "sd"
+        ]
+      }
+    },
+    "missionProfile": {}
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "sex",
+    "anchor",
+    "missionProfile"
+  ]
+}
