@@ -40,7 +40,8 @@ EVENT_CONTRACTS = {"reading": "Reading", "trigger": "Trigger"}
 
 
 class HabitatService:
-    def __init__(self, db_path, replays, crew_records, monotonic=time.monotonic):
+    def __init__(self, db_path, replays, crew_records, monotonic=time.monotonic, detection=None):
+        self.detection = detection  # Spec 3 backend/detection.py; None runs without detection
         self._lock = threading.RLock()
         self._subscribers = {}  # token -> callback
         self._sub_changed = threading.Condition(self._lock)
@@ -105,6 +106,13 @@ class HabitatService:
             except Exception:  # one broken window must not stop the others
                 pass
 
+    def _push_and_detect(self, message):
+        """Push an incoming event, then the Alerts, Triggers and Reading states detection makes from it."""
+        self._push(message)
+        if self.detection is not None:
+            for out in self.detection.on_message(message):
+                self._push(out)
+
     # ---- state -----------------------------------------------------------------
     def _save_state(self, commit=True):
         self.store.conn.execute("UPDATE service_state SET delivered = ?, mission_t = ?, speed = ? WHERE id = 1",
@@ -134,7 +142,7 @@ class HabitatService:
                 self._delivered = start
                 raise
             for message in due:
-                self._push(message)
+                self._push_and_detect(message)
 
     def skip(self):
         with self._lock:
@@ -155,16 +163,19 @@ class HabitatService:
     def post_reading(self, doc):
         with self._lock:
             self.store.add("reading", doc)
-            self._push({"t": doc["t"], "type": "reading", "payload": doc})
+            self._push_and_detect({"t": doc["t"], "type": "reading", "payload": doc})
 
     def post_trigger(self, doc):
         with self._lock:
             validate("Trigger", doc)
-            self._push({"t": doc["t"], "type": "trigger", "payload": doc})
+            self._push_and_detect({"t": doc["t"], "type": "trigger", "payload": doc})
 
     def post_label(self, doc):
         with self._lock:
             self.store.add("label", doc)
+            if self.detection is not None:
+                for out in self.detection.on_label(doc):
+                    self._push(out)
 
     def post_ground_reply(self, report):
         """Store a ground report that carries a reply, and store the reply as a Label."""
@@ -332,7 +343,10 @@ def main(argv=None):
     for path in args.crew:
         doc = load(path)
         crew.extend(doc if isinstance(doc, list) else [doc])
-    service = HabitatService(args.db, [load(p) for p in args.replay], crew)
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from backend.detection import Detection, load_content  # Spec 3
+    cutoffs, bounds = load_content()
+    service = HabitatService(args.db, [load(p) for p in args.replay], crew, detection=Detection(crew, cutoffs, bounds))
     httpd = make_server(service, port=args.port)
     print(f"Habitat network on http://127.0.0.1:{args.port} ({service.clock.label})")
     try:
