@@ -35,7 +35,7 @@ test.describe("home screen in a real browser, no service", () => {
     expect(px.red).toBeGreaterThan(300);
     await expect(
       page.getByRole("region", { name: "Physical health" }).getByRole("group", { name: "Heart rate", exact: true }),
-    ).toContainText("Act now");
+    ).toContainText("Alert");
   });
 
   test("hiding a layer changes what is drawn", async ({ page }) => {
