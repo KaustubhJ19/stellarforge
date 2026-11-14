@@ -98,20 +98,111 @@ def test_numbers_without_dose_units_are_allowed():
     assert cl.lint_protocol(with_step(text="Give 30 compressions, then 2 breaths")) == []
 
 
+def test_medication_mention_without_flight_surgeon_handoff_fails():
+    problems = cl.lint_protocol(with_step(text="Give the cardiac medication from the kit"))
+    assert any("flight surgeon" in p for p in problems)
+
+
+def test_medicine_in_a_citation_is_allowed():
+    src = {"guideline": "Society of Aerospace Medicine guideline 2020", "section": "Results"}
+    assert cl.lint_protocol(with_step(source=src)) == []
+
+
+# --- environment coverage (content/protocols/coverage.json) ---
+
+def coverage(**env_changes):
+    envs = {
+        "spacecraft-transit": {"covered": True, "basis": "Aims and scope"},
+        "station": {"covered": True, "basis": "Aims and scope"},
+        "moon-base": {"covered": False, "label": "not covered by published guidance"},
+        "mars-base": {"covered": False, "label": "not covered by published guidance"},
+        "rover": {"covered": False, "label": "not covered by published guidance"},
+    }
+    envs.update(env_changes)
+    return {"test-protocol": {"source": "Fixture guideline 2020", "environments": envs}}
+
+
+def test_good_coverage_has_no_problems():
+    assert cl.lint_coverage(coverage(), {"test-protocol"}) == []
+
+
+def test_protocol_without_coverage_entry_fails():
+    assert any("other-protocol" in p for p in cl.lint_coverage(coverage(), {"test-protocol", "other-protocol"}))
+
+
+def test_coverage_for_unknown_protocol_fails():
+    assert cl.lint_coverage(coverage(), set())
+
+
+def test_every_environment_must_be_listed():
+    doc = coverage()
+    del doc["test-protocol"]["environments"]["rover"]
+    assert any("rover" in p for p in cl.lint_coverage(doc, {"test-protocol"}))
+
+
+def test_unknown_environment_fails():
+    assert cl.lint_coverage(coverage(**{"asteroid": {"covered": False, "label": "x"}}), {"test-protocol"})
+
+
+def test_covered_environment_needs_a_basis():
+    assert cl.lint_coverage(coverage(station={"covered": True, "basis": " "}), {"test-protocol"})
+
+
+def test_uncovered_environment_needs_the_honest_label():
+    doc = coverage(**{"moon-base": {"covered": False, "label": "probably fine"}})
+    assert cl.lint_coverage(doc, {"test-protocol"})
+
+
+def test_coverage_needs_a_source():
+    doc = coverage()
+    doc["test-protocol"]["source"] = ""
+    assert cl.lint_coverage(doc, {"test-protocol"})
+
+
+def test_coverage_notes_need_a_section():
+    doc = coverage()
+    doc["test-protocol"]["environments"]["spacecraft-transit"]["notes"] = [{"text": "A note", "section": ""}]
+    assert cl.lint_coverage(doc, {"test-protocol"})
+
+
+def test_cli_fails_when_coverage_file_missing(tmp_path):
+    (tmp_path / "protocols").mkdir()
+    (tmp_path / "protocols" / "p.json").write_text(json.dumps(GOOD))
+    assert cl.lint_dir(tmp_path)
+
+
+def write_clean(tmp_path):
+    (tmp_path / "protocols").mkdir()
+    (tmp_path / "protocols" / "p.json").write_text(json.dumps(GOOD))
+    (tmp_path / "protocols" / "coverage.json").write_text(json.dumps(coverage()))
+
+
+def test_main_returns_zero_on_clean_content(tmp_path, capsys):
+    write_clean(tmp_path)
+    assert cl.main(["content_lint.py", str(tmp_path)]) == 0
+    assert "clean" in capsys.readouterr().out
+
+
+def test_main_returns_one_and_reports_problem(tmp_path, capsys):
+    write_clean(tmp_path)
+    (tmp_path / "protocols" / "bad.json").write_text(json.dumps(with_step(text="Give 1 mg epinephrine")))
+    assert cl.main(["content_lint.py", str(tmp_path)]) == 1
+    assert "bad.json" in capsys.readouterr().err
+
+
 def run_cli(content_dir):
     return subprocess.run([sys.executable, str(ROOT / "tools" / "content_lint.py"), str(content_dir)],
                           capture_output=True, text=True)
 
 
 def test_cli_exits_zero_on_clean_content(tmp_path):
-    (tmp_path / "protocols").mkdir()
-    (tmp_path / "protocols" / "p.json").write_text(json.dumps(GOOD))
+    write_clean(tmp_path)
     result = run_cli(tmp_path)
     assert result.returncode == 0, result.stderr
 
 
 def test_cli_exits_nonzero_and_names_file_on_problem(tmp_path):
-    (tmp_path / "protocols").mkdir()
+    write_clean(tmp_path)
     (tmp_path / "protocols" / "bad.json").write_text(json.dumps(with_step(text="Give 1 mg epinephrine")))
     result = run_cli(tmp_path)
     assert result.returncode == 1

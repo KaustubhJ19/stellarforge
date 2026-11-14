@@ -1,0 +1,57 @@
+{
+  "microgravity-cpr": {
+    "source": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+    "environments": {
+      "spacecraft-transit": {
+        "covered": true,
+        "basis": "Aims and scope of the guideline: CPR in microgravity",
+        "notes": [
+          {
+            "text": "During space exploration missions to Mars, telemedicine support will be impractical during CPR because of the communication time delay (3 to 23 min), and should only be attempted when additional crewmembers, not involved in treating the patient, are present.",
+            "section": "Telemedicine, Recommendation 21"
+          }
+        ]
+      },
+      "station": {
+        "covered": true,
+        "basis": "Aims and scope of the guideline: CPR in microgravity",
+        "notes": [
+          {
+            "text": "In low Earth orbit, telemedicine support should be consulted in a cardiac arrest when it seems feasible and enough crew are available.",
+            "section": "Telemedicine, Recommendation 20"
+          }
+        ]
+      },
+      "moon-base": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "The guideline covers microgravity only. It mentions that other techniques have been suggested for hypogravity, but it makes no recommendation for partial gravity.",
+            "section": "Aims and scope of the guideline; Microgravity CPR methods"
+          }
+        ]
+      },
+      "mars-base": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "The guideline covers microgravity only. It mentions that other techniques have been suggested for hypogravity, but it makes no recommendation for partial gravity.",
+            "section": "Aims and scope of the guideline; Microgravity CPR methods"
+          }
+        ]
+      },
+      "rover": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "A surface rover is in partial gravity (Moon or Mars). The guideline covers microgravity only.",
+            "section": "Aims and scope of the guideline"
+          }
+        ]
+      }
+    }
+  }
+}

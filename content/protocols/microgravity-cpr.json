@@ -1,14 +1,14 @@
 {
   "schema_version": "1.0.0",
   "id": "microgravity-cpr",
-  "title": "CPR in microgravity (weightless only; partial gravity is not covered by published guidance)",
+  "title": "CPR in microgravity (weightless only; see coverage.json for each environment)",
   "steps": [
     {
       "id": "cpr-1-er-compressions",
-      "text": "Start chest compressions with the Evetts-Russomano (ER) method. In immediate Basic Life Support it is the chest compression method of choice, and it does not require the patient to be restrained.",
+      "text": "For initial Basic Life Support at the site of the emergency, apply the Evetts-Russomano (ER) method first. If you cannot give adequate chest compressions with ER, switch to the Reverse-Bear-Hug (RBH) method.",
       "source": {
         "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
-        "section": "Abstract (Results); Microgravity CPR methods"
+        "section": "Results and recommendations, Recommendation 2 (one rescuer, no restraint, no equipment: rationale for Recommendation 1)"
       },
       "equipment": [],
       "rescuers": 1
