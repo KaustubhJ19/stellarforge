@@ -35,9 +35,11 @@ export function App({
   const [insight, setInsight] = useState<IndicatorId | null>(null);
 
   const glow = useMemo(() => glowFrom(state.latest), [state]);
+  const heartRate = state.latest.get("heart_rate")?.value ?? null;
+  const breathRate = state.latest.get("respiratory_rate")?.value ?? null;
   const view = useMemo(
-    () => buildBodyView({ focus, layers, glow, heartRate: null, insight }),
-    [focus, layers, glow, insight],
+    () => buildBodyView({ focus, layers, glow, heartRate, breathRate, insight }),
+    [focus, layers, glow, heartRate, breathRate, insight],
   );
 
   const insightReading = insight ? state.latest.get(insight) : undefined;

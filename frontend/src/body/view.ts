@@ -40,6 +40,8 @@ export interface BodyView {
   wholeBody: Status | null;
   /** Beats per minute for the heart, or null for still. */
   heartRate: number | null;
+  /** Breaths per minute for the lungs, or null for still. */
+  breathRate: number | null;
 }
 
 /** The drawing surface behind the body: Three.js in the app, a recorder in tests. */

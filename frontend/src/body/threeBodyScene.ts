@@ -55,6 +55,7 @@ export const threeBodyScene: BodySceneFactory = (host) => {
 
   const parts = new Map<string, Part>();
   let heart: THREE.Mesh | null = null;
+  let lungs: THREE.Mesh | null = null;
   let view: BodyView | null = null;
   let body: THREE.Object3D | null = null;
   let framedFocus = "";
@@ -82,7 +83,9 @@ export const threeBodyScene: BodySceneFactory = (host) => {
         parts.set(id, { mesh: o, material, kind, layer });
       });
       heart = parts.get("heart")?.mesh ?? null;
+      lungs = parts.get("lungs")?.mesh ?? null;
       if (heart) centreOnItself(heart);
+      if (lungs) centreOnItself(lungs);
       scene.add(gltf.scene);
       body = gltf.scene;
       const box = new THREE.Box3().setFromObject(body);
@@ -226,6 +229,12 @@ export const threeBodyScene: BodySceneFactory = (host) => {
       const phase = bpm > 0 ? (t * bpm) / 60 - Math.floor((t * bpm) / 60) : 1;
       const beat = phase < 0.15 ? Math.sin((phase / 0.15) * Math.PI) : 0;
       heart.scale.setScalar(1 + 0.08 * beat);
+    }
+    if (lungs) {
+      const rate = view?.breathRate ?? 0;
+      // Smooth in-and-out, once per breath.
+      const swell = rate > 0 ? 0.5 - 0.5 * Math.cos((t * rate * 2 * Math.PI) / 60) : 0;
+      lungs.scale.set(1 + 0.03 * swell, 1 + 0.02 * swell, 1 + 0.04 * swell);
     }
     if (fly) {
       fly.t = Math.min(1, fly.t + dt / FLY_SECONDS);
