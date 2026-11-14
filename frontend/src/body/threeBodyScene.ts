@@ -51,6 +51,8 @@ export const threeBodyScene: BodySceneFactory = (host, events) => {
     amber: cssColor("--status-amber", "#ffcc33"),
     red: cssColor("--status-red", "#ff5a5a"),
   };
+  // "Why this forecast?": one neutral hue, deliberately unlike any Status colour.
+  const explainColor = cssColor("--explain", "#b48cff");
   // Read theme colours once; apply() runs on every scrub step.
   const layerColors = new Map<LayerId, THREE.Color>();
   const layerColor = (layer: LayerId) => {
@@ -222,7 +224,14 @@ export const threeBodyScene: BodySceneFactory = (host, events) => {
       p.material.opacity = opacity;
       p.material.depthWrite = opacity > 0.9;
       p.mesh.renderOrder = glow ? 2 : p.kind === "structure" ? 1 : 0;
-      if (glow) {
+      const weight = s?.explain ?? null;
+      if (weight !== null) {
+        // Heat-map: from the layer's own colour towards the explain hue, by weight.
+        p.material.color.copy(layerColor(p.layer)).lerp(explainColor, 0.35 + 0.65 * weight);
+        p.material.emissive.copy(explainColor);
+        p.material.emissiveIntensity = 0.15 + 0.5 * weight;
+        p.mesh.renderOrder = 2;
+      } else if (glow) {
         p.material.color.copy(status[glow]);
         p.material.emissive.copy(status[glow]);
         p.material.emissiveIntensity = 0.55;

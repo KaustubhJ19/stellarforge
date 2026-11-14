@@ -1,0 +1,34 @@
+{
+  "indicator": "heart_rate",
+  "related_indicators": [
+    "resting_heart_rate"
+  ],
+  "unit": "bpm",
+  "how": [
+    "Wear the heart-rate sensor as the device instructions say.",
+    "Read the resting value at the same time each morning, before exercise.",
+    "The morning check can also estimate it from the webcam (estimate, not validated)."
+  ],
+  "why": {
+    "text": "Weightlessness changes the heart and blood vessels, potentially increasing the risk of cardiovascular events.",
+    "hrp_risk": "Risk of Cardiovascular Adaptations",
+    "source": "https://www.nasa.gov/hrp/risks/"
+  },
+  "if_abnormal": {
+    "now": "Check the sensor is worn correctly. If the crewmember is unresponsive, start the CPR protocol. If they report chest pain, start the chest-pain protocol.",
+    "remeasure": "Measure again after the crewmember has rested, with the same device.",
+    "tell_crew": "Tell the crew medical officer.",
+    "tell_ground": "Add the readings to the next ground report."
+  },
+  "space_note": "After landing, Apollo crews' average resting heart rate was 8.1 bpm higher than before flight (61.6 to 69.7), and standing heart rate 23.4 bpm higher. Safety bound 50 to 150 bpm is an Earth reference, no space data (AHA 2025).",
+  "labels": [
+    "team value (how and if_abnormal steps)",
+    "Earth reference, no space data (Safety bound)"
+  ],
+  "sources": [
+    "https://www.nasa.gov/hrp/risks/",
+    "https://nlsp.nasa.gov/search/data/details/e1fa5c55-ddfe-5548-91ba-864080319f44?dataType=EXPERIMENTS",
+    "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms",
+    "Hinkelbein et al. 2020, Recommendation 14 (content/protocols/microgravity-cpr.json)"
+  ]
+}

@@ -81,13 +81,36 @@ export interface Task {
 }
 
 /**
+ * UN-CONTRACTED: tomorrow's readiness forecast (0-10) as Spec 3 proposes to record it into
+ * replay files, one per crew per day (their message of 2026-11-15). `base` + the drivers =
+ * `population`, the general model's forecast; `value` adds `personal_correction` on top.
+ * Replace with the Forecast schema if the data lead adds one.
+ */
+export interface Forecast {
+  crew: string;
+  t: MissionTime;
+  value: number;
+  low: number;
+  high: number;
+  /** "" (normal), "learning your pattern" (range is the whole 0-10) or "re-measure" (range too wide). */
+  label: string | null;
+  population: number;
+  personal_correction: number;
+  base: number;
+  /** SHAP value per driver, in readiness points. */
+  drivers: Record<string, number>;
+}
+
+/**
  * Event types the web app reads. A ReplayFile may carry others (trigger, crew_report);
- * the app ignores them. "alert" events carry Spec 3's Alerts; "task" is APP-SIDE.
+ * the app ignores them. "alert" events carry Spec 3's Alerts; "forecast" is Spec 3's proposed
+ * recorded event (un-contracted); "task" is APP-SIDE.
  */
 export type ReplayEvent =
   | { t: MissionTime; type: "reading"; payload: Reading }
   | { t: MissionTime; type: "alert"; payload: Alert }
-  | { t: MissionTime; type: "task"; payload: Task };
+  | { t: MissionTime; type: "task"; payload: Task }
+  | { t: MissionTime; type: "forecast"; payload: Forecast };
 
 export interface ReplayFile {
   schema_version: string;
@@ -99,14 +122,26 @@ export interface ReplayFile {
 }
 
 /**
- * ASSUMED: one measurement card's content from Spec 5 (content/cards/).
- * Every field is optional so a card renders before its content is written.
+ * One measurement card from Spec 5 (content/cards/*.json at the repo root, the structured
+ * source of truth). Every field but `indicator` is optional so a card renders before its
+ * content is written.
  */
 export interface CardContent {
   indicator: IndicatorId;
-  how?: string;
-  why?: string;
-  ifAbnormal?: string;
+  /** Other Indicators this card also explains, e.g. resting_heart_rate on heart_rate's card. */
+  related_indicators?: IndicatorId[];
+  unit?: string;
+  /** Steps, in order. */
+  how?: string[];
+  why?: {
+    text: string;
+    /** A NASA HRP risk name, or "uncovered" with `uncovered_reason`. */
+    hrp_risk?: string;
+    uncovered_reason?: string;
+    source?: string;
+  };
+  if_abnormal?: { now?: string; remeasure?: string; tell_crew?: string; tell_ground?: string };
+  space_note?: string;
   /** Honest labels, e.g. "team value", "Earth reference, no space data". */
   labels?: string[];
   /** Citations for the content. */

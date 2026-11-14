@@ -23,6 +23,11 @@ export interface StructureView {
   status: Status | null;
   /** Opacity override (insight view); null = follow the layer. */
   opacity: number | null;
+  /**
+   * "Why this forecast?" heat-map weight, 0-1 (what drove the model); null = not part of it.
+   * Drawn in one neutral hue, never a Status colour.
+   */
+  explain: number | null;
 }
 
 /** Zoom level: whole body → region → one structure. */
@@ -40,7 +45,7 @@ export interface BodyView {
   focus: Focus;
   layers: Record<LayerId, LayerView>;
   structures: Record<string, StructureView>;
-  /** Whole-body Status tint (radiation dose, temperature); null = none. */
+  /** Whole-body Status tint (radiation dose, body temperature); null = none. */
   wholeBody: Status | null;
   /** Beats per minute for the heart, or null for still. */
   heartRate: number | null;

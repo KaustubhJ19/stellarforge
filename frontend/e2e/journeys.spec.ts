@@ -37,7 +37,7 @@ test.describe("home screen in a real browser, no service", () => {
     expect(px.red).toBeGreaterThan(300);
     await expect(
       page.getByRole("region", { name: "Physical health" }).getByRole("group", { name: "Heart rate", exact: true }),
-    ).toContainText("Act now");
+    ).toContainText("Alert");
   });
 
   test("hiding a layer changes what is drawn", async ({ page }) => {
@@ -134,6 +134,10 @@ test.describe("home screen in a real browser, no service", () => {
     await details.click();
     const card = page.getByRole("dialog", { name: "Heart rate" });
     await expect(card).toContainText("70 bpm");
+    // Spec 5's structured card, bundled from content/cards/heart_rate.json.
+    await expect(card.getByRole("region", { name: "Why it matters" })).toContainText("Risk of Cardiovascular Adaptations");
+    await expect(card.getByRole("region", { name: "If abnormal" }).getByRole("term")).toHaveCount(4);
+    await card.screenshot({ path: "test-results/card-heart-rate.png" });
     for (let i = 0; i < 4; i++) {
       await page.keyboard.press("Tab");
       expect(await card.evaluate((c) => c.contains(document.activeElement))).toBe(true);
@@ -197,5 +201,41 @@ test.describe("phone width", () => {
       await page.evaluate((y) => scrollTo(0, y), y);
       await expect(page.getByRole("button", { name: "Emergency" })).toBeInViewport();
     }
+  });
+});
+
+test.describe("cabin CO₂ banner", () => {
+  test("shows while the cabin replay's CO₂ is high (10:00-12:00) and clears after", async ({ page }) => {
+    const problems = await openApp(page, "/?replay=/replay/mars-day3-female.json&cabin=/replay/iss-cabin-day3.json");
+    const banner = page.getByRole("status", { name: "Cabin CO₂" });
+    await expect(page.getByRole("region", { name: "Mission" })).toContainText("41.89 mGy");
+    await expect(banner).toHaveCount(0);
+    await scrubTo(page, 10);
+    await expect(banner).toContainText("Cabin CO₂ high: 5,800 ppm");
+    await expect(banner).toContainText("team value, not yet researched");
+    await banner.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: "test-results/co2-banner.png" });
+    await scrubTo(page, 12);
+    await expect(banner).toHaveCount(0);
+    expect(problems).toEqual([]);
+  });
+});
+
+test.describe('"Why this forecast?"', () => {
+  test("draws what drove the model on the body with no Status colours", async ({ page }) => {
+    const problems = await openApp(page);
+    await waitForBody(page);
+    await expect(page.getByRole("region", { name: "Readiness forecast" })).toContainText("6.4 of 10");
+    await page.getByRole("button", { name: "Why this forecast?" }).click();
+    await expect(page.getByRole("heading", { name: "What drove the model" })).toBeVisible();
+    await page.waitForTimeout(1200); // camera settles on the whole body
+    await page.locator(".body-host").screenshot({ path: "test-results/why-forecast.png" });
+    const px = await statusPixels(page);
+    console.log(`status pixels in the why view: ${JSON.stringify(px)}`);
+    expect(px.green + px.amber + px.red).toBeLessThan(150);
+    expect(px.explain).toBeGreaterThan(100); // the brain heat-map at whole-body zoom
+    await page.getByRole("button", { name: "Back to body" }).click();
+    await expect(page.getByRole("heading", { name: "What drove the model" })).toHaveCount(0);
+    expect(problems).toEqual([]);
   });
 });

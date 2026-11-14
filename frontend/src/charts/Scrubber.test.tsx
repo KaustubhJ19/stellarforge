@@ -30,7 +30,7 @@ describe("mission-clock scrubber", () => {
     scrub(14);
     expect(body.view.structures.heart.status).toBe("red");
     expect(body.view.heartRate).toBe(128);
-    expect(heartTile()).toHaveTextContent("Act now");
+    expect(heartTile()).toHaveTextContent("Alert");
 
     scrub(13);
     expect(body.view.structures.heart.status).toBe("green");

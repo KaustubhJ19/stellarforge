@@ -47,20 +47,6 @@
   },
   {
    "t": 172800,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.2,
-    "unit": "mGy",
-    "t": 172800,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 172800,
    "type": "task",
    "payload": {
     "id": "t1",
@@ -129,20 +115,6 @@
    }
   },
   {
-   "t": 176400,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.23,
-    "unit": "mGy",
-    "t": 176400,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
    "t": 180000,
    "type": "reading",
    "payload": {
@@ -178,20 +150,6 @@
     "indicator": "spo2",
     "value": 0.97,
     "unit": "fraction",
-    "t": 180000,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 180000,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.26,
-    "unit": "mGy",
     "t": 180000,
     "source": "sensor",
     "confidence": 0.9,
@@ -269,20 +227,6 @@
    }
   },
   {
-   "t": 183600,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.29,
-    "unit": "mGy",
-    "t": 183600,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
    "t": 187200,
    "type": "reading",
    "payload": {
@@ -318,20 +262,6 @@
     "indicator": "spo2",
     "value": 0.97,
     "unit": "fraction",
-    "t": 187200,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 187200,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.32,
-    "unit": "mGy",
     "t": 187200,
     "source": "sensor",
     "confidence": 0.9,
@@ -381,20 +311,6 @@
    }
   },
   {
-   "t": 190800,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.35,
-    "unit": "mGy",
-    "t": 190800,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
    "t": 194400,
    "type": "reading",
    "payload": {
@@ -430,20 +346,6 @@
     "indicator": "spo2",
     "value": 0.97,
     "unit": "fraction",
-    "t": 194400,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 194400,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.38,
-    "unit": "mGy",
     "t": 194400,
     "source": "sensor",
     "confidence": 0.9,
@@ -564,16 +466,26 @@
   },
   {
    "t": 198000,
-   "type": "reading",
+   "type": "forecast",
    "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.41,
-    "unit": "mGy",
+    "crew": "A",
     "t": 198000,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
+    "value": 6.4,
+    "low": 4.9,
+    "high": 7.8,
+    "label": "",
+    "population": 6.1,
+    "personal_correction": 0.3,
+    "base": 5.6,
+    "drivers": {
+     "fatigue": -0.35,
+     "mood": 0.05,
+     "readiness": 0.6,
+     "sleep_duration_h": -0.4,
+     "sleep_quality": 0.2,
+     "soreness": -0.1,
+     "stress": 0.5
+    }
    }
   },
   {
@@ -626,20 +538,6 @@
     "indicator": "spo2",
     "value": 0.97,
     "unit": "fraction",
-    "t": 201600,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 201600,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.44,
-    "unit": "mGy",
     "t": 201600,
     "source": "sensor",
     "confidence": 0.9,
@@ -722,20 +620,6 @@
    }
   },
   {
-   "t": 205200,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.47,
-    "unit": "mGy",
-    "t": 205200,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
    "t": 208800,
    "type": "reading",
    "payload": {
@@ -771,20 +655,6 @@
     "indicator": "spo2",
     "value": 0.97,
     "unit": "fraction",
-    "t": 208800,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 208800,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.5,
-    "unit": "mGy",
     "t": 208800,
     "source": "sensor",
     "confidence": 0.9,
@@ -863,20 +733,6 @@
   },
   {
    "t": 212400,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.53,
-    "unit": "mGy",
-    "t": 212400,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 212400,
    "type": "alert",
    "payload": {
     "id": "a-drift-stress",
@@ -943,20 +799,6 @@
    }
   },
   {
-   "t": 216000,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.56,
-    "unit": "mGy",
-    "t": 216000,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
    "t": 219600,
    "type": "reading",
    "payload": {
@@ -999,20 +841,6 @@
    }
   },
   {
-   "t": 219600,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.59,
-    "unit": "mGy",
-    "t": 219600,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
    "t": 223200,
    "type": "reading",
    "payload": {
@@ -1048,20 +876,6 @@
     "indicator": "spo2",
     "value": 0.97,
     "unit": "fraction",
-    "t": 223200,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 223200,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.62,
-    "unit": "mGy",
     "t": 223200,
     "source": "sensor",
     "confidence": 0.9,
@@ -1159,20 +973,6 @@
   },
   {
    "t": 226800,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.65,
-    "unit": "mGy",
-    "t": 226800,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 226800,
    "type": "alert",
    "payload": {
     "id": "a-acute-hr-2",
@@ -1226,20 +1026,6 @@
     "indicator": "spo2",
     "value": 0.97,
     "unit": "fraction",
-    "t": 230400,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 230400,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.68,
-    "unit": "mGy",
     "t": 230400,
     "source": "sensor",
     "confidence": 0.9,
@@ -1308,20 +1094,6 @@
    }
   },
   {
-   "t": 234000,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.71,
-    "unit": "mGy",
-    "t": 234000,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
    "t": 237600,
    "type": "reading",
    "payload": {
@@ -1357,20 +1129,6 @@
     "indicator": "spo2",
     "value": 0.97,
     "unit": "fraction",
-    "t": 237600,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 237600,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.74,
-    "unit": "mGy",
     "t": 237600,
     "source": "sensor",
     "confidence": 0.9,
@@ -1467,20 +1225,6 @@
    }
   },
   {
-   "t": 241200,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.77,
-    "unit": "mGy",
-    "t": 241200,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
    "t": 244800,
    "type": "reading",
    "payload": {
@@ -1516,20 +1260,6 @@
     "indicator": "spo2",
     "value": 0.97,
     "unit": "fraction",
-    "t": 244800,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 244800,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.8,
-    "unit": "mGy",
     "t": 244800,
     "source": "sensor",
     "confidence": 0.9,
@@ -1579,20 +1309,6 @@
    }
   },
   {
-   "t": 248400,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.83,
-    "unit": "mGy",
-    "t": 248400,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
    "t": 252000,
    "type": "reading",
    "payload": {
@@ -1628,20 +1344,6 @@
     "indicator": "spo2",
     "value": 0.97,
     "unit": "fraction",
-    "t": 252000,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 252000,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.86,
-    "unit": "mGy",
     "t": 252000,
     "source": "sensor",
     "confidence": 0.9,
@@ -1712,20 +1414,6 @@
     "indicator": "spo2",
     "value": 0.98,
     "unit": "fraction",
-    "t": 255600,
-    "source": "sensor",
-    "confidence": 0.9,
-    "state": "released"
-   }
-  },
-  {
-   "t": 255600,
-   "type": "reading",
-   "payload": {
-    "crew": "habitat",
-    "indicator": "radiation_dose_accumulated",
-    "value": 41.89,
-    "unit": "mGy",
     "t": 255600,
     "source": "sensor",
     "confidence": 0.9,

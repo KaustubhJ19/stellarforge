@@ -38,8 +38,17 @@ export const INDICATORS: Record<IndicatorId, IndicatorInfo> = {
   eyes_sans: { label: "Eyes (SANS)", kind: "physical", place: ["eye.optic"] },
   balance: { label: "Balance", kind: "physical", place: ["brain.cerebellum", "ear.vestibular"] },
   motion_sickness: { label: "Motion sickness", kind: "physical", place: ["brain.cerebellum", "ear.vestibular"] },
+  // Stand test (logged by the crew; Apollo AP005 measures)
+  standing_heart_rate: { label: "Standing heart rate", kind: "physical", place: ["heart", "vessels.carotids"] },
+  standing_systolic_bp: { label: "Standing systolic BP", kind: "physical", place: ["heart", "vessels.carotids"] },
+  // Post-EVA check (self-reports; no body place)
+  post_eva_heart_rate: { label: "Heart rate after EVA", kind: "physical", place: [] },
+  hand_pain: { label: "Hand or finger pain", kind: "physical", place: [] },
+  joint_pain: { label: "Joint pain", kind: "physical", place: [] },
+  skin_irritation: { label: "Skin itch or rash", kind: "physical", place: [] },
+  tingling: { label: "Tingling or numbness", kind: "physical", place: [] },
   radiation_dose_accumulated: { label: "Radiation dose", kind: "physical", place: "whole-body" },
-  temperature: { label: "Temperature", kind: "physical", place: "whole-body" },
+  body_temperature: { label: "Body temperature", kind: "physical", place: "whole-body" },
   // Mental
   stress: { label: "Stress", kind: "mental", place: ["brain.prefrontal", "brain.amygdala"] },
   fatigue: {
@@ -79,6 +88,8 @@ export const HABITAT_INDICATORS: IndicatorId[] = [
 export function formatValue(value: number, unit: string): { value: string; unit: string } {
   const scale = /^(?:score )?\d+-(\d+)$/.exec(unit);
   if (scale) return { value: String(value), unit: `of ${scale[1]}` };
+  if (unit === "yes/no") return { value: value ? "Yes" : "No", unit: "" };
+  if (unit === "1/min") return { value: String(value), unit: "/min" }; // Pulse's per-minute rates
   if (unit === "fraction") return { value: String(+(value * 100).toFixed(1)), unit: "%" };
   return { value: String(value), unit };
 }
@@ -104,6 +115,15 @@ export const SOURCE_TEXT: Record<ReadingSource, string> = {
 /** A 0-1 fraction becomes a percentage for display (tiles, charts, bands); other units are as given. */
 export function displayScale(unit: string): { factor: number; unit: string } {
   return unit === "fraction" ? { factor: 100, unit: "%" } : { factor: 1, unit };
+}
+
+/** The possible range of a bounded unit ("score 1-5", "fraction", "%"); null if open-ended. */
+export function scaleRange(unit: string): [number, number] | null {
+  const scale = /^(?:score )?(\d+)-(\d+)$/.exec(unit);
+  if (scale) return [Number(scale[1]), Number(scale[2])];
+  if (unit === "fraction") return [0, 1];
+  if (unit === "%") return [0, 100];
+  return null;
 }
 
 export function sourceLabel(source: string): string {

@@ -18,7 +18,7 @@ npx playwright install chromium   # only for the browser tests and the audit
 
 ```
 npm run dev          # http://localhost:5173 with the bundled Mars day-3 replay (male crew)
-npm run dev:female   # same day for a female crew member: opens the female body
+npm run dev:female   # same day for a female crew member, with the cabin replay: opens the female body
 npm run build        # production build in dist/ (static files, works offline)
 npm run preview      # serve the build
 ```
@@ -26,7 +26,9 @@ npm run preview      # serve the build
 Load another replay file served by the app (for example one placed in `public/replay/`):
 `http://localhost:5173/?replay=/replay/<file>.json`. Its Crew record is read from the
 `crew-records.json` in the same folder, which is how Spec 1's generators write them
-(`replay/generated/crew-A.json` beside `crew-records.json`). Files from other addresses are refused.
+(`replay/generated/crew-A.json` beside `crew-records.json`). Add the habitat's cabin replay
+(CO₂, temperature, humidity, dose) with `&cabin=/replay/<file>.json`; its events are merged in by
+time. Files from other addresses are refused.
 
 ## Data contracts
 
@@ -35,18 +37,31 @@ The app reads Spec 1's frozen shapes: the JSON Schemas in `contracts/` at the re
 
 - **Status comes only from Alerts.** A Reading's `state` is a data state, not a Status. An
   Indicator shows the Status of its newest Alert at the scrubbed time; with no Alert it is
-  Normal. OPEN: Spec 3 raises Alerts only when an Indicator gets worse and sends no green
-  Alert yet, so a Status never clears; asked of the Spec 3 lead. The sample uses a green Alert.
+  Normal. Spec 3 sends one green Alert when a kind (drift, acute, Safety bound) returns to
+  green; it ends only that kind, so an Indicator shows the worst of its open kinds. Status
+  words are Spec 3's: Normal / Watch / Alert.
 - **Quarantined Readings are shown.** Spec 3 holds Readings out of the baseline while an Alert
   is open; they are the abnormal values. `Alert.deviation` is Spec 3's object
   (`{sigma, cusum, combined}` or `{value, bound}`).
-- **"Your normal" band** on a trend is the Crew record's anchor mean ± 2 SD. OPEN QUESTION for
-  the Spec 3 owner: on a bounded scale this can pass the edge (stress 2 ± 1.2 on 1-5 gives
-  0.8-3.2; SpO₂ could pass 100%). Trim to the scale, or another rule?
-- **Mission profile** name and Earth delay come from `src/profiles.ts` (team values) until
-  Spec 5's profiles exist; an unknown profile shows its id and "Not known".
+- **"Your normal" band** on a trend is the Crew record's anchor mean ± 2 SD, drawn only inside the
+  scale's possible range (a 1-5 score stops at 1 and 5; SpO₂ stops at 100%); agreed with Spec 3.
+  KNOWN GAP: it does not include Spec 3's expected space shift (body temperature +1 °C, building
+  up over 75 days), so a healthy in-flight temperature can sit above the band while Normal.
+  Revisit when body temperature data exists.
+- **Mission profile** name and Earth delay come from Spec 5's `content/profiles/<id>.json`
+  (`name`, `comm_delay`), with the delay's direction and "team value" label shown; an
+  unknown profile shows its id and "Not known".
+- **Measurement cards** come from Spec 5's structured `content/cards/*.json` (How as steps,
+  Why with the NASA HRP risk and space note, If abnormal in four parts). A card also covers
+  its `related_indicators`. Fields in another shape read "Not added yet."
 - **Habitat Readings** (`radiation_dose_*`, `cabin_*`) stay out of the health summaries; the
   mission bar shows `radiation_dose_accumulated`.
+- **Readiness forecast** (`forecast` events, un-contracted: Spec 3's proposed recorded
+  output) shows tomorrow's readiness with its range and label. "Why this forecast?" draws
+  what drove the general model as a violet heat-map on the body (`--explain`, never a Status
+  colour) with the drivers in words; it says the personal adjustment comes on top.
+- **CO₂ banner** shows while the latest cabin CO₂ is over 5,000 ppm, a team value (not yet
+  researched) kept in `src/teamValues.ts` and labelled on screen.
 - **Tasks** (`task` events) are app-side; no contract carries them yet. `trigger` and
   `crew_report` events are ignored here (Spec 4).
 
@@ -88,6 +103,10 @@ public/draco/         vendored Draco decoder so models load offline
 
 - **Spec 4 (emergency flow):** pass `onEmergency` to `<App>`; it receives `"emergency"` or
   `"help-crewmate"`. Until then a placeholder alert shows.
+- **Readings logged on screen** (stand test, post-EVA check from today's tasks): pass
+  `onReadings` to `<App>`; it receives the Readings (`source: "manual"`) and the optional
+  post-EVA note, for the service's `POST /reading`. Until that is wired they live only on
+  the page and are gone on reload.
 - **Spec 5 (content):** pass `cards` to `<App>` (shape `CardContent` in `contracts.ts`);
   missing sections read "Not added yet".
 

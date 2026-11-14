@@ -158,3 +158,112 @@ describe("habitat Readings in the trends", () => {
     }
   });
 });
+
+describe("green Alerts clear one kind of Alert (Spec 3, db44200)", () => {
+  function mission(extra: { kind: "acute" | "drift"; status: "green" | "amber" | "red"; t: number; safety?: boolean }[]) {
+    const m = missionWith([
+      { indicator: "heart_rate", value: 70, t: 8 * HOUR },
+      { indicator: "heart_rate", value: 72, t: 12 * HOUR },
+    ]);
+    const reading = m.replay.events[0].payload as Reading;
+    extra.forEach(({ kind, status, t, safety }, i) => {
+      const a = { ...alertFor({ ...reading, t }, status, 100 + i, kind) };
+      if (safety) a.deviation = { value: 160, bound: { low: 50, high: 150 } };
+      m.replay.events.push({ t, type: "alert", payload: a });
+    });
+    m.replay.events.sort((a, b) => a.t - b.t);
+    return m;
+  }
+  const hr = () => screen.getByRole("group", { name: "Heart rate" });
+
+  it("keeps a drift Watch when only the acute Alert clears", () => {
+    render(<App {...mission([
+      { kind: "drift", status: "amber", t: 9 * HOUR },
+      { kind: "acute", status: "red", t: 10 * HOUR },
+      { kind: "acute", status: "green", t: 11 * HOUR },
+    ])} bodyScene={fakeBodyScene().factory} />);
+    expect(hr()).toHaveAttribute("data-status", "amber");
+  });
+
+  it("keeps a Safety-bound Alert when the acute (sigma) Alert clears", () => {
+    render(<App {...mission([
+      { kind: "acute", status: "red", t: 9 * HOUR, safety: true },
+      { kind: "acute", status: "amber", t: 10 * HOUR },
+      { kind: "acute", status: "green", t: 11 * HOUR },
+    ])} bodyScene={fakeBodyScene().factory} />);
+    expect(hr()).toHaveAttribute("data-status", "red");
+  });
+
+  it("shows Normal once every kind has cleared", () => {
+    render(<App {...mission([
+      { kind: "drift", status: "amber", t: 9 * HOUR },
+      { kind: "acute", status: "red", t: 10 * HOUR },
+      { kind: "acute", status: "green", t: 10.5 * HOUR },
+      { kind: "drift", status: "green", t: 11 * HOUR },
+    ])} bodyScene={fakeBodyScene().factory} />);
+    expect(hr()).toHaveAttribute("data-status", "green");
+  });
+
+  it("calls red 'Alert', Spec 3's word", () => {
+    render(<App {...mission([{ kind: "acute", status: "red", t: 11 * HOUR }])} bodyScene={fakeBodyScene().factory} />);
+    expect(within(hr()).getByText("Alert")).toBeInTheDocument();
+  });
+});
+
+describe("your normal band stays inside the scale", () => {
+  function chartFor(indicator: string, unit: string, values: number[], anchor: { mean: number; sd: number }) {
+    const mission = missionWith(values.map((value, i) => ({ indicator, value, unit, t: (8 + i) * HOUR })));
+    mission.crew.anchor[indicator] = anchor;
+    render(<App {...mission} bodyScene={fakeBodyScene().factory} />);
+    return screen.getByRole("figure", { name: /trend$/ });
+  }
+
+  it("trims a self-report band at the bottom of its 1-5 scale", () => {
+    const chart = chartFor("stress", "score 1-5", [2, 3], { mean: 2, sd: 0.6 });
+    expect(within(chart).getByLabelText("Your normal: 1–3.2 score 1-5")).toBeInTheDocument();
+  });
+
+  it("trims an SpO₂ band at 100%", () => {
+    const chart = chartFor("spo2", "fraction", [0.99, 0.98], { mean: 0.99, sd: 0.01 });
+    expect(within(chart).getByLabelText("Your normal: 97–100 %")).toBeInTheDocument();
+  });
+
+  it("leaves a band on an open-ended unit as mean ± 2 SD", () => {
+    const chart = chartFor("heart_rate", "bpm", [60, 62], { mean: 64, sd: 4 });
+    expect(within(chart).getByLabelText("Your normal: 56–72 bpm")).toBeInTheDocument();
+  });
+});
+
+describe("recorded replays from Spec 3's proposed script", () => {
+  it("loads reading_state events without doubling Readings, and shows the forecast", async () => {
+    const mission = missionWith([
+      { indicator: "heart_rate", value: 70, t: 8 * HOUR },
+      { indicator: "heart_rate", value: 131, t: 9 * HOUR, status: "red" },
+    ]);
+    const held = mission.replay.events.find((e) => e.type === "reading" && e.payload.value === 131)!.payload as Reading;
+    const extra = [
+      { t: 9 * HOUR, type: "reading_state", payload: { ...held, state: "quarantined" } },
+      { t: 10 * HOUR, type: "reading_state", payload: { ...held, state: "released" } },
+      {
+        t: 10 * HOUR, type: "forecast",
+        payload: { crew: "A", t: 10 * HOUR, value: 6.2, low: 4.5, high: 7.9, label: "", population: 6.0,
+          personal_correction: 0.2, base: 5.5, drivers: { fatigue: -0.4, sleep_duration_h: 0.9 } },
+      },
+    ];
+    mission.replay.events.push(...(extra as never[]));
+    mission.replay.events.sort((a, b) => a.t - b.t);
+    render(<App {...mission} bodyScene={fakeBodyScene().factory} />);
+    expect(screen.getByRole("group", { name: "Heart rate" })).toHaveTextContent("131");
+    await userEvent.click(within(screen.getByRole("region", { name: "Trends" })).getByRole("button", { name: "Heart rate" }));
+    await userEvent.click(screen.getByRole("button", { name: "Show as table" }));
+    expect(within(screen.getByRole("table")).getAllByRole("row")).toHaveLength(3); // header + 2 Readings, not 4
+    expect(screen.getByRole("region", { name: "Readiness forecast" })).toHaveTextContent("6.2 of 10");
+  });
+});
+
+describe("units as the crew reads them", () => {
+  it("shows Pulse's 1/min as /min", () => {
+    render(<App {...missionWith([{ indicator: "respiration_rate", value: 15, unit: "1/min" }])} bodyScene={fakeBodyScene().factory} />);
+    expect(screen.getByRole("group", { name: "Respiration" })).toHaveTextContent("15 /min");
+  });
+});

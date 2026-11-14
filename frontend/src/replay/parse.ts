@@ -9,7 +9,14 @@ const PAYLOAD_FIELDS: Record<string, string[]> = {
   reading: ["indicator", "value", "unit", "t"],
   alert: ["id", "kind", "indicator", "status", "t"],
   task: ["id", "title", "done"],
+  forecast: ["crew", "t", "value", "low", "high"],
 };
+
+/** The forecast is un-contracted, so check the fields its views do arithmetic on. */
+function forecastReadable(p: Record<string, unknown>): boolean {
+  const nums = ["value", "low", "high", "population", "personal_correction"].every((k) => typeof p[k] === "number");
+  return nums && isObject(p.drivers) && Object.values(p.drivers).every((v) => typeof v === "number");
+}
 
 /**
  * Checks a replay file loaded from outside (e.g. `?replay=`) has the shape the app reads
@@ -33,6 +40,12 @@ export function parseReplay(json: unknown): ParseResult {
     const payload = e.payload;
     const lacking = isObject(payload) ? need.filter((f) => !(f in payload)) : need;
     if (lacking.length) return { ok: false, error: `event ${i} (${e.type}) is missing ${lacking.join(", ")}` };
+    if (e.type === "forecast" && !forecastReadable(payload as Record<string, unknown>)) {
+      return {
+        ok: false,
+        error: `event ${i} (forecast) needs numbers for value, population, personal_correction and drivers as a set of numbers`,
+      };
+    }
   }
   for (const [i, e] of (json.events as { t: number }[]).entries()) {
     if (e.t < lastT) return { ok: false, error: `event ${i} is out of time order` };

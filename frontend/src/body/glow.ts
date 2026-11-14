@@ -14,7 +14,7 @@ export function worse(a: Status | null, b: Status | null): Status | null {
 
 export interface Glow {
   structures: Record<StructureId, Status | null>;
-  /** Whole-body Indicators (dose, temperature) glow only when not green. */
+  /** Whole-body Indicators (dose, body temperature) glow only when not green. */
   wholeBody: Status | null;
 }
 

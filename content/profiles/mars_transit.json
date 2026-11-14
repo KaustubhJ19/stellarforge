@@ -1,0 +1,64 @@
+{
+  "id": "mars_transit",
+  "name": "Mars transit",
+  "gravity": {
+    "value": "weightless",
+    "status": "sourced",
+    "source": "https://www.nasa.gov/hrp/hazard-gravity-fields/",
+    "note": "NASA: crews are weightless on the six-month trek between the planets. On Mars itself NASA gives three-eighths (hazards page) or about one-third (gravity page) of Earth's gravity; that applies to the Mars base profile, not transit."
+  },
+  "radiation_rate": {
+    "value": 1.8,
+    "unit": "mSv/day",
+    "status": "sourced",
+    "source": "https://www.jpl.nasa.gov/news/data-from-nasa-rovers-voyage-to-mars-aids-planning/",
+    "note": "Galactic cosmic rays measured by Curiosity's RAD instrument inside the spacecraft on its 2011-2012 cruise to Mars. Uncrewed vehicle; no crewed measurement exists."
+  },
+  "comm_delay": {
+    "value": 28.5,
+    "unit": "min one way (57 min round trip)",
+    "status": "not confirmed: team value",
+    "reference": "https://www.nasa.gov/hrp/hazard-distance-from-earth/",
+    "note": "Team choice, conservative. It exceeds NASA's stated maximum of up to 20 minutes one way."
+  },
+  "evacuation": {
+    "value": "none mid-transit",
+    "status": "not confirmed: team value",
+    "reference": "https://www.nasa.gov/hrp/hazard-distance-from-earth/",
+    "note": "No NASA page read states this outright. NASA: crews must handle situations with minimal support from teams on Earth."
+  },
+  "medical_kit": {
+    "value": [],
+    "status": "not confirmed: team value",
+    "note": "No published medical kit for a Mars vehicle. Orion (Artemis II, a Moon mission) carries a medical kit for minor needs; not used as a Mars value."
+  },
+  "exercise_kit": {
+    "value": "not confirmed for a Mars vehicle",
+    "status": "not confirmed: team value",
+    "reference": "https://www.nasa.gov/humans-in-space/life-encapsulated-inside-nasas-orion-for-artemis-ii-moon-mission/",
+    "note": "Reference only: Orion for Artemis II has a flywheel device, with 30 minutes of exercise per astronaut per day."
+  },
+  "crew_size": {
+    "value": 4,
+    "status": "not confirmed: team value",
+    "reference": "https://www.nasa.gov/humans-in-space/life-encapsulated-inside-nasas-orion-for-artemis-ii-moon-mission/",
+    "note": "Artemis II flies four astronauts around the Moon. No crew size is set for a Mars mission."
+  },
+  "duration": {
+    "value": "about 3 years",
+    "status": "sourced",
+    "source": "https://www.nasa.gov/hrp/hazard-distance-from-earth/",
+    "note": "NASA: astronauts bound for Mars would be leaving our planet for roughly three years."
+  },
+  "dust": {
+    "value": "none in transit",
+    "status": "not confirmed: team value",
+    "note": "Planetary dust is a surface hazard; no source read states the transit value."
+  },
+  "closed_habitat": {
+    "value": true,
+    "status": "sourced",
+    "source": "https://www.nasa.gov/hrp/hazards/",
+    "note": "NASA HRP hazards: isolation and confinement, and hostile closed environments inside a spacecraft."
+  }
+}
