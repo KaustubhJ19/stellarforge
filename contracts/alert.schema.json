@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:stellarforge:contracts:alert",
+  "title": "Alert",
+  "description": "An acute, drift or emergency alert (Spec 1 Contracts table).",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "description": "Contract version. Spec 1: include a schema_version field."
+    },
+    "id": {},
+    "kind": {
+      "enum": [
+        "acute",
+        "drift",
+        "emergency"
+      ]
+    },
+    "crew": {},
+    "indicator": {},
+    "deviation": {},
+    "status": {
+      "enum": [
+        "green",
+        "amber",
+        "red"
+      ]
+    },
+    "urgency": {
+      "enum": [
+        "ACT_NOW",
+        "ESCALATE_TO_GROUND",
+        "MONITOR",
+        "ROUTINE"
+      ]
+    },
+    "likely_causes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "indicator": {},
+          "direction": {},
+          "note": {}
+        },
+        "required": [
+          "indicator",
+          "direction",
+          "note"
+        ]
+      }
+    },
+    "t": {
+      "type": "number",
+      "description": "Mission clock seconds"
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "kind",
+    "crew",
+    "indicator",
+    "deviation",
+    "status",
+    "urgency",
+    "likely_causes",
+    "t"
+  ]
+}

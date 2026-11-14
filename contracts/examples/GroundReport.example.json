@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "id": "report-1",
+  "crew": "B",
+  "summary": "Example summary",
+  "history": [],
+  "timeline": [],
+  "actions": [],
+  "sent_t": 1000,
+  "reply_t": 4420,
+  "reply": "Example reply"
+}
