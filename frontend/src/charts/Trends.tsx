@@ -1,16 +1,19 @@
 import { useMemo, useState } from "react";
 import type { CrewRecord, IndicatorId, MissionTime, ReplayFile } from "../contracts";
-import { byIndicatorOrder, displayScale, indicatorLabel } from "../indicators";
+import { HABITAT_INDICATORS, byIndicatorOrder, displayScale, indicatorLabel } from "../indicators";
 import type { MissionState } from "../replay/state";
 import { baselineFor, seriesOf } from "../replay/state";
 import { TrendChart } from "./TrendChart";
 import { Scrubber } from "./Scrubber";
 
+/** Habitat Readings stay out of the health trends, except the dose the mission bar shows. */
+const NOT_CHARTED = HABITAT_INDICATORS.filter((id) => id !== "radiation_dose_accumulated");
+
 /** Indicators with enough Readings to draw a trend, in display order. */
 function chartable(replay: ReplayFile): IndicatorId[] {
   const counts = new Map<IndicatorId, number>();
   for (const e of replay.events) {
-    if (e.type === "reading") counts.set(e.payload.indicator, (counts.get(e.payload.indicator) ?? 0) + 1);
+    if (e.type === "reading" && !NOT_CHARTED.includes(e.payload.indicator)) counts.set(e.payload.indicator, (counts.get(e.payload.indicator) ?? 0) + 1);
   }
   return [...counts]
     .filter(([, n]) => n > 1)
