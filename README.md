@@ -8,18 +8,17 @@ It learns each person's own normal, flags drift early, and walks the crew throug
 
 **Deadline:** Sun 15 Nov 2026, 11:59 PM Melbourne time.
 
-## Start here
+## Team streams
 
-1. Read [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) (the whole plan, datasets, risks, video script).
-2. Pick **one** spec from [specs/](specs/) and follow its "How to start" section.
+Each person owns one stream. The plan and specs are shared by the team outside this repo.
 
-| Spec | Role | Folder it mostly touches |
+| Stream | Role | Folders it mostly touches |
 |---|---|---|
-| [01 Data and service](specs/01-data-and-service.md) | Data lead. **Start first, others wait on the contracts** | `contracts/`, `replay/`, `backend/` |
-| [02 3D body and home](specs/02-3d-body-and-home.md) | 3D / UI lead | `frontend/` |
-| [03 Detection and baseline](specs/03-detection-and-baseline.md) | AI / detection lead | `backend/` |
-| [04 Emergency flow](specs/04-emergency-flow.md) | Emergency-flow lead | `frontend/`, `backend/`, `tools/` |
-| [05 Integration and submission](specs/05-integration-and-submission.md) | Integration lead (Team Owner) | `content/`, `docs/` |
+| Data, clock, contracts | Data lead. **Starts first, others wait on the contracts** | `contracts/`, `replay/`, `backend/` |
+| 3D body and home screen | 3D / UI lead | `frontend/` |
+| Detection and baseline | AI / detection lead | `backend/` |
+| Emergency flow | Emergency-flow lead | `frontend/`, `backend/`, `tools/` |
+| Integration and submission | Integration lead (Team Owner) | `content/`, `docs/` |
 
 ## Repo layout
 
@@ -30,11 +29,10 @@ content/     Protocols, measurement cards, mission profiles (every item has a so
   protocols/
   cards/
   profiles/
-backend/      Local Python backend: Mission clock, detection, store, explainer
+backend/     Local Python backend: Mission clock, detection, store, explainer
 frontend/    Web app (React + Three.js)
 tools/       Content linter, replay generator, golden tests
 docs/        SI-use log, credits, write-up
-specs/       One spec per stream
 ```
 
 Folders are empty on purpose. Each spec says what to put in them.
