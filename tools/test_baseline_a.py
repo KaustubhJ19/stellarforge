@@ -159,3 +159,16 @@ def test_briefing_on_a_normal_day_says_so():
     a = crew()
     feed(a, normal_days(30))
     assert briefing(a) == ["All indicators within your normal."]
+
+
+# --- Clearing a Status (Spec 2 request): a green Alert when a tier returns to green ----------
+
+def test_return_to_green_sends_one_green_routine_alert_that_holds_nothing():
+    out = feed(crew(), normal_days(30) + [80.0, 60.0, 60.5])
+    cleared = [al for al in alerts(out[31:], "acute") if al["status"] == "green"]
+    assert len(cleared) == 1 and cleared[0]["urgency"] == "ROUTINE" and cleared[0]["t"] == 31 * DAY
+    assert out[31]["state"] == out[32]["state"] == "released"  # a green Alert is no reason to hold
+
+
+def test_no_green_alert_without_an_earlier_alert():
+    assert not [al for al in alerts(feed(crew(), normal_days(60, seed=5))) if al["status"] == "green"]

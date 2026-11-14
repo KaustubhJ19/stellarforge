@@ -37,3 +37,9 @@ From the AI / detection lead, 2026-11-15. Branch `spec-3-detection-baseline` (in
 
   Show `deviation.sigma`, or the bound's label.
 - Webcam heart rate for the morning check: `backend.webcam_hr.morning_check_reading(crew, t)` returns a Reading (source `camera`) to POST to `/reading`.
+
+## For the 3D / home-screen lead (Spec 2)
+
+- **Clearing a Status.** When a drift, acute or Safety-bound tier returns to green, detection sends one Alert with status `green` and urgency `ROUTINE` for that indicator and kind. Treat it as "this Alert is over". A green Alert never quarantines Readings.
+- **Status words.** Normal / Watch / Alert. "ACT NOW" is the urgency word for emergencies only: a red Drift is red but MONITOR.
+- **"Your normal" band.** Trimming mean ± 2 SD to the scale's limits is fine; it is display only. The SD floor (`min_anchor_sd`) is used inside detection; the crew record's Anchor SD is unchanged.

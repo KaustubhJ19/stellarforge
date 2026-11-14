@@ -132,7 +132,7 @@ class BaselineA:
             alerts += self._maybe_alert("acute", indicator, tier, {"sigma": za, "cusum": None}, t)
 
         reading = fields | {"crew": self.crew, "indicator": indicator, "value": value, "unit": unit, "t": t}
-        if alerts and self.hold_since is None:
+        if any(al["status"] != "green" for al in alerts) and self.hold_since is None:  # a cleared Alert holds nothing
             self.hold_since = t
         if self.hold_since is not None:  # Quarantine: held data never updates A
             reading["state"] = "quarantined"
@@ -166,11 +166,12 @@ class BaselineA:
     def _maybe_alert(self, kind: str, indicator: str, tier: str, deviation: dict, t: float) -> list[dict]:
         key = (indicator, kind)
         if tier == "green":
-            self.raised.pop(key, None)
-            return []
-        if TIERS.index(tier) <= TIERS.index(self.raised.get(key, "green")):
+            if self.raised.pop(key, None) is None:
+                return []  # nothing to clear
+        elif TIERS.index(tier) <= TIERS.index(self.raised.get(key, "green")):
             return []  # already alerted at this tier
-        self.raised[key] = tier
+        else:
+            self.raised[key] = tier
         zs = list(self.latest_z.values())
         deviation |= {"combined": math.sqrt(sum(z * z for z in zs) / len(zs)) if zs else None}
         return [{"id": f"{self.crew}-{kind}-{indicator}-{t:.0f}", "kind": kind, "crew": self.crew,

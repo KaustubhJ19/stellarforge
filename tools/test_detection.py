@@ -112,6 +112,17 @@ def test_unknown_crew_is_ignored():
     assert Detection([RECORD_B], CUTOFFS).on_message(reading("Z", "resting_heart_rate", 60, "bpm", 0)) == []
 
 
+# --- Clearing a Status (Spec 2 request) --------------------------------------------------
+
+def test_safety_bound_sends_a_green_alert_when_the_value_is_back_inside():
+    bounds = [{"indicator": "heart_rate", "low": 50, "high": 150, "label": "Earth reference, no space data", "source": "AHA"}]
+    det = Detection([RECORD_B], CUTOFFS, bounds)
+    out = run(det, [reading("B", "heart_rate", v, "1/min", t) for t, v in enumerate([155, 156, 100, 101])])
+    assert_valid(out)
+    safety = [m["payload"] for m in out if m["type"] == "alert" and "bound" in m["payload"]["deviation"]]
+    assert [(a["status"], a["urgency"], a["t"]) for a in safety] == [("red", "ESCALATE_TO_GROUND", 0), ("green", "ROUTINE", 2)]
+
+
 # --- Golden crew replays (tickets 03, 13) ------------------------------------------------
 
 def crew_replays():
@@ -127,7 +138,7 @@ def false_alert_report(cutoffs=CUTOFFS, bounds=()):
         events = rp["events"]
         days += (events[-1]["t"] - events[0]["t"]) / 86_400
         out += run(det, [{**e, "payload": {"schema_version": rp["schema_version"], **e["payload"]}} for e in events])
-    alerts = [m["payload"] for m in out if m["type"] == "alert"]
+    alerts = [m["payload"] for m in out if m["type"] == "alert" and m["payload"]["status"] != "green"]  # green = cleared
     by_kind = {k: sum(a["kind"] == k for a in alerts) for k in ("drift", "acute")}
     return out, {"crew_days": round(days), **by_kind, "alerts_per_crew_day": len(alerts) / days}
 
