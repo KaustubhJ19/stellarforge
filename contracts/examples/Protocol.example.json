@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "id": "example-protocol",
+  "title": "Example protocol (placeholder, not medical content)",
+  "steps": [
+    {
+      "id": "step-1",
+      "text": "Example step text",
+      "source": {
+        "guideline": "Example guideline",
+        "section": "0"
+      },
+      "equipment": [],
+      "rescuers": 1
+    }
+  ]
+}

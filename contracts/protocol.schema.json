@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:stellarforge:contracts:protocol",
+  "title": "Protocol",
+  "description": "A protocol of cited steps (Spec 1 Contracts table).",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "description": "Contract version. Spec 1: include a schema_version field."
+    },
+    "id": {},
+    "title": {},
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {},
+          "text": {},
+          "source": {
+            "type": "object",
+            "properties": {
+              "guideline": {},
+              "section": {}
+            },
+            "required": [
+              "guideline",
+              "section"
+            ]
+          },
+          "equipment": {
+            "type": "array"
+          },
+          "rescuers": {}
+        },
+        "required": [
+          "id",
+          "text",
+          "source",
+          "equipment",
+          "rescuers"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "steps"
+  ]
+}

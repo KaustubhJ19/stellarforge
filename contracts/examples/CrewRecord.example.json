@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "id": "A",
+  "sex": "male",
+  "anchor": {
+    "resting_heart_rate": {
+      "mean": 60,
+      "sd": 4
+    }
+  },
+  "missionProfile": "mars_transit"
+}

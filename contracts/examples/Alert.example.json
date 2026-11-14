@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "id": "alert-1",
+  "kind": "drift",
+  "crew": "A",
+  "indicator": "resting_heart_rate",
+  "deviation": 2.1,
+  "status": "amber",
+  "urgency": "MONITOR",
+  "likely_causes": [
+    {
+      "indicator": "sleep_duration",
+      "direction": "down",
+      "note": "Example note"
+    }
+  ],
+  "t": 7200
+}
