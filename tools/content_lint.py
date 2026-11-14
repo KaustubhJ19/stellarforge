@@ -31,7 +31,8 @@ NOT_COVERED = "not covered by published guidance"
 COVERAGE_FILE = "coverage.json"
 
 DRUG_RE = re.compile(r"\b(" + "|".join(map(re.escape, DRUGS)) + r")\b", re.IGNORECASE)
-DOSE_RE = re.compile(r"\d+(?:[.,]\d+)?\s*(mg|mcg|µg|ug|g|ml|l|iu|units?|mmol|meq)\b", re.IGNORECASE)
+# A concentration (54 mg/dL, 3.0 mmol/L) is a measurement, not a dose.
+DOSE_RE = re.compile(r"\d+(?:[.,]\d+)?\s*(mg|mcg|µg|ug|g|ml|l|iu|units?|mmol|meq)\b(?!\s*/\s*d?l\b)", re.IGNORECASE)
 
 
 def _strings(value):
@@ -159,6 +160,46 @@ def lint_bounds(doc):
     return problems
 
 
+# The 17 risks on https://www.nasa.gov/hrp/risks/ (read 2026-11-15), verbatim titles.
+HRP_RISKS = {
+    "Risk of Altered Immune System Responses", "Risk of Altered Sensorimotor and Vestibular Function",
+    "Risk of Cardiovascular Adaptations", "Risk of Decompression Sickness",
+    "Risk of Host-Microorganism Interactions", "Risk of Hypoxia", "Risk of Inadequate Food and Nutrition",
+    "Risk of Injury and Compromised Performance from Spacewalks",
+    "Risk of Reduced Cardiorespiratory and Musculoskeletal Fitness",
+    "Risk of Spaceflight Associated Neuro-ocular Syndrome (SANS)", "Risk of Spaceflight-Induced Bone Changes",
+    "Risk of Behavioral Changes and Psychiatric Disorders", "Risk of Inadequate Teamwork",
+    "Risk of Inadequate Sleep and Irregular Schedules", "Risk of Inadequate Systems Operations Support",
+    "Risk of Injury from Dynamic Loads", "Risk of Radiation-Induced Cancers",
+}
+UNCOVERED = "uncovered"
+IF_ABNORMAL = ("now", "remeasure", "tell_crew", "tell_ground")
+
+
+def lint_card(doc):
+    """Test (c): every card's Why names an HRP risk (or is flagged uncovered with a reason); no drug or dose."""
+    problems = [f"{k}: needs a non-empty string" for k in ("indicator", "unit", "space_note") if not _filled(doc.get(k))]
+    how = doc.get("how")
+    if not (isinstance(how, list) and how and all(_filled(h) for h in how)):
+        problems.append("how: needs a non-empty list of steps")
+    why = doc.get("why") or {}
+    for k in ("text", "source"):
+        if not _filled(why.get(k)):
+            problems.append(f"why.{k}: needs a non-empty string")
+    risk = why.get("hrp_risk")
+    if risk == UNCOVERED:
+        if not _filled(why.get("uncovered_reason")):
+            problems.append("why: an uncovered HRP risk needs an uncovered_reason")
+    elif risk not in HRP_RISKS:
+        problems.append(f"why.hrp_risk {risk!r} is not a NASA HRP risk title (or {UNCOVERED!r})")
+    steps = doc.get("if_abnormal") or {}
+    problems += [f"if_abnormal.{k}: needs a non-empty string" for k in IF_ABNORMAL if not _filled(steps.get(k))]
+    for text in _strings({k: v for k, v in doc.items() if k != "sources"}):
+        problems += [f"drug name {m.group(0)!r} in {text!r}" for m in DRUG_RE.finditer(text)]
+        problems += [f"dose {m.group(0)!r} in {text!r}" for m in DOSE_RE.finditer(text)]
+    return problems
+
+
 def _load(path):
     try:
         return json.loads(path.read_text(encoding="utf-8")), []
@@ -190,6 +231,11 @@ def lint_dir(content_dir):
     for path in sorted((Path(content_dir) / "profiles").glob("*.json")):
         doc, problems = _load(path)
         problems = problems or (lint_bounds(doc) if path.name == BOUNDS_FILE else lint_profile(doc))
+        if problems:
+            failures[path] = problems
+    for path in sorted((Path(content_dir) / "cards").glob("*.json")):
+        doc, problems = _load(path)
+        problems = problems or lint_card(doc)
         if problems:
             failures[path] = problems
     return failures

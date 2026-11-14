@@ -20,6 +20,15 @@ Reviewed `content/profiles/detection-cut-offs.json` (Spec 5 ticket 05). Changes:
 - AHA links added to the `heart_rate` and `systolic_bp` sources.
 - Please confirm detection reads `glucose` and `body_temperature` under those names.
 
+## For the 3D / UI lead (Spec 2)
+
+- **Measurement cards are in `content/cards/`**, one per Indicator: `heart_rate`, `systolic_bp`, `sleep_duration`, `glucose`, `body_temperature`, `mood`. They follow the Spec 5 card shape, not the flat `CardContent` strings your frontend assumes:
+  - `how`: list of steps (join them for display)
+  - `why`: `{text, hrp_risk, source}`, with `uncovered_reason` when `hrp_risk` is `"uncovered"`
+  - `if_abnormal`: `{now, remeasure, tell_crew, tell_ground}`
+  - `unit`, `space_note`, `labels` (list), `sources` (list)
+- **Mission profile:** read `content/profiles/mars_transit.json`; your `groundDelayMin` is `comm_delay.value`.
+
 ## For everyone
 
 Every protocol step and Safety bound is listed in `docs/medical-review.md` for a qualified clinician to sign. If nobody signs, the write-up says "Medical content not clinically reviewed."

@@ -59,6 +59,19 @@ File: `content/profiles/detection-cut-offs.json` (read by Spec 3 detection).
 | `glucose` | 54 | 250 | Earth reference, no space data | ADA Standards of Care in Diabetes 2025, Section 6, Table 6.2 (CGM metrics): TBR <54 mg/dL is level 2 hypoglycemia; TAR >250 mg/dL is level 2 hyperglycemia. Diabetes-care limits, used with the personal baseline. Real astronaut data: 3 of 28 Inspiration4 values (NASA OSDR OSD-575) are below 54 mg/dL, all at R+45. https://pmc.ncbi.nlm.nih.gov/articles/PMC11635034/ https://osdr.nasa.gov/bio/repo/data/studies/OSD-575 | ☐ | |
 | `body_temperature` | 35.0 | 38.0 | low: NASA-STD-3001 (space standard); high: Earth reference, no space data | Low: NASA-STD-3001 Volume 1 Rev C, Definitions: hypothermia occurs as body temperature falls below 95 °F (35 °C). https://standards.nasa.gov/sites/default/files/standards/NASA/C//nasa-std-3001-vol-1-rev-c-signature.pdf High: CDC ill-traveler definitions (Fever): a measured temperature of 100.4 °F [38 °C] or greater. https://www.cdc.gov/quarantine/maritime/definitions-signs-symptoms-conditions-ill-travelers.html Caution: resting core temperature rose about 1 °C over 2.5 months of long-duration flight (Stahn 2017), so 38 °C may be reached by healthy crew in flight; see expected_shift. https://pmc.ncbi.nlm.nih.gov/articles/PMC5701078/ | ☐ | |
 
+## Measurement cards
+
+Files: `content/cards/*.json`. Check the Why, the if-abnormal steps and the space note.
+
+| Card | HRP risk | If abnormal (now) | Space note | OK? | Change needed |
+|---|---|---|---|---|---|
+| card `body_temperature` | uncovered | Check the thermometer and that the crewmember is at rest. | Resting core temperature rose about 1 °C over 2.5 months of long-duration flight (Stahn 2017), so detection expects +1 °C. Safety bound 35 to 38 °C: below 35 °C is hypothermia (NASA-STD-3001); 38 °C is the CDC fever definition (Earth reference, no space data). | ☐ | |
+| card `glucose` | uncovered | Check the sample and the analyser. Compare with the crewmember's own normal. | Safety bound 54 to 250 mg/dL: ADA level 2 limits (Table 6.2), an Earth reference, no space data. Inspiration4 astronauts (NASA OSDR OSD-575) had 3 of 28 values below 54 mg/dL, all 45 days after return. | ☐ | |
+| card `heart_rate` | Risk of Cardiovascular Adaptations | Check the sensor is worn correctly. If the crewmember is unresponsive, start the CPR protocol. If they report chest pain, start the chest-pain protocol. | After landing, Apollo crews' average resting heart rate was 8.1 bpm higher than before flight (61.6 to 69.7), and standing heart rate 23.4 bpm higher. Safety bound 50 to 150 bpm is an Earth reference, no space data (AHA 2025). | ☐ | |
+| card `mood` | Risk of Behavioral Changes and Psychiatric Disorders | Talk with the crewmember privately. | A 1 to 5 self-rating has no clinical limit, so mood has no Safety bound and is judged against the crewmember's own normal. Normal-day data come from Earth wearable users (PMData), not astronauts. | ☐ | |
+| card `sleep_duration` | Risk of Inadequate Sleep and Irregular Schedules | Compare with the crewmember's own normal, not with one night. | NASA schedules an 8.5 hour sleep period (NASA-STD-3001 [V1 6001]). ISS crews actually slept about 6.1 hours a night in flight (Barger 2014). On Earth, adults need 7 or more hours (AASM). No Safety bound: judged against the personal baseline only. | ☐ | |
+| card `systolic_bp` | Risk of Cardiovascular Adaptations | Check the cuff size and position. If the crewmember is unresponsive, start the CPR protocol. | After landing, Apollo crews' average standing systolic pressure was 13 mmHg lower than before flight (118.8 to 105.8). Safety bound: systolic below 90 mmHg, an Earth reference, no space data (AHA 2020); no upper limit sourced. | ☐ | |
+
 ## Points to check first
 
 - Rescuer counts of 1: the guideline names a single "rescuer" or gives no number for those steps.
@@ -66,3 +79,4 @@ File: `content/profiles/detection-cut-offs.json` (read by Spec 3 detection).
 - Glucose: personal baseline plus an ADA level 2 Safety bound (54-250 mg/dL), decision 2026-11-15. Level 1 (70) would fire on 7 of 28 Inspiration4 values (OSD-575); level 2 fires on 3, all at R+45 (36, 43, 44 mg/dL).
 - Body temperature: in-flight resting core temperature rises about 1 °C (Stahn 2017), so the 38 °C Earth fever bound may fire on healthy crew. Detection applies a +1 °C expected shift.
 - "Stop activity" was dropped from the chest-pain phase: no source found.
+- Card Why texts summarise NASA's HRP risk descriptions in plain words; only part of each is quoted verbatim.

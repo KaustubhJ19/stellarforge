@@ -307,6 +307,75 @@ def test_repo_has_a_safety_bound_for(indicator):
     assert indicator in {b["indicator"] for b in doc["safety_bounds"]}
 
 
+# --- Measurement cards (content/cards/), test (c) ---
+
+def card(**changes):
+    doc = {"indicator": "heart_rate", "unit": "bpm",
+           "how": ["Read it from the wearable."],
+           "why": {"text": "Fixture why.", "hrp_risk": "Risk of Cardiovascular Adaptations",
+                   "source": "https://www.nasa.gov/hrp/risks/"},
+           "if_abnormal": {"now": "a", "remeasure": "b", "tell_crew": "c", "tell_ground": "d"},
+           "space_note": "Fixture note.", "labels": ["team value"], "sources": ["https://www.nasa.gov/hrp/risks/"]}
+    doc.update(changes)
+    return doc
+
+
+def test_good_card_has_no_problems():
+    assert cl.lint_card(card()) == []
+
+
+def test_why_must_name_a_real_hrp_risk():
+    problems = cl.lint_card(card(why={"text": "x", "hrp_risk": "Risk of Being Unwell", "source": "s"}))
+    assert any("HRP risk" in p for p in problems)
+
+
+def test_uncovered_risk_is_allowed_with_a_reason():
+    why = {"text": "x", "hrp_risk": "uncovered", "uncovered_reason": "No HRP risk names it.", "source": "s"}
+    assert cl.lint_card(card(why=why)) == []
+
+
+def test_uncovered_risk_needs_a_reason():
+    assert cl.lint_card(card(why={"text": "x", "hrp_risk": "uncovered", "source": "s"}))
+
+
+def test_why_needs_a_source():
+    assert cl.lint_card(card(why={"text": "x", "hrp_risk": "Risk of Cardiovascular Adaptations", "source": ""}))
+
+
+@pytest.mark.parametrize("key", ["now", "remeasure", "tell_crew", "tell_ground"])
+def test_every_if_abnormal_step_is_filled(key):
+    steps = {"now": "a", "remeasure": "b", "tell_crew": "c", "tell_ground": "d", key: ""}
+    assert cl.lint_card(card(if_abnormal=steps))
+
+
+@pytest.mark.parametrize("field", ["how", "unit", "space_note", "indicator"])
+def test_card_fields_are_required(field):
+    doc = card()
+    del doc[field]
+    assert cl.lint_card(doc)
+
+
+@pytest.mark.parametrize("text", ["Below 54 mg/dL", "3.0 mmol/L", "about 1.8 mSv/day"])
+def test_concentrations_are_not_doses(text):
+    assert cl.lint_card(card(space_note=text)) == []
+
+
+def test_drug_or_dose_on_a_card_fails():
+    assert cl.lint_card(card(how=["Take 5 mg melatonin"]))
+
+
+def test_bad_card_file_fails_lint_dir(tmp_path):
+    (tmp_path / "cards").mkdir()
+    (tmp_path / "cards" / "hr.json").write_text(json.dumps(card(unit="")))
+    assert tmp_path / "cards" / "hr.json" in cl.lint_dir(tmp_path)
+
+
+@pytest.mark.parametrize("indicator", ["heart_rate", "systolic_bp", "sleep_duration", "glucose",
+                                       "body_temperature", "mood"])
+def test_repo_has_a_card_for(indicator):
+    assert (ROOT / "content" / "cards" / f"{indicator}.json").exists()
+
+
 def write_clean(tmp_path):
     (tmp_path / "protocols").mkdir()
     (tmp_path / "protocols" / "p.json").write_text(json.dumps(GOOD))

@@ -122,6 +122,12 @@ def test_medical_review_sheet_lists_every_step_and_bound():
         assert f"`{b['indicator']}`" in sheet, b["indicator"]
 
 
+def test_medical_review_sheet_lists_every_card():
+    sheet = (ROOT / "docs" / "medical-review.md").read_text(encoding="utf-8")
+    for path in sorted((ROOT / "content" / "cards").glob("*.json")):
+        assert f"| card `{path.stem}` |" in sheet, path.stem
+
+
 @pytest.mark.parametrize("pid", ["microgravity-cpr", "chest-pain"])
 def test_step_ids_are_unique(pid):
     ids = [s["id"] for s in steps(pid)]
