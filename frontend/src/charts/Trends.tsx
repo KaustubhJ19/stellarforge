@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { CrewRecord, IndicatorId, MissionTime, ReplayFile } from "../contracts";
-import { HABITAT_INDICATORS, byIndicatorOrder, displayScale, indicatorLabel, scaleRange } from "../indicators";
+import { HABITAT_INDICATORS, byIndicatorOrder, displayScale, indicatorLabel } from "../indicators";
 import type { MissionState } from "../replay/state";
 import { baselineFor, seriesOf } from "../replay/state";
 import { TrendChart } from "./TrendChart";
@@ -45,10 +45,8 @@ export function Trends({
   const readings = series
     .filter((r) => r.t <= state.t)
     .map((r) => ({ ...r, value: shown(r.value), unit: scale.unit }));
-  // Mean ± 2 SD, drawn only inside the scale's possible range (e.g. 1-5, SpO₂ up to 100%).
   const band = indicator ? baselineFor(crew, indicator) : undefined;
-  const [min, max] = scaleRange(series[0]?.unit ?? "") ?? [-Infinity, Infinity];
-  const baseline = band && { low: shown(Math.max(band.low, min)), high: shown(Math.min(band.high, max)) };
+  const baseline = band && { low: shown(band.low), high: shown(band.high) };
   const alerts = state.alerts.filter((a) => a.indicator === indicator);
 
   return (
