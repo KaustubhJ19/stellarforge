@@ -75,6 +75,17 @@ function day3(crew) {
   alert(8, "a-drift-bone", "drift", "bone_density", 1.2, "amber");
   alert(18, "a-drift-fatigue", "drift", "fatigue", 1.6, "amber");
 
+  // UN-CONTRACTED: tomorrow's readiness as Spec 3's recording script would write it
+  // (placeholder values; base + drivers = population, value = population + personal_correction).
+  events.push({
+    t: at(7),
+    type: "forecast",
+    payload: {
+      crew, t: at(7), value: 6.4, low: 4.9, high: 7.8, label: "", population: 6.1, personal_correction: 0.3, base: 5.6,
+      drivers: { fatigue: -0.35, mood: 0.05, readiness: 0.6, sleep_duration_h: -0.4, sleep_quality: 0.2, soreness: -0.1, stress: 0.5 },
+    },
+  });
+
   // APP-SIDE: today's checks (no contract carries tasks yet).
   for (const [id, title, done] of [
     ["t1", "Morning check-in", true],

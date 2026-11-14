@@ -25,6 +25,15 @@ describe("checking a replay file before showing it", () => {
     expect(parseReplay(bad)).toEqual({ ok: false, error: `event ${bad.events.length - 1} is out of time order` });
   });
 
+  it("rejects a forecast event missing what the forecast view reads", () => {
+    const bad = marsReplay() as unknown as { events: unknown[] };
+    bad.events.push({ t: 1e9, type: "forecast", payload: { crew: "A", t: 1e9, value: null, low: 1, high: 2 } });
+    expect(parseReplay(bad)).toEqual({
+      ok: false,
+      error: `event ${bad.events.length - 1} (forecast) needs numbers for value, population, personal_correction and drivers as a set of numbers`,
+    });
+  });
+
   it("rejects an event it cannot read", () => {
     const bad = marsReplay() as unknown as { events: unknown[] };
     bad.events.push({ t: 5, type: "reading", payload: { indicator: "heart_rate" } });

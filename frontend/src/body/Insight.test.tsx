@@ -16,8 +16,8 @@ describe("insight view", () => {
     await userEvent.click(screen.getByRole("button", { name: "Show stress on body" }));
 
     const { structures, layers } = body.view;
-    expect(structures["brain.prefrontal"]).toEqual({ status: "amber", opacity: 1 });
-    expect(structures["brain.amygdala"]).toEqual({ status: "amber", opacity: 1 });
+    expect(structures["brain.prefrontal"]).toEqual({ status: "amber", opacity: 1, explain: null });
+    expect(structures["brain.amygdala"]).toEqual({ status: "amber", opacity: 1, explain: null });
     // Unrelated structures lose their glow and fade.
     expect(structures.lungs.status).toBeNull();
     expect(structures.lungs.opacity).toBeLessThan(0.2);

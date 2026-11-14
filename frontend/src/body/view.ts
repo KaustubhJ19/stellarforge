@@ -23,6 +23,11 @@ export interface StructureView {
   status: Status | null;
   /** Opacity override (insight view); null = follow the layer. */
   opacity: number | null;
+  /**
+   * "Why this forecast?" heat-map weight, 0-1 (what drove the model); null = not part of it.
+   * Drawn in one neutral hue, never a Status colour.
+   */
+  explain: number | null;
 }
 
 /** Zoom level: whole body → region → one structure. */

@@ -31,8 +31,9 @@
   --chart-band: rgba(167, 177, 196, 0.12);
   --chart-future: rgba(11, 15, 23, 0.6);
 
-  /* Explanation (never a status colour) */
-  --explain: #6ec6ff;
+  /* Explanation ("Why this forecast?" heat-map), never a status colour. Violet, not the
+     earlier sky blue #6ec6ff, which sat too close to the Normal teal (ΔE 12.6; tritan 5.4). */
+  --explain: #b48cff;
 
   /* Accent and action */
   --accent: #7aa7ff;
@@ -905,3 +906,30 @@ h2 {
 .form-results caption { text-align: left; font-weight: 700; padding-bottom: 8px; }
 .form-results th,
 .form-results td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--surface-2); }
+
+/* Readiness forecast and "Why this forecast?" (explanation, never Status colours) */
+.forecast {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 16px 20px;
+}
+.forecast h2 { margin-top: 0; }
+.forecast__value { font-size: var(--font-size-lg); margin: 4px 0; }
+.forecast__value strong { font-size: var(--font-size-xl); }
+.forecast__note { color: var(--text-muted); }
+.forecast__why { display: block; margin-top: 12px; min-height: var(--tap-min); }
+.why-forecast {
+  border: 2px solid var(--explain);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+.why-forecast h2 { margin: 0 0 8px; }
+.why-forecast__key { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: var(--font-size-sm); }
+.why-forecast__swatch {
+  width: 48px;
+  height: 14px;
+  border-radius: 7px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--explain) 25%, transparent), var(--explain));
+}
+.why-forecast__drivers { margin: 8px 0; padding-left: 1.2em; }

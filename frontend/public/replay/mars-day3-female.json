@@ -465,6 +465,30 @@
    }
   },
   {
+   "t": 198000,
+   "type": "forecast",
+   "payload": {
+    "crew": "B",
+    "t": 198000,
+    "value": 6.4,
+    "low": 4.9,
+    "high": 7.8,
+    "label": "",
+    "population": 6.1,
+    "personal_correction": 0.3,
+    "base": 5.6,
+    "drivers": {
+     "fatigue": -0.35,
+     "mood": 0.05,
+     "readiness": 0.6,
+     "sleep_duration_h": -0.4,
+     "sleep_quality": 0.2,
+     "soreness": -0.1,
+     "stress": 0.5
+    }
+   }
+  },
+  {
    "t": 201600,
    "type": "reading",
    "payload": {

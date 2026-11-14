@@ -38,8 +38,29 @@ export function buildBodyView(input: {
   breathRate: number | null;
   /** The Indicator being examined and its own Status, or null outside insight view. */
   insight: { indicator: IndicatorId; status: Status } | null;
+  /** "Why this forecast?" weights per structure (0-1), or null outside that view. */
+  explain?: Partial<Record<StructureId, number>> | null;
 }): BodyView {
-  const { model, focus, layers, glow, heartRate, breathRate, insight } = input;
+  const { model, focus, layers, glow, heartRate, breathRate, insight, explain } = input;
+  if (explain) {
+    // Explanation, not Status: no glow, no whole-body tint, every layer faint.
+    return {
+      model,
+      focus: { level: "body" },
+      layers: Object.fromEntries(
+        (Object.keys(INSIGHT_FAINT) as LayerId[]).map((layer) => [layer, { visible: true, opacity: INSIGHT_FAINT[layer] }]),
+      ) as Record<LayerId, LayerView>,
+      structures: Object.fromEntries(
+        (Object.keys(glow.structures) as StructureId[]).map((id) => {
+          const w = explain[id];
+          return [id, w ? { status: null, opacity: 0.15 + 0.85 * w, explain: w } : { status: null, opacity: INSIGHT_OTHER_STRUCTURE, explain: null }];
+        }),
+      ),
+      wholeBody: null,
+      heartRate,
+      breathRate,
+    };
+  }
   const ids = insight ? insightStructures(insight.indicator) : [];
 
   if (ids.length === 0) {
@@ -48,7 +69,7 @@ export function buildBodyView(input: {
       focus,
       layers,
       structures: Object.fromEntries(
-        Object.entries(glow.structures).map(([id, status]) => [id, { status, opacity: null }]),
+        Object.entries(glow.structures).map(([id, status]) => [id, { status, opacity: null, explain: null }]),
       ),
       wholeBody: glow.wholeBody,
       heartRate,
@@ -79,8 +100,8 @@ export function buildBodyView(input: {
       (Object.keys(glow.structures) as StructureId[]).map((id) => [
         id,
         focused.has(id)
-          ? { status: insight!.status, opacity: 1 }
-          : { status: null, opacity: INSIGHT_OTHER_STRUCTURE },
+          ? { status: insight!.status, opacity: 1, explain: null }
+          : { status: null, opacity: INSIGHT_OTHER_STRUCTURE, explain: null },
       ]),
     ),
     wholeBody: null,

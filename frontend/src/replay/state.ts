@@ -5,6 +5,7 @@ import type {
   IndicatorId,
   MissionTime,
   Reading,
+  Forecast,
   ReplayEvent,
   ReplayFile,
   Status,
@@ -32,6 +33,8 @@ export interface MissionState {
   latest: Map<IndicatorId, ShownReading>;
   alerts: Alert[];
   tasks: Task[];
+  /** This crew member's newest readiness forecast at `t`, or null. */
+  forecast: Forecast | null;
 }
 
 export function replayRange(replay: ReplayFile): [MissionTime, MissionTime] {
@@ -68,6 +71,7 @@ class OpenAlerts {
  * baseline while an Alert is open, so they are the abnormal values the crew must see.
  */
 function shows(replay: ReplayFile, e: ReplayEvent): boolean {
+  if (e.type === "forecast") return e.payload.crew === replay.crew;
   if (e.type !== "reading" && e.type !== "alert") return true;
   return e.payload.crew === replay.crew || HABITAT_INDICATORS.includes(e.payload.indicator);
 }
@@ -77,6 +81,7 @@ export function missionStateAt(replay: ReplayFile, t: MissionTime): MissionState
   const open = new OpenAlerts();
   const tasks = new Map<string, Task>();
   const alerts: Alert[] = [];
+  let forecast: Forecast | null = null;
   for (const e of replay.events) {
     if (e.t > t || !shows(replay, e)) continue;
     switch (e.type) {
@@ -92,6 +97,9 @@ export function missionStateAt(replay: ReplayFile, t: MissionTime): MissionState
       case "task":
         tasks.set(e.payload.id, e.payload);
         break;
+      case "forecast":
+        forecast = e.payload;
+        break;
     }
   }
   const shown = new Map<IndicatorId, ShownReading>();
@@ -102,6 +110,7 @@ export function missionStateAt(replay: ReplayFile, t: MissionTime): MissionState
     latest: shown,
     alerts,
     tasks: [...tasks.values()],
+    forecast,
   };
 }
 
