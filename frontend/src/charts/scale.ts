@@ -1,3 +1,14 @@
+/** [min, max] without spreading into Math.min/max (large arrays overflow the stack). */
+export function extent(values: number[]): [number, number] {
+  let lo = Infinity;
+  let hi = -Infinity;
+  for (const v of values) {
+    if (v < lo) lo = v;
+    if (v > hi) hi = v;
+  }
+  return values.length ? [lo, hi] : [0, 0];
+}
+
 export type Scale = ((v: number) => number) & { domain: [number, number] };
 
 export function linear([d0, d1]: [number, number], [r0, r1]: [number, number]): Scale {

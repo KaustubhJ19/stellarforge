@@ -1,9 +1,7 @@
 import type { Status } from "../contracts";
 import { StatusBadge } from "../status";
-import type { Glow } from "./glow";
+import { STATUS_RANK, type Glow } from "./glow";
 import { STRUCTURES, type StructureId } from "./structures";
-
-const RANK: Record<Status, number> = { red: 0, amber: 1, green: 2 };
 
 /** The body's Status in words and icons, so colour is never the only signal. */
 export function BodyStatusList({ glow }: { glow: Glow }) {
@@ -12,7 +10,7 @@ export function BodyStatusList({ glow }: { glow: Glow }) {
   for (const [id, status] of Object.entries(glow.structures) as [StructureId, Status | null][]) {
     if (status) rows.push({ name: STRUCTURES[id].label, status });
   }
-  rows.sort((a, b) => RANK[a.status] - RANK[b.status]);
+  rows.sort((a, b) => STATUS_RANK[b.status] - STATUS_RANK[a.status]);
   if (rows.length === 0) return <p className="empty">Nothing to show on the body yet.</p>;
   return (
     <ul className="body-status" aria-label="Body status">

@@ -3,7 +3,7 @@ import type { Alert, Baseline, MissionTime, Reading } from "../contracts";
 import { indicatorLabel } from "../indicators";
 import { formatClock, formatMissionTime } from "../replay/time";
 import { STATUS_TEXT, StatusBadge } from "../status";
-import { linear, niceTicks } from "./scale";
+import { extent, linear, niceTicks } from "./scale";
 
 const W = 640;
 const H = 260;
@@ -15,12 +15,14 @@ export interface TrendChartProps {
   readings: Reading[];
   baseline?: Baseline;
   alerts: Alert[];
-  /** Mission-clock cursor (scrubber); the chart greys out what comes after it. */
+  /** Time axis span; defaults to the Readings' own span. */
+  domain?: [MissionTime, MissionTime];
+  /** Mission-clock cursor (scrubber); the chart shades the not-yet-known time after it. */
   cursor?: MissionTime;
 }
 
 /** Value over the Mission clock, with the person's own normal band and alert markers. */
-export function TrendChart({ readings, baseline, alerts, cursor }: TrendChartProps) {
+export function TrendChart({ readings, baseline, alerts, domain, cursor }: TrendChartProps) {
   const [hover, setHover] = useState<number | null>(null);
   const [asTable, setAsTable] = useState(false);
   const clipId = useId();
@@ -30,10 +32,8 @@ export function TrendChart({ readings, baseline, alerts, cursor }: TrendChartPro
   const label = indicatorLabel(indicator);
   const unit = readings[0].unit;
 
-  const ts = readings.map((r) => r.t);
-  const x = linear([Math.min(...ts), Math.max(...ts)], [M.left, W - M.right]);
-  const values = readings.map((r) => r.value).concat(baseline ? [baseline.low, baseline.high] : []);
-  const [lo, hi] = [Math.min(...values), Math.max(...values)];
+  const x = linear(domain ?? extent(readings.map((r) => r.t)), [M.left, W - M.right]);
+  const [lo, hi] = extent(readings.map((r) => r.value).concat(baseline ? [baseline.low, baseline.high] : []));
   const pad = (hi - lo || 1) * 0.12;
   const y = linear([lo - pad, hi + pad], [H - M.bottom, M.top]);
   const yTicks = niceTicks(lo - pad, hi + pad, 4);

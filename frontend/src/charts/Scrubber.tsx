@@ -21,7 +21,7 @@ export function Scrubber({
           aria-label="Mission clock"
           min={start}
           max={end}
-          step={60}
+          step={1}
           value={t}
           onChange={(e) => onChange(Number(e.target.value))}
         />

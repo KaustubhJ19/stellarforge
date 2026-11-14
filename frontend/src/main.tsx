@@ -1,9 +1,24 @@
-import { StrictMode, useEffect, useState } from "react";
+import { Component, StrictMode, useEffect, useState, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import type { ReplayFile } from "./contracts";
 import { App } from "./App";
+import { parseReplay } from "./replay/parse";
 import marsDay3 from "./fixtures/mars-day3.replay.json";
 import "./theme.css";
+
+/** Last line of defence: say what broke instead of showing a blank page. */
+class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+  state = { error: null as Error | null };
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+  render() {
+    if (this.state.error) {
+      return <p className="load-message">Something went wrong showing this replay: {this.state.error.message}</p>;
+    }
+    return this.props.children;
+  }
+}
 
 /**
  * The app never talks to the service: it renders a replay file. By default the
@@ -18,7 +33,11 @@ function Root() {
     if (!url) return;
     fetch(url)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`${r.status} ${r.statusText}`))))
-      .then(setReplay)
+      .then((json: unknown) => {
+        const parsed = parseReplay(json);
+        if (parsed.ok) setReplay(parsed.replay);
+        else setError(parsed.error);
+      })
       .catch((e: Error) => setError(e.message));
   }, [url]);
 
@@ -29,6 +48,8 @@ function Root() {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Root />
+    <ErrorBoundary>
+      <Root />
+    </ErrorBoundary>
   </StrictMode>,
 );

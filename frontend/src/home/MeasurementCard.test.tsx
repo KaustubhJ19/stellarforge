@@ -55,3 +55,19 @@ describe("measurement card", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 });
+
+describe("measurement card keyboard use", () => {
+  it("keeps Tab inside the card and returns focus to Details on close", async () => {
+    render(<App replay={marsReplay()} bodyScene={fakeBodyScene().factory} cards={[heartCard]} />);
+    const details = screen.getByRole("button", { name: "Heart rate details" });
+    await userEvent.click(details);
+    const card = screen.getByRole("dialog", { name: "Heart rate" });
+    for (let i = 0; i < 5; i++) {
+      await userEvent.tab();
+      expect(card).toContainElement(document.activeElement as HTMLElement);
+    }
+    await userEvent.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(details).toHaveFocus();
+  });
+});

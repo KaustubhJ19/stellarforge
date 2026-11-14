@@ -1,3 +1,4 @@
+import { extent } from "../charts/scale";
 import type {
   Alert,
   Baseline,
@@ -21,8 +22,7 @@ export interface MissionState {
 }
 
 export function replayRange(replay: ReplayFile): [MissionTime, MissionTime] {
-  const ts = replay.events.map((e) => e.t);
-  return ts.length ? [Math.min(...ts), Math.max(...ts)] : [0, 0];
+  return extent(replay.events.map((e) => e.t));
 }
 
 export function missionStateAt(replay: ReplayFile, t: MissionTime): MissionState {
