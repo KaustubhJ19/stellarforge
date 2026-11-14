@@ -2,7 +2,7 @@
 
 Auto rule (Spec 3 "Auto-detect rule"): raise a Trigger when either
 - the rhythm state is VT, VF, PEA or asystole, or
-- heart rate is extreme (above hr_high or below hr_low) for sustain_s seconds AND systolic BP is below sbp_low.
+- heart rate is extreme (at or above hr_high, or below hr_low) for sustain_s seconds AND systolic BP is below sbp_low.
 Works on rhythm state, HR and BP from the Pulse replay, not on an ECG waveform. Chest pain is crew-reported.
 The cut-offs are "Earth reference / team value" items kept in content/, so they are passed in.
 Indicator names ("rhythm", "heart_rate", "systolic_bp") are placeholders until the Spec 1 contracts exist.
@@ -52,7 +52,7 @@ class AutoDetect:
         elif indicator == "systolic_bp":
             self.sbp = value
         elif indicator == "heart_rate":
-            extreme = value > self.th.hr_high or value < self.th.hr_low
+            extreme = value >= self.th.hr_high or value < self.th.hr_low  # AHA 2025: >=150/min, <50/min
             self.extreme_since = (t if self.extreme_since is None else self.extreme_since) if extreme else None
         if (reason is None and self.extreme_since is not None and t - self.extreme_since >= self.th.sustain_s
                 and self.sbp is not None and self.sbp < self.th.sbp_low):
