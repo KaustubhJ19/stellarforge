@@ -89,6 +89,7 @@ export function formatValue(value: number, unit: string): { value: string; unit:
   const scale = /^(?:score )?\d+-(\d+)$/.exec(unit);
   if (scale) return { value: String(value), unit: `of ${scale[1]}` };
   if (unit === "yes/no") return { value: value ? "Yes" : "No", unit: "" };
+  if (unit === "1/min") return { value: String(value), unit: "/min" }; // Pulse's per-minute rates
   if (unit === "fraction") return { value: String(+(value * 100).toFixed(1)), unit: "%" };
   return { value: String(value), unit };
 }

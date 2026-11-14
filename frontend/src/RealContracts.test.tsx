@@ -259,3 +259,10 @@ describe("recorded replays from Spec 3's proposed script", () => {
     expect(within(screen.getByRole("table")).getAllByRole("row")).toHaveLength(3); // header + 2 Readings, not 4
   });
 });
+
+describe("units as the crew reads them", () => {
+  it("shows Pulse's 1/min as /min", () => {
+    render(<App {...missionWith([{ indicator: "respiration_rate", value: 15, unit: "1/min" }])} bodyScene={fakeBodyScene().factory} />);
+    expect(screen.getByRole("group", { name: "Respiration" })).toHaveTextContent("15 /min");
+  });
+});
