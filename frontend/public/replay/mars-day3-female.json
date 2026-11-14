@@ -668,11 +668,15 @@
     "kind": "drift",
     "crew": "B",
     "indicator": "bone_density",
-    "deviation": 1.2,
     "status": "amber",
-    "urgency": "ROUTINE",
+    "urgency": "MONITOR",
     "likely_causes": [],
-    "t": 201600
+    "t": 201600,
+    "deviation": {
+     "sigma": 1.2,
+     "cusum": 3.6,
+     "combined": 0.72
+    }
    }
   },
   {
@@ -879,7 +883,6 @@
     "kind": "drift",
     "crew": "B",
     "indicator": "stress",
-    "deviation": 1.8,
     "status": "amber",
     "urgency": "MONITOR",
     "likely_causes": [
@@ -889,7 +892,12 @@
       "note": "Example: shorter sleep over three days"
      }
     ],
-    "t": 212400
+    "t": 212400,
+    "deviation": {
+     "sigma": 1.8,
+     "cusum": 5.4,
+     "combined": 1.08
+    }
    }
   },
   {
@@ -1015,7 +1023,7 @@
     "t": 223200,
     "source": "sensor",
     "confidence": 0.9,
-    "state": "released"
+    "state": "quarantined"
    }
   },
   {
@@ -1096,11 +1104,15 @@
     "kind": "acute",
     "crew": "B",
     "indicator": "heart_rate",
-    "deviation": 4.2,
     "status": "red",
-    "urgency": "ACT_NOW",
+    "urgency": "ESCALATE_TO_GROUND",
     "likely_causes": [],
-    "t": 223200
+    "t": 223200,
+    "deviation": {
+     "sigma": 5.4,
+     "cusum": null,
+     "combined": 3.24
+    }
    }
   },
   {
@@ -1114,7 +1126,7 @@
     "t": 226800,
     "source": "sensor",
     "confidence": 0.9,
-    "state": "released"
+    "state": "quarantined"
    }
   },
   {
@@ -1167,11 +1179,15 @@
     "kind": "acute",
     "crew": "B",
     "indicator": "heart_rate",
-    "deviation": 2.1,
     "status": "amber",
     "urgency": "MONITOR",
     "likely_causes": [],
-    "t": 226800
+    "t": 226800,
+    "deviation": {
+     "sigma": 4.1,
+     "cusum": null,
+     "combined": 2.46
+    }
    }
   },
   {
@@ -1238,11 +1254,15 @@
     "kind": "acute",
     "crew": "B",
     "indicator": "heart_rate",
-    "deviation": 0.4,
     "status": "green",
     "urgency": "ROUTINE",
     "likely_causes": [],
-    "t": 230400
+    "t": 230400,
+    "deviation": {
+     "sigma": 0.4,
+     "cusum": null,
+     "combined": 0.24
+    }
    }
   },
   {
@@ -1393,11 +1413,15 @@
     "kind": "drift",
     "crew": "B",
     "indicator": "fatigue",
-    "deviation": 1.6,
     "status": "amber",
     "urgency": "MONITOR",
     "likely_causes": [],
-    "t": 237600
+    "t": 237600,
+    "deviation": {
+     "sigma": 1.6,
+     "cusum": 4.8,
+     "combined": 0.96
+    }
    }
   },
   {

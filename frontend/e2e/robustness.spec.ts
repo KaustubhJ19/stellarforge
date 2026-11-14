@@ -15,8 +15,9 @@ function bigReplay(days = 3) {
       t,
       type: "alert",
       payload: {
-        id: `hr-${t}`, kind: "acute", crew: "A", indicator: "heart_rate", deviation: 3, status,
-        urgency: status === "red" ? "ACT_NOW" : "ROUTINE", likely_causes: [], t,
+        id: `hr-${t}`, kind: "acute", crew: "A", indicator: "heart_rate", status,
+        deviation: { sigma: 5, cusum: null, combined: 3 },
+        urgency: status === "red" ? "ESCALATE_TO_GROUND" : "ROUTINE", likely_causes: [], t,
       },
     });
   for (let t = 0; t < days * 86400; t++) {

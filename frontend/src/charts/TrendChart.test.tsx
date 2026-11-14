@@ -17,7 +17,7 @@ function missionWithHeartAlerts(): Mission {
     type: "alert",
     payload: {
       id: "a-drift-hr", kind: "drift", crew: mission.crew.id, indicator: "heart_rate",
-      deviation: 1.6, status: "amber", urgency: "MONITOR", likely_causes: [], t,
+      deviation: { sigma: 1.6, cusum: 4.8, combined: 1 }, status: "amber", urgency: "MONITOR", likely_causes: [], t,
     },
   });
   events.sort((a, b) => a.t - b.t);
