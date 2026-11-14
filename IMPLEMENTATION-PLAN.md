@@ -216,8 +216,8 @@ stellarforge/
   contracts/   JSON Schemas (frozen at H2)
   replay/      crew days, emergency, ISS cabin + dose (generated at the hackathon)
   content/     protocols/  cards/  profiles/   (JSON; every item has a source)
-  service/     Python: clock, replay player, baseline A, detect, likely-cause, explainer, SQLite
-  web/         React + Three.js
+  backend/     Python: clock, replay player, baseline A, detect, likely-cause, explainer, SQLite
+  frontend/    React + Three.js
   tools/       content linter, replay generator, golden tests
   docs/        credits, si-log.md, write-up
   LICENSE      MIT (code); derived 3D assets CC BY-SA 4.0
