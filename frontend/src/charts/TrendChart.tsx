@@ -1,5 +1,6 @@
 import { useId, useState, type PointerEvent } from "react";
-import type { Alert, Baseline, MissionTime, Reading } from "../contracts";
+import type { Alert, MissionTime } from "../contracts";
+import type { Baseline, ShownReading } from "../replay/state";
 import { indicatorLabel } from "../indicators";
 import { formatClock, formatMissionTime } from "../replay/time";
 import { STATUS_TEXT, StatusBadge } from "../status";
@@ -12,7 +13,7 @@ const ALERT_SHAPE = { acute: "triangle", drift: "diamond", emergency: "square" }
 const ALERT_WORD = { acute: "Acute", drift: "Drift", emergency: "Emergency" } as const;
 
 export interface TrendChartProps {
-  readings: Reading[];
+  readings: ShownReading[];
   baseline?: Baseline;
   alerts: Alert[];
   /** Time axis span; defaults to the Readings' own span. */
@@ -146,7 +147,7 @@ export function TrendChart({ readings, baseline, alerts, domain, cursor }: Trend
             <strong>
               {shown.value} {unit}
             </strong>
-            <StatusBadge status={shown.state} />
+            <StatusBadge status={shown.status} />
           </div>
         )}
       </div>
@@ -167,7 +168,7 @@ export function TrendChart({ readings, baseline, alerts, domain, cursor }: Trend
               <tr key={r.t}>
                 <td>{formatMissionTime(r.t)}</td>
                 <td>{r.value}</td>
-                <td>{STATUS_TEXT[r.state].label}</td>
+                <td>{STATUS_TEXT[r.status].label}</td>
               </tr>
             ))}
           </tbody>

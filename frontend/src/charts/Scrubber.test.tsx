@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../App";
-import { marsReplay } from "../test/replay";
+import { marsMission } from "../test/replay";
 import { fakeBodyScene } from "../test/fakeBodyScene";
 
 const DAY3 = 2 * 86400;
@@ -9,7 +9,7 @@ const at = (hour: number) => String(DAY3 + hour * 3600);
 
 function renderApp() {
   const body = fakeBodyScene();
-  render(<App replay={marsReplay()} bodyScene={body.factory} />);
+  render(<App {...marsMission()} bodyScene={body.factory} />);
   const scrubber = screen.getByRole("slider", { name: "Mission clock" });
   return { body, scrub: (hour: number) => fireEvent.change(scrubber, { target: { value: at(hour) } }) };
 }

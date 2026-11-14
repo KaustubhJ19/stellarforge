@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "crew": "A",
+  "profile": "mars_transit",
+  "events": [
+    {
+      "t": 0,
+      "type": "reading",
+      "payload": {
+        "crew": "A",
+        "indicator": "resting_heart_rate",
+        "value": 61,
+        "unit": "bpm",
+        "t": 0,
+        "source": "sim",
+        "confidence": 0.9,
+        "state": "released"
+      }
+    },
+    {
+      "t": 60,
+      "type": "reading",
+      "payload": {
+        "crew": "A",
+        "indicator": "resting_heart_rate",
+        "value": 62,
+        "unit": "bpm",
+        "t": 60,
+        "source": "sim",
+        "confidence": 0.9,
+        "state": "released"
+      }
+    }
+  ]
+}

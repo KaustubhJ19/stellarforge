@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { CardContent, IndicatorId, ReplayFile } from "./contracts";
+import type { CardContent, CrewRecord, IndicatorId, ReplayFile } from "./contracts";
 import { missionStateAt, replayRange, seriesOf } from "./replay/state";
 import { MeasurementCard } from "./home/MeasurementCard";
 import { MissionBar } from "./home/MissionBar";
@@ -33,11 +33,14 @@ function emergencyNotWired(request: EmergencyRequest) {
 
 export function App({
   replay,
+  crew,
   bodyScene = threeBodyScene,
   onEmergency = emergencyNotWired,
   cards = [],
 }: {
   replay: ReplayFile;
+  /** The Crew record the replay belongs to (sex picks the body; anchor gives "your normal"). */
+  crew: CrewRecord;
   bodyScene?: BodySceneFactory;
   /** Hand-off to the emergency flow (Spec 4). */
   onEmergency?: (request: EmergencyRequest) => void;
@@ -54,9 +57,9 @@ export function App({
   const closeCard = useCallback(() => setCardFor(null), []);
 
   const glow = useMemo(() => glowFrom(state.latest), [state]);
-  const model = replay.crew.sex === "female" ? "female" : "male";
+  const model = crew.sex === "female" ? "female" : "male";
   const heartRate = state.latest.get("heart_rate")?.value ?? null;
-  const breathRate = state.latest.get("respiratory_rate")?.value ?? null;
+  const breathRate = state.latest.get("respiration_rate")?.value ?? null;
   // Insight and cards need a Reading at the scrubbed time; scrubbing to before one closes them.
   const insightReading = insight ? state.latest.get(insight) : undefined;
   const cardReading = cardFor ? state.latest.get(cardFor) : undefined;
@@ -64,7 +67,7 @@ export function App({
     if (insight && !insightReading) setInsight(null);
     if (cardFor && !cardReading) setCardFor(null);
   }, [insight, insightReading, cardFor, cardReading]);
-  const examined = insightReading ? { indicator: insightReading.indicator, status: insightReading.state } : null;
+  const examined = insightReading ? { indicator: insightReading.indicator, status: insightReading.status } : null;
   const view = useMemo(
     () => buildBodyView({ model, focus, layers, glow, heartRate, breathRate, insight: examined }),
     // `examined` is a new object each render, so depend on its parts.
@@ -99,7 +102,7 @@ export function App({
             <HealthSummary kind="physical" latest={state.latest} onDetails={setCardFor} />
             <HealthSummary kind="mental" latest={state.latest} onDetails={setCardFor} />
           </div>
-          <Trends replay={replay} state={state} range={range} onScrub={setT} />
+          <Trends replay={replay} crew={crew} state={state} range={range} onScrub={setT} />
           <TaskList tasks={state.tasks} />
         </div>
       </main>

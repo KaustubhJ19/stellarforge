@@ -1,77 +1,92 @@
-// Shapes consumed from Spec 1 (frozen at H2). Until the JSON Schemas land in
-// contracts/, these mirror the fields listed in the Spec 2 contracts table.
-// Assumptions are marked ASSUMED; ticket 12 swaps them for the frozen shapes.
+// Shapes consumed from Spec 1. The JSON Schemas are in contracts/ at the repo root
+// (copied from the data service branch); these types mirror them. Anything not in those
+// schemas is marked APP-SIDE.
 
-/** Mission-elapsed time in seconds since mission start. ASSUMED unit. */
+/** Mission clock seconds. */
 export type MissionTime = number;
 
-/** Green / amber / red. ASSUMED spelling of Reading.state and Alert.status. */
+/** Green / amber / red: only ever set by an Alert (Alert.status). */
 export type Status = "green" | "amber" | "red";
 
 export type IndicatorId = string;
 
+/** Data state of a Reading (not a health Status). */
+export type ReadingState = "released" | "quarantined" | "event";
+
+export type ReadingSource = "sensor" | "camera" | "mic" | "manual" | "lab" | "sim";
+
 export interface Reading {
+  /** May be omitted inside a ReplayFile event; it takes the file's. */
+  schema_version?: string;
   crew: string;
   indicator: IndicatorId;
   value: number;
   unit: string;
   t: MissionTime;
-  source: string;
+  source: ReadingSource;
   confidence: number;
-  state: Status;
+  state: ReadingState;
 }
 
 export type AlertKind = "acute" | "drift" | "emergency";
 
+export type Urgency = "ACT_NOW" | "ESCALATE_TO_GROUND" | "MONITOR" | "ROUTINE";
+
+export interface LikelyCause {
+  indicator: IndicatorId;
+  direction: string;
+  note: string;
+}
+
 export interface Alert {
+  schema_version?: string;
   id: string;
   kind: AlertKind;
   crew: string;
   indicator: IndicatorId;
   deviation: number;
   status: Status;
-  urgency: string;
-  likely_causes: string[];
+  urgency: Urgency;
+  likely_causes: LikelyCause[];
   t: MissionTime;
 }
 
+/** The person's own Earth normal for one Indicator. */
+export interface AnchorEntry {
+  mean: number;
+  sd: number;
+}
+
 export interface CrewRecord {
+  schema_version: string;
   id: string;
   sex: "male" | "female";
-  anchor: string;
+  anchor: Record<IndicatorId, AnchorEntry>;
   missionProfile: string;
 }
 
-/** ASSUMED: the profile payload carried by a ReplayFile. */
-export interface MissionProfile {
-  id: string;
-  name: string;
-  groundDelayMin: number;
-}
-
-/** ASSUMED: the personal baseline band for an Indicator (from Spec 3). */
-export interface Baseline {
-  indicator: IndicatorId;
-  low: number;
-  high: number;
-}
-
-/** ASSUMED: a check due today. */
+/** APP-SIDE: a check due today. No contract carries tasks yet. */
 export interface Task {
   id: string;
   title: string;
   done: boolean;
 }
 
+/**
+ * Event types the web app reads. A ReplayFile may carry others (trigger, crew_report);
+ * the app ignores them. "alert" events carry Spec 3's Alerts; "task" is APP-SIDE.
+ */
 export type ReplayEvent =
   | { t: MissionTime; type: "reading"; payload: Reading }
   | { t: MissionTime; type: "alert"; payload: Alert }
-  | { t: MissionTime; type: "baseline"; payload: Baseline }
   | { t: MissionTime; type: "task"; payload: Task };
 
 export interface ReplayFile {
-  crew: CrewRecord;
-  profile: MissionProfile;
+  schema_version: string;
+  /** Crew id; the CrewRecord itself comes from crew-records.json. */
+  crew: string;
+  /** Mission profile id, e.g. "mars_transit". */
+  profile: string;
   events: ReplayEvent[];
 }
 

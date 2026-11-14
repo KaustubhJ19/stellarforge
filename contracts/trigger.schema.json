@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:stellarforge:contracts:trigger",
+  "title": "Trigger",
+  "description": "An auto or manual emergency trigger (Spec 1 Contracts table).",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "description": "Contract version. Spec 1: include a schema_version field."
+    },
+    "kind": {
+      "enum": [
+        "auto",
+        "manual"
+      ]
+    },
+    "crew": {},
+    "t": {
+      "type": "number",
+      "description": "Mission clock seconds"
+    },
+    "reason": {},
+    "confirmed": {
+      "description": "optional"
+    }
+  },
+  "required": [
+    "schema_version",
+    "kind",
+    "crew",
+    "t",
+    "reason"
+  ]
+}

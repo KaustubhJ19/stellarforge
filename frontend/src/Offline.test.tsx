@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { App } from "./App";
-import { marsReplay } from "./test/replay";
+import { marsMission } from "./test/replay";
 import { fakeBodyScene } from "./test/fakeBodyScene";
 
 describe("runs from replay files with no server", () => {
@@ -10,7 +10,7 @@ describe("runs from replay files with no server", () => {
       throw new Error("service is stopped");
     });
 
-    render(<App replay={marsReplay()} bodyScene={fakeBodyScene().factory} />);
+    render(<App {...marsMission()} bodyScene={fakeBodyScene().factory} />);
 
     expect(screen.getByRole("region", { name: "Mission" })).toHaveTextContent("28.5 min");
     expect(screen.getByRole("region", { name: "Physical health" })).toBeInTheDocument();

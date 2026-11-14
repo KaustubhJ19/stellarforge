@@ -1,16 +1,58 @@
-import { loadReplay } from "./load";
-import { marsReplay } from "../test/replay";
+import { loadMission } from "./load";
+import { marsMission } from "../test/replay";
 
 const ORIGIN = "http://localhost:4173";
+const { replay, crew } = marsMission();
+const CREW_RECORDS = JSON.stringify([crew]);
 
-function respond(body: string, contentType: string, status = 200): typeof fetch {
-  return async () => new Response(body, { status, headers: { "content-type": contentType } });
+/** Serves the replay body for any address, and the Crew records for crew-records.json. */
+function respond(body: string, contentType: string, status = 200, crewRecords = CREW_RECORDS): typeof fetch {
+  return async (input) => {
+    if (String(input).endsWith("/crew-records.json")) {
+      return new Response(crewRecords, { headers: { "content-type": "application/json" } });
+    }
+    return new Response(body, { status, headers: { "content-type": contentType } });
+  };
 }
+const loadReplay = (address: string, origin: string, fetchFn: typeof fetch) => loadMission(address, origin, fetchFn);
 
 describe("loading a replay file from ?replay=", () => {
-  it("loads a replay from the app's own address", async () => {
-    const result = await loadReplay("/replay/day3.json", ORIGIN, respond(JSON.stringify(marsReplay()), "application/json"));
-    expect(result.ok).toBe(true);
+  it("loads a replay and its Crew record from crew-records.json beside it", async () => {
+    const asked: string[] = [];
+    const fetchFn: typeof fetch = async (input) => {
+      asked.push(String(input));
+      return respond(JSON.stringify(replay), "application/json")(input);
+    };
+    const result = await loadReplay("/replay/day3.json", ORIGIN, fetchFn);
+    expect(result).toEqual({ ok: true, replay, crew });
+    expect(asked).toEqual([`${ORIGIN}/replay/day3.json`, `${ORIGIN}/replay/crew-records.json`]);
+  });
+
+  it("says when crew-records.json has no record for the replay's crew", async () => {
+    const other = JSON.stringify([{ ...crew, id: "Z" }]);
+    const result = await loadReplay("/replay/day3.json", ORIGIN, respond(JSON.stringify(replay), "application/json", 200, other));
+    expect(result).toEqual({ ok: false, error: "crew-records.json beside the replay has no Crew record for crew A" });
+  });
+
+  it("names crew-records.json, not the replay, when it comes back as a web page", async () => {
+    const fetchFn: typeof fetch = async (input) =>
+      String(input).endsWith("/crew-records.json")
+        ? new Response("<!doctype html>", { headers: { "content-type": "text/html" } })
+        : new Response(JSON.stringify(replay), { headers: { "content-type": "application/json" } });
+    const result = await loadReplay("/replay/day3.json", ORIGIN, fetchFn);
+    expect(result).toEqual({
+      ok: false,
+      error: "crew-records.json beside the replay: that address returned a web page, not crew-records.json (is it there?)",
+    });
+  });
+
+  it("explains when crew-records.json is missing", async () => {
+    const fetchFn: typeof fetch = async (input) =>
+      String(input).endsWith("/crew-records.json")
+        ? new Response("", { status: 404 })
+        : new Response(JSON.stringify(replay), { headers: { "content-type": "application/json" } });
+    const result = await loadReplay("/replay/day3.json", ORIGIN, fetchFn);
+    expect(result).toEqual({ ok: false, error: "crew-records.json beside the replay: file not found (404)" });
   });
 
   it("refuses a replay from another address, without fetching it", async () => {

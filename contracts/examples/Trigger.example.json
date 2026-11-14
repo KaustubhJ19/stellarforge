@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "manual",
+  "crew": "B",
+  "t": 900,
+  "reason": "Example reason",
+  "confirmed": true
+}

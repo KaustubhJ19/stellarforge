@@ -34,7 +34,7 @@ test.describe("home screen in a real browser, no service", () => {
     const px = await statusPixels(page);
     expect(px.red).toBeGreaterThan(300);
     await expect(
-      page.getByRole("region", { name: "Physical health" }).getByRole("group", { name: "Heart rate" }),
+      page.getByRole("region", { name: "Physical health" }).getByRole("group", { name: "Heart rate", exact: true }),
     ).toContainText("Act now");
   });
 
@@ -133,7 +133,7 @@ test.describe("home screen in a real browser, no service", () => {
 
   test("a measurement card opens, traps focus and closes with Escape", async ({ page }) => {
     await openApp(page);
-    const details = page.getByRole("button", { name: "Heart rate details" });
+    const details = page.getByRole("button", { name: "Heart rate details", exact: true });
     await details.click();
     const card = page.getByRole("dialog", { name: "Heart rate" });
     await expect(card).toContainText("70 bpm");

@@ -1,4 +1,5 @@
-import type { IndicatorId, Reading } from "../contracts";
+import type { IndicatorId } from "../contracts";
+import type { ShownReading } from "../replay/state";
 import { indicatorLabel } from "../indicators";
 import { StatusBadge } from "../status";
 import { insightStructures } from "./buildView";
@@ -8,11 +9,11 @@ export function FlaggedList({
   latest,
   onShow,
 }: {
-  latest: Map<IndicatorId, Reading>;
+  latest: Map<IndicatorId, ShownReading>;
   onShow: (indicator: IndicatorId) => void;
 }) {
   const flagged = [...latest.values()].filter(
-    (r) => r.state !== "green" && insightStructures(r.indicator).length > 0,
+    (r) => r.status !== "green" && insightStructures(r.indicator).length > 0,
   );
   if (flagged.length === 0) return null;
   return (
@@ -23,12 +24,12 @@ export function FlaggedList({
           <button
             key={r.indicator}
             className="flagged__item"
-            data-status={r.state}
+            data-status={r.status}
             aria-label={`Show ${label.toLowerCase()} on body`}
             onClick={() => onShow(r.indicator)}
           >
             <span>{label}</span>
-            <StatusBadge status={r.state} />
+            <StatusBadge status={r.status} />
           </button>
         );
       })}
@@ -36,12 +37,12 @@ export function FlaggedList({
   );
 }
 
-export function InsightBanner({ reading, onExit }: { reading: Reading; onExit: () => void }) {
+export function InsightBanner({ reading, onExit }: { reading: ShownReading; onExit: () => void }) {
   const title = `Insight: ${indicatorLabel(reading.indicator)}`;
   return (
     <section className="insight-banner" aria-label={title}>
       <h2>{title}</h2>
-      <StatusBadge status={reading.state} />
+      <StatusBadge status={reading.status} />
       <button onClick={onExit}>Exit insight</button>
     </section>
   );

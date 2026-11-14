@@ -1,11 +1,11 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../App";
-import { marsReplay } from "../test/replay";
+import { marsMission } from "../test/replay";
 import { fakeBodyScene } from "../test/fakeBodyScene";
 
 function renderHome(onEmergency = vi.fn()) {
-  render(<App replay={marsReplay()} bodyScene={fakeBodyScene().factory} onEmergency={onEmergency} />);
+  render(<App {...marsMission()} bodyScene={fakeBodyScene().factory} onEmergency={onEmergency} />);
   return onEmergency;
 }
 
@@ -17,8 +17,8 @@ describe("home screen", () => {
     renderHome();
     const physical = namesIn(screen.getByRole("region", { name: "Physical health" }));
     const mental = namesIn(screen.getByRole("region", { name: "Mental health" }));
-    expect(physical).toEqual(expect.arrayContaining(["Heart rate", "SpO₂", "Respiration", "Bone density"]));
-    expect(mental).toEqual(expect.arrayContaining(["Stress", "Alertness", "Mood"]));
+    expect(physical).toEqual(expect.arrayContaining(["Heart rate", "Resting heart rate", "SpO₂", "Respiration", "Steps"]));
+    expect(mental).toEqual(expect.arrayContaining(["Stress", "Fatigue", "Sleep", "Mood"]));
     expect(physical).not.toContain("Mood");
     expect(physical).not.toContain("Stress");
   });
