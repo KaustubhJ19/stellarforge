@@ -837,3 +837,58 @@ h2 {
   color: var(--text-muted);
   font-size: var(--font-size-sm);
 }
+
+/* Crew forms (stand test, post-EVA): large type and targets for gloved hands */
+.tasks__forms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+.tasks__forms button { min-height: var(--tap-min); flex: 1 1 200px; font-size: var(--font-size); }
+.form-dialog { font-size: var(--font-size); }
+.form-field {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 20px;
+}
+.form-field > label,
+.form-field > span { font-weight: 600; }
+.form-field input:not([type="radio"]),
+.form-field textarea {
+  min-height: var(--tap-min);
+  padding: 8px 14px;
+  border: 2px solid var(--surface-2);
+  border-radius: 10px;
+  background: var(--bg);
+  color: inherit;
+  font: inherit;
+  font-size: var(--font-size-lg);
+}
+.form-field input:focus-visible,
+.form-field textarea:focus-visible,
+.form-choice:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
+.form-choices { display: flex; flex-wrap: wrap; gap: 10px; }
+.form-choice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: 0 18px;
+  border: 2px solid var(--surface-2);
+  border-radius: 10px;
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+}
+.form-choice:has(input:checked) { border-color: var(--text); background: var(--surface-2); }
+.form-choice input { width: 24px; height: 24px; min-width: 0; min-height: 0; margin: 0; accent-color: var(--accent); }
+.form-submit { min-height: var(--tap-big); width: 100%; font-size: var(--font-size-lg); font-weight: 700; }
+.form-error { font-weight: 600; }
+.form-error::before { content: "! "; }
+.form-note { color: var(--text-muted); font-size: var(--font-size-sm); }
+.form-results { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+.form-results caption { text-align: left; font-weight: 700; padding-bottom: 8px; }
+.form-results th,
+.form-results td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--surface-2); }

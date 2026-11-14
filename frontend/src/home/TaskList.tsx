@@ -1,6 +1,8 @@
 import type { Task } from "../contracts";
 
-export function TaskList({ tasks }: { tasks: Task[] }) {
+export type CrewForm = "stand-test" | "post-eva";
+
+export function TaskList({ tasks, onLog }: { tasks: Task[]; onLog?: (form: CrewForm) => void }) {
   return (
     <section className="tasks" aria-label="Today's tasks">
       <h2>Today's tasks</h2>
@@ -18,6 +20,12 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
             </li>
           ))}
         </ul>
+      )}
+      {onLog && (
+        <div className="tasks__forms">
+          <button onClick={() => onLog("stand-test")}>Log stand test</button>
+          <button onClick={() => onLog("post-eva")}>Log post-EVA check</button>
+        </div>
       )}
     </section>
   );
