@@ -6,8 +6,8 @@ licence, download date, file hash and notes. Generated on 2026-11-14/15; rebuild
 
 | File | What it is | Mission time | Source and licence |
 |---|---|---|---|
-| `crew-A.json` … `crew-D.json` | Four synthetic crew, 152 days of daily readings: resting HR, sleep, steps, sleep score, fatigue, mood, readiness, sleep quality, stress, soreness. Crew A has a planted drift on days 143–151 (source `sim`) | days 0–151 | PMData (Simula), CC BY 4.0, see credit below |
-| `crew-records.json` | Crew records A–D: sex, Anchor (first 14 days), Mars transit profile | — | as above |
+| `crew-A.json` … `crew-D.json` | Four synthetic crew (A–C male, 152 days; D female, 115 days from PMData p10 at the team's request, days 6–120) of daily readings: resting HR, sleep, steps, sleep score, fatigue, mood, readiness, sleep quality, stress, soreness. Crew A has a planted drift on days 143–151 (source `sim`) | days 0–151 (crew D: days 6–120) | PMData (Simula), CC BY 4.0, see credit below |
+| `crew-records.json` | Crew records A–D: sex (D female), Anchor (first 14 days), Mars transit profile | — | as above |
 | `emergency-crew-B.json` | Crew B's collapse: stepwise stroke-volume drop, sinus tachycardia, unstable VT, VF and arrest, compressions; 1 s readings incl. `cardiac_rhythm` and `body_temperature`; chest pain as a `crew_report`. **Estimate, not validated** | starts day 152 (t = 13,132,800 s) | Pulse Physiology Engine 4.3.1 (Kitware), Apache 2.0 |
 | `iss-cabin-dose-RR-1.json` | Real ISS cabin temperature, humidity, CO₂ (5 min) and radiation dose (daily), crew `habitat` | t = 0 at the first sample; use `--offset` to align | NASA OSDR Environmental Data App, mission RR-1; radiation cited as visualization |
 | `inspiration4-labs-I4-C001.json` … `C004` | Real Inspiration4 blood counts (5 analytes, 7 timepoints), source `lab`, crew `I4-C00n` | t = 0 at L-92 | NASA OSDR OSD-569 (LSDS-7), public |
@@ -24,7 +24,7 @@ Readings; crew A has a planted drift; per-minute steps summed per day.
 
 ## Rebuild (needs the git-ignored `data/` downloads)
 ```bash
-python tools/crew_replays.py --overview data/pmdata/participant-overview.xlsx
+python tools/crew_replays.py --overview data/pmdata/participant-overview.xlsx --assign D=p10
 python tools/emergency_replay.py --bundle data/pulse/PulseExplorer-3.3.0-Windows-AMD64 --offset 13132800
 python tools/cabin_dose_replay.py --fetch RR-1
 python tools/inspiration4_labs.py
