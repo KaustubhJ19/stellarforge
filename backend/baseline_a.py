@@ -187,14 +187,36 @@ class BaselineA:
         run.update(tier=tier, unit=unit, last=t)
 
 
+def _drift_note(a: BaselineA, indicator: str) -> str | None:
+    """'resting hr +6 bpm over 9 days' from the current CuSum run, or None if there is no run."""
+    run = a.drift.get(indicator)
+    if not run or not run["n"]:
+        return None
+    normal = a.anchor[indicator]["mean"] + a.shift.get(indicator, 0.0)
+    days = round((run["last"] - run["start"]) / 86_400) + 1
+    return f"{indicator.replace('_', ' ')} {run['sum'] / run['n'] - normal:+.0f} {run['unit']} over {days} days"
+
+
 def briefing(a: BaselineA) -> list[str]:
     """Morning briefing in words from A's numbers, e.g. 'resting hr +6 bpm over 9 days'."""
-    lines = []
-    for indicator, run in a.drift.items():
-        if run["tier"] == "green" or not run["n"]:
-            continue
-        normal = a.anchor[indicator]["mean"] + a.shift.get(indicator, 0.0)
-        size = run["sum"] / run["n"] - normal
-        days = round((run["last"] - run["start"]) / 86_400) + 1
-        lines.append(f"{indicator.replace('_', ' ')} {size:+.0f} {run['unit']} over {days} days")
-    return lines or ["All indicators within your normal."]
+    lines = [_drift_note(a, ind) for ind, run in a.drift.items() if run["tier"] != "green"]
+    return [line for line in lines if line] or ["All indicators within your normal."]
+
+
+LIKELY_CAUSE_LABEL = "suggestion, not diagnosis"  # Spec 3 "Likely-cause ranking"
+
+
+def likely_causes(a: BaselineA, min_sigma: float, top: int = 3) -> list[dict]:
+    """Up to 3 Indicators furthest from the person's normal (Anchor), as Alert.likely_causes.
+
+    Rule-based from A's numbers; it never chooses protocol steps (the confirmed Trigger does).
+    The contract has no label field, so the label is part of each note.
+    """
+    ranked = sorted((i for i, z in a.latest_z.items() if abs(z) >= min_sigma), key=lambda i: -abs(a.latest_z[i]))
+    causes = []
+    for ind in ranked[:top]:
+        z = a.latest_z[ind]
+        note = _drift_note(a, ind) or \
+            f"{ind.replace('_', ' ')} {z * a.anchor[ind]['sd']:+.0f} {a.drift[ind]['unit']} from your normal"
+        causes.append({"indicator": ind, "direction": "up" if z > 0 else "down", "note": f"{note} ({LIKELY_CAUSE_LABEL})"})
+    return causes
