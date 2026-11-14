@@ -14,7 +14,7 @@ describe("zoom body → region → structure", () => {
   it("starts on the whole body", () => {
     const body = renderApp();
     expect(body.view.focus).toEqual({ level: "body" });
-    expect(screen.queryByRole("button", { name: /back/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^Back to (whole body|head|chest|abdomen|pelvis)/ })).not.toBeInTheDocument();
   });
 
   it("zooms into a region and offers only that region's structures", async () => {

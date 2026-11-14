@@ -4,6 +4,7 @@ import { INDICATORS, indicatorLabel } from "../indicators";
 import type { MissionState } from "../replay/state";
 import { seriesOf } from "../replay/state";
 import { TrendChart } from "./TrendChart";
+import { Scrubber } from "./Scrubber";
 
 /** Indicators with enough Readings to draw a trend, in display order. */
 function chartable(replay: ReplayFile): IndicatorId[] {
@@ -21,11 +22,13 @@ function chartable(replay: ReplayFile): IndicatorId[] {
 export function Trends({
   replay,
   state,
-  cursor,
+  range,
+  onScrub,
 }: {
   replay: ReplayFile;
   state: MissionState;
-  cursor?: MissionTime;
+  range: [MissionTime, MissionTime];
+  onScrub: (t: MissionTime) => void;
 }) {
   const options = useMemo(() => chartable(replay), [replay]);
   const [picked, setPicked] = useState<IndicatorId | null>(null);
@@ -40,6 +43,7 @@ export function Trends({
   return (
     <section className="trends" aria-label="Trends">
       <h2>Trends</h2>
+      <Scrubber range={range} t={state.t} onChange={onScrub} />
       {options.length === 0 ? (
         <p className="empty">No trends yet.</p>
       ) : (
@@ -56,7 +60,7 @@ export function Trends({
             readings={readings}
             baseline={state.baselines.get(indicator)}
             alerts={alerts}
-            cursor={cursor}
+            cursor={state.t}
           />
         </>
       )}
