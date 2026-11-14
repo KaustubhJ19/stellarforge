@@ -1,0 +1,166 @@
+/* Theme tokens (ticket 02). Use these, not raw values. */
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg: #0b0f17;
+  --surface: #141a26;
+  --surface-2: #1c2433;
+  --border: #2a3448;
+  --text: #eef2f8;
+  --text-muted: #a7b1c4;
+
+  /* Status: always paired with an icon and words */
+  --status-green: #3ccf7a;
+  --status-amber: #f5b53d;
+  --status-red: #ff5a5a;
+
+  /* Body layers: one calm neutral colour each */
+  --layer-muscles: #c98f86;
+  --layer-skeleton: #e6dfcf;
+  --layer-vessels: #8f9fc9;
+  --layer-organs: #c7a9b8;
+  --layer-brain: #d9c7e3;
+
+  /* Explanation (never a status colour) */
+  --explain: #6ec6ff;
+
+  /* Accent and action */
+  --accent: #7aa7ff;
+  --emergency: #e5262b;
+  --emergency-text: #ffffff;
+
+  /* Type: large for stress and gloves */
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-size: 20px;
+  --font-size-sm: 16px;
+  --font-size-lg: 26px;
+  --font-size-xl: 34px;
+
+  /* Touch: glove-sized targets */
+  --tap-min: 56px;
+  --tap-big: 88px;
+
+  --radius: 14px;
+  --gap: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--font-size);
+  line-height: 1.4;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  min-height: var(--tap-min);
+  min-width: var(--tap-min);
+}
+
+button {
+  cursor: pointer;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 0 20px;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.load-message {
+  padding: 40px;
+  font-size: var(--font-size-lg);
+}
+
+/* Mission bar */
+.mission-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  padding: 12px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.mission-bar__item {
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+}
+
+.mission-bar__label {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+.mission-bar__value {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+/* Status */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.status-badge__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--bg);
+  font-size: var(--font-size-sm);
+}
+
+.status-badge[data-status="green"] .status-badge__icon { background: var(--status-green); }
+.status-badge[data-status="amber"] .status-badge__icon { background: var(--status-amber); }
+.status-badge[data-status="red"] .status-badge__icon { background: var(--status-red); }
+
+/* Indicator tile */
+.indicator-tile {
+  display: grid;
+  gap: 4px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  border-left: 6px solid var(--border);
+}
+
+.indicator-tile[data-status="green"] { border-left-color: var(--status-green); }
+.indicator-tile[data-status="amber"] { border-left-color: var(--status-amber); }
+.indicator-tile[data-status="red"] { border-left-color: var(--status-red); }
+
+.indicator-tile__label {
+  color: var(--text-muted);
+}
+
+.indicator-tile__value {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+.disclaimer {
+  padding: 12px 20px;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  border-top: 1px solid var(--border);
+}

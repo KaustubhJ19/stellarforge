@@ -1,0 +1,2161 @@
+{
+ "crew": {
+  "id": "crew-a",
+  "sex": "male",
+  "anchor": "earth-preflight",
+  "missionProfile": "mars-transit"
+ },
+ "profile": {
+  "id": "mars-transit",
+  "name": "Mars transit",
+  "groundDelayMin": 28.5
+ },
+ "events": [
+  {
+   "t": 172800,
+   "type": "baseline",
+   "payload": {
+    "indicator": "heart_rate",
+    "low": 55,
+    "high": 75
+   }
+  },
+  {
+   "t": 172800,
+   "type": "baseline",
+   "payload": {
+    "indicator": "respiratory_rate",
+    "low": 12,
+    "high": 18
+   }
+  },
+  {
+   "t": 172800,
+   "type": "baseline",
+   "payload": {
+    "indicator": "spo2",
+    "low": 95,
+    "high": 100
+   }
+  },
+  {
+   "t": 172800,
+   "type": "baseline",
+   "payload": {
+    "indicator": "stress",
+    "low": 20,
+    "high": 45
+   }
+  },
+  {
+   "t": 172800,
+   "type": "baseline",
+   "payload": {
+    "indicator": "alertness",
+    "low": 70,
+    "high": 95
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 62,
+    "unit": "bpm",
+    "t": 172800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 14,
+    "unit": "breaths/min",
+    "t": 172800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 97,
+    "unit": "%",
+    "t": 172800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 30,
+    "unit": "score",
+    "t": 172800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 88,
+    "unit": "score",
+    "t": 172800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.2,
+    "unit": "mSv",
+    "t": 172800,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "task",
+   "payload": {
+    "id": "t1",
+    "title": "Morning check-in",
+    "done": true
+   }
+  },
+  {
+   "t": 172800,
+   "type": "task",
+   "payload": {
+    "id": "t2",
+    "title": "Blood pressure",
+    "done": false
+   }
+  },
+  {
+   "t": 172800,
+   "type": "task",
+   "payload": {
+    "id": "t3",
+    "title": "Attention test",
+    "done": false
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 69,
+    "unit": "bpm",
+    "t": 176400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 15,
+    "unit": "breaths/min",
+    "t": 176400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 98,
+    "unit": "%",
+    "t": 176400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 31.5,
+    "unit": "score",
+    "t": 176400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 87,
+    "unit": "score",
+    "t": 176400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.23,
+    "unit": "mSv",
+    "t": 176400,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 67,
+    "unit": "bpm",
+    "t": 180000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 16,
+    "unit": "breaths/min",
+    "t": 180000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 97,
+    "unit": "%",
+    "t": 180000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 33,
+    "unit": "score",
+    "t": 180000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 86,
+    "unit": "score",
+    "t": 180000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.26,
+    "unit": "mSv",
+    "t": 180000,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 65,
+    "unit": "bpm",
+    "t": 183600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 14,
+    "unit": "breaths/min",
+    "t": 183600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 98,
+    "unit": "%",
+    "t": 183600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 34.5,
+    "unit": "score",
+    "t": 183600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 85,
+    "unit": "score",
+    "t": 183600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.29,
+    "unit": "mSv",
+    "t": 183600,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 63,
+    "unit": "bpm",
+    "t": 187200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 15,
+    "unit": "breaths/min",
+    "t": 187200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 97,
+    "unit": "%",
+    "t": 187200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 36,
+    "unit": "score",
+    "t": 187200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 84,
+    "unit": "score",
+    "t": 187200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.32,
+    "unit": "mSv",
+    "t": 187200,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 70,
+    "unit": "bpm",
+    "t": 190800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 16,
+    "unit": "breaths/min",
+    "t": 190800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 98,
+    "unit": "%",
+    "t": 190800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 37.5,
+    "unit": "score",
+    "t": 190800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 83,
+    "unit": "score",
+    "t": 190800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.35,
+    "unit": "mSv",
+    "t": 190800,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 68,
+    "unit": "bpm",
+    "t": 194400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 14,
+    "unit": "breaths/min",
+    "t": 194400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 97,
+    "unit": "%",
+    "t": 194400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 39,
+    "unit": "score",
+    "t": 194400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 82,
+    "unit": "score",
+    "t": 194400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.38,
+    "unit": "mSv",
+    "t": 194400,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 66,
+    "unit": "bpm",
+    "t": 198000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 15,
+    "unit": "breaths/min",
+    "t": 198000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 98,
+    "unit": "%",
+    "t": 198000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 40.5,
+    "unit": "score",
+    "t": 198000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 81,
+    "unit": "score",
+    "t": 198000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.41,
+    "unit": "mSv",
+    "t": 198000,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 64,
+    "unit": "bpm",
+    "t": 201600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 16,
+    "unit": "breaths/min",
+    "t": 201600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 97,
+    "unit": "%",
+    "t": 201600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 42,
+    "unit": "score",
+    "t": 201600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 80,
+    "unit": "score",
+    "t": 201600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.44,
+    "unit": "mSv",
+    "t": 201600,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "mood",
+    "value": 3,
+    "unit": "1-5",
+    "t": 201600,
+    "source": "self-report",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "bone_density",
+    "value": -1.1,
+    "unit": "T-score",
+    "t": 201600,
+    "source": "manual",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 62,
+    "unit": "bpm",
+    "t": 205200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 14,
+    "unit": "breaths/min",
+    "t": 205200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 98,
+    "unit": "%",
+    "t": 205200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 43.5,
+    "unit": "score",
+    "t": 205200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 79,
+    "unit": "score",
+    "t": 205200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.47,
+    "unit": "mSv",
+    "t": 205200,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 69,
+    "unit": "bpm",
+    "t": 208800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 15,
+    "unit": "breaths/min",
+    "t": 208800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 97,
+    "unit": "%",
+    "t": 208800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 45,
+    "unit": "score",
+    "t": 208800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 78,
+    "unit": "score",
+    "t": 208800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.5,
+    "unit": "mSv",
+    "t": 208800,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 67,
+    "unit": "bpm",
+    "t": 212400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 16,
+    "unit": "breaths/min",
+    "t": 212400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 98,
+    "unit": "%",
+    "t": 212400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 46.5,
+    "unit": "score",
+    "t": 212400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 77,
+    "unit": "score",
+    "t": 212400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.53,
+    "unit": "mSv",
+    "t": 212400,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "alert",
+   "payload": {
+    "id": "a-drift-stress",
+    "kind": "drift",
+    "crew": "crew-a",
+    "indicator": "stress",
+    "deviation": 1.8,
+    "status": "amber",
+    "urgency": "today",
+    "likely_causes": [],
+    "t": 212400
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 65,
+    "unit": "bpm",
+    "t": 216000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 14,
+    "unit": "breaths/min",
+    "t": 216000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 97,
+    "unit": "%",
+    "t": 216000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 48,
+    "unit": "score",
+    "t": 216000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 76,
+    "unit": "score",
+    "t": 216000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.56,
+    "unit": "mSv",
+    "t": 216000,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 63,
+    "unit": "bpm",
+    "t": 219600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 15,
+    "unit": "breaths/min",
+    "t": 219600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 98,
+    "unit": "%",
+    "t": 219600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 49.5,
+    "unit": "score",
+    "t": 219600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 75,
+    "unit": "score",
+    "t": 219600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.59,
+    "unit": "mSv",
+    "t": 219600,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 128,
+    "unit": "bpm",
+    "t": 223200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "red"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 16,
+    "unit": "breaths/min",
+    "t": 223200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 97,
+    "unit": "%",
+    "t": 223200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 51,
+    "unit": "score",
+    "t": 223200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 74,
+    "unit": "score",
+    "t": 223200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.62,
+    "unit": "mSv",
+    "t": 223200,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "alert",
+   "payload": {
+    "id": "a-acute-hr",
+    "kind": "acute",
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "deviation": 4.2,
+    "status": "red",
+    "urgency": "now",
+    "likely_causes": [],
+    "t": 223200
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 96,
+    "unit": "bpm",
+    "t": 226800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 14,
+    "unit": "breaths/min",
+    "t": 226800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 98,
+    "unit": "%",
+    "t": 226800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 52.5,
+    "unit": "score",
+    "t": 226800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 73,
+    "unit": "score",
+    "t": 226800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.65,
+    "unit": "mSv",
+    "t": 226800,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 66,
+    "unit": "bpm",
+    "t": 230400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 15,
+    "unit": "breaths/min",
+    "t": 230400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 97,
+    "unit": "%",
+    "t": 230400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 54,
+    "unit": "score",
+    "t": 230400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 72,
+    "unit": "score",
+    "t": 230400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.68,
+    "unit": "mSv",
+    "t": 230400,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 64,
+    "unit": "bpm",
+    "t": 234000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 16,
+    "unit": "breaths/min",
+    "t": 234000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 98,
+    "unit": "%",
+    "t": 234000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 55.5,
+    "unit": "score",
+    "t": 234000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 71,
+    "unit": "score",
+    "t": 234000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.71,
+    "unit": "mSv",
+    "t": 234000,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 62,
+    "unit": "bpm",
+    "t": 237600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 14,
+    "unit": "breaths/min",
+    "t": 237600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 97,
+    "unit": "%",
+    "t": 237600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 57,
+    "unit": "score",
+    "t": 237600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 70,
+    "unit": "score",
+    "t": 237600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.74,
+    "unit": "mSv",
+    "t": 237600,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 69,
+    "unit": "bpm",
+    "t": 241200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 15,
+    "unit": "breaths/min",
+    "t": 241200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 98,
+    "unit": "%",
+    "t": 241200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 58.5,
+    "unit": "score",
+    "t": 241200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 69,
+    "unit": "score",
+    "t": 241200,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.77,
+    "unit": "mSv",
+    "t": 241200,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 67,
+    "unit": "bpm",
+    "t": 244800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 16,
+    "unit": "breaths/min",
+    "t": 244800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 97,
+    "unit": "%",
+    "t": 244800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 60,
+    "unit": "score",
+    "t": 244800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 68,
+    "unit": "score",
+    "t": 244800,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.8,
+    "unit": "mSv",
+    "t": 244800,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 65,
+    "unit": "bpm",
+    "t": 248400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 14,
+    "unit": "breaths/min",
+    "t": 248400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 98,
+    "unit": "%",
+    "t": 248400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 61.5,
+    "unit": "score",
+    "t": 248400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 67,
+    "unit": "score",
+    "t": 248400,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.83,
+    "unit": "mSv",
+    "t": 248400,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 63,
+    "unit": "bpm",
+    "t": 252000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 15,
+    "unit": "breaths/min",
+    "t": 252000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 97,
+    "unit": "%",
+    "t": 252000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 63,
+    "unit": "score",
+    "t": 252000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 66,
+    "unit": "score",
+    "t": 252000,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.86,
+    "unit": "mSv",
+    "t": 252000,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "heart_rate",
+    "value": 70,
+    "unit": "bpm",
+    "t": 255600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "respiratory_rate",
+    "value": 16,
+    "unit": "breaths/min",
+    "t": 255600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "spo2",
+    "value": 98,
+    "unit": "%",
+    "t": 255600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "stress",
+    "value": 64.5,
+    "unit": "score",
+    "t": 255600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "alertness",
+    "value": 65,
+    "unit": "score",
+    "t": 255600,
+    "source": "wearable",
+    "confidence": 0.9,
+    "state": "amber"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "crew-a",
+    "indicator": "radiation_dose",
+    "value": 41.89,
+    "unit": "mSv",
+    "t": 255600,
+    "source": "dosimeter",
+    "confidence": 0.9,
+    "state": "green"
+   }
+  }
+ ]
+}
