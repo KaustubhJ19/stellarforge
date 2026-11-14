@@ -119,10 +119,10 @@ def crew_replays():
     return records, [json.loads((GENERATED / f"crew-{c}.json").read_text()) for c in "ABCD"]
 
 
-def false_alert_report(cutoffs=CUTOFFS):
+def false_alert_report(cutoffs=CUTOFFS, bounds=()):
     """Alerts per crew-day on the four crew replays (Earth wearable data shaped as crew)."""
     records, replays = crew_replays()
-    det, out, days = Detection(records, cutoffs), [], 0.0
+    det, out, days = Detection(records, cutoffs, bounds), [], 0.0
     for rp in replays:
         events = rp["events"]
         days += (events[-1]["t"] - events[0]["t"]) / 86_400
@@ -140,5 +140,6 @@ def test_crew_replays_give_only_contract_valid_messages():
 
 
 if __name__ == "__main__":
-    _, report = false_alert_report()
-    print(report)
+    from backend.detection import load_content
+    print("starting values:", false_alert_report()[1])
+    print("content values: ", false_alert_report(*load_content())[1])

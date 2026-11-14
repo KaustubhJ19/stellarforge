@@ -40,3 +40,15 @@ def test_clip_without_pulse_has_low_confidence():
 def test_too_short_clip_is_rejected():
     with pytest.raises(ValueError):
         estimate_bpm(synthetic_clip(72.0, seconds=3.0), FPS)
+
+
+def test_morning_check_reading_is_a_contract_reading_from_the_camera():
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "contracts"))
+    from validate import validate
+    from backend.webcam_hr import morning_check_reading
+    r = morning_check_reading("A", t=3600, rgb=synthetic_clip(72.0), fps=FPS)
+    validate("Reading", r)
+    assert (r["source"], r["indicator"], r["unit"], r["state"]) == ("camera", "heart_rate", "bpm", "released")
+    assert abs(r["value"] - 72) <= 3 and 0 <= r["confidence"] <= 1

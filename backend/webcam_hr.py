@@ -47,6 +47,19 @@ def estimate_bpm(rgb: np.ndarray, fps: float) -> tuple[float, float]:
     return bpm, confidence
 
 
+def morning_check_reading(crew: str, t: float, rgb=None, fps: float | None = None, seconds: float = 20.0) -> dict:
+    """A Reading (Spec 1 contract) for the morning check: heart rate from the webcam, source camera.
+
+    Pass rgb/fps from a recorded clip, or leave them out to capture from the webcam.
+    Post it to the service (POST /reading). Accuracy: 4.9 bpm mean error on UBFC-rPPG (docs/datasets.md).
+    """
+    if rgb is None:
+        rgb, fps = _capture(seconds)
+    bpm, confidence = estimate_bpm(rgb, fps)
+    return {"schema_version": "1.0.0", "crew": crew, "indicator": "heart_rate", "value": round(bpm, 1), "unit": "bpm",
+            "t": t, "source": "camera", "confidence": round(confidence, 3), "state": "released"}
+
+
 def _skin_means(cap, n_frames: int) -> tuple[np.ndarray, list[float]]:
     """Mean R, G, B of the forehead/cheek area for up to n_frames frames, plus capture times."""
     import cv2
