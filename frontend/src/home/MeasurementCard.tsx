@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef } from "react";
-import type { CardContent, Reading } from "../contracts";
-import { formatValue, indicatorLabel } from "../indicators";
+import type { CardContent } from "../contracts";
+import type { ShownReading } from "../replay/state";
+import { formatValue, indicatorLabel, sourceLabel } from "../indicators";
 import { StatusBadge } from "../status";
 import { Sparkline } from "../charts/Sparkline";
 
@@ -17,8 +18,8 @@ export function MeasurementCard({
   content,
   onClose,
 }: {
-  reading: Reading;
-  history: Reading[];
+  reading: ShownReading;
+  history: ShownReading[];
   content?: CardContent;
   onClose: () => void;
 }) {
@@ -66,7 +67,7 @@ export function MeasurementCard({
         role="dialog"
         aria-modal="true"
         aria-label={label}
-        data-status={reading.state}
+        data-status={reading.status}
         onClick={(e) => e.stopPropagation()}
       >
         <header className="card__head">
@@ -79,10 +80,10 @@ export function MeasurementCard({
           <span className="card__number">
             {shown.value} {shown.unit}
           </span>
-          <StatusBadge status={reading.state} />
+          <StatusBadge status={reading.status} />
           <Sparkline readings={history} />
         </div>
-        <p className="card__source">Source: {reading.source}</p>
+        <p className="card__source">Source: {sourceLabel(reading.source)}</p>
         {content?.labels?.map((l) => (
           <span key={l} className="card__label">
             {l}

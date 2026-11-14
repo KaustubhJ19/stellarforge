@@ -1,4 +1,5 @@
-import type { IndicatorId, Reading, Status } from "../contracts";
+import type { IndicatorId, Status } from "../contracts";
+import type { ShownReading } from "../replay/state";
 import { INDICATORS } from "../indicators";
 import { STRUCTURE_IDS, type StructureId } from "./structures";
 
@@ -17,18 +18,18 @@ export interface Glow {
   wholeBody: Status | null;
 }
 
-/** Status glow from the latest Reading of each Indicator. Status is taken as given, never recomputed. */
-export function glowFrom(latest: Map<IndicatorId, Reading>): Glow {
+/** Status glow from the latest Reading of each Indicator. Status comes from Alerts, never recomputed. */
+export function glowFrom(latest: Map<IndicatorId, ShownReading>): Glow {
   const structures = Object.fromEntries(STRUCTURE_IDS.map((id) => [id, null])) as Glow["structures"];
   let wholeBody: Status | null = null;
   for (const reading of latest.values()) {
     const place = INDICATORS[reading.indicator]?.place;
     if (!place) continue;
     if (place === "whole-body") {
-      if (reading.state !== "green") wholeBody = worse(wholeBody, reading.state);
+      if (reading.status !== "green") wholeBody = worse(wholeBody, reading.status);
       continue;
     }
-    for (const id of place) structures[id] = worse(structures[id], reading.state);
+    for (const id of place) structures[id] = worse(structures[id], reading.status);
   }
   return { structures, wholeBody };
 }

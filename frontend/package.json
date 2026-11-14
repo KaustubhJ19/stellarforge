@@ -30,6 +30,7 @@
     "@types/three": "^0.187.0",
     "@vitejs/plugin-react": "^6.3.0",
     "@vitest/coverage-v8": "^5.1.0",
+    "ajv": "^8.17.1",
     "jsdom": "^31.0.1",
     "playwright": "^1.65.1",
     "typescript": "^7.0.2",

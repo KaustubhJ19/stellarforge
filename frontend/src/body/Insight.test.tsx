@@ -1,12 +1,12 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../App";
-import { marsReplay } from "../test/replay";
+import { marsMission } from "../test/replay";
 import { fakeBodyScene } from "../test/fakeBodyScene";
 
 function renderApp() {
   const body = fakeBodyScene();
-  render(<App replay={marsReplay()} bodyScene={body.factory} />);
+  render(<App {...marsMission()} bodyScene={body.factory} />);
   return body;
 }
 

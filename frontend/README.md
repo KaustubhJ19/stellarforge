@@ -24,7 +24,28 @@ npm run preview      # serve the build
 ```
 
 Load another replay file served by the app (for example one placed in `public/replay/`):
-`http://localhost:5173/?replay=/replay/<file>.json`. Files from other addresses are refused.
+`http://localhost:5173/?replay=/replay/<file>.json`. Its Crew record is read from the
+`crew-records.json` in the same folder, which is how Spec 1's generators write them
+(`replay/generated/crew-A.json` beside `crew-records.json`). Files from other addresses are refused.
+
+## Data contracts
+
+The app reads Spec 1's frozen shapes: the JSON Schemas in `contracts/` at the repo root.
+`npm test` checks every sample replay and Crew record against them. What the app adds on top:
+
+- **Status comes only from Alerts.** A Reading's `state` is a data state, not a Status. An
+  Indicator shows the Status of its newest Alert at the scrubbed time; with no Alert it is
+  Normal. ASSUMED: Spec 3 clears an Indicator with a green Alert.
+- **"Your normal" band** on a trend is the Crew record's anchor mean ± 2 SD.
+- **Mission profile** name and Earth delay come from `src/profiles.ts` (team values) until
+  Spec 5's profiles exist; an unknown profile shows its id and "Not known".
+- **Habitat Readings** (`radiation_dose_*`, `cabin_*`) stay out of the health summaries; the
+  mission bar shows `radiation_dose_accumulated`.
+- **Tasks** (`task` events) are app-side; no contract carries them yet. `trigger` and
+  `crew_report` events are ignored here (Spec 4).
+
+Rebuild the samples with `npm run fixtures`; check them with the data team's validator too:
+`python contracts/validate.py ReplayFile frontend/public/replay/mars-day3.json`.
 
 ## Test
 
@@ -44,13 +65,14 @@ jsdom has no WebGL, so unit tests swap the Three.js renderer for a recorder
 ```
 src/
   App.tsx             home screen: wires replay state, body, summaries, charts
-  contracts.ts        shapes consumed from Spec 1 (ASSUMED fields marked until frozen)
+  contracts.ts        Spec 1 shapes (mirror the JSON Schemas in ../contracts/)
+  profiles.ts         mission profile names and Earth delay by id (until Spec 5)
   indicators.ts       Indicator labels, physical/mental, and where each glows on the body
   replay/             fold a replay up to a Mission-clock time; load and check replay files
   body/               3D body: view model, Three.js renderer, layers, zoom, insight, glow
   charts/             trend chart, sparkline, scrubber
   home/               mission bar, summaries, tasks, Emergency/Help, measurement card
-  fixtures/           hand-made Mars replay used until Spec 1's replay lands
+  fixtures/           hand-made Mars replay and Crew records in Spec 1's shapes
 e2e/                  Playwright browser tests
 public/models/        male and female body GLBs built by tools/anatomy/export_body.py (CC BY-SA 4.0)
 public/draco/         vendored Draco decoder so models load offline
@@ -65,7 +87,7 @@ public/draco/         vendored Draco decoder so models load offline
 
 ## Female body
 
-When the replay's Crew record has `sex: "female"`, the app loads `body-female.glb`
+When the Crew record has `sex: "female"`, the app loads `body-female.glb`
 (try it with `npm run dev:female`, or open `/?replay=/replay/mars-day3-female.json`): female
 organs from the Human Reference Atlas, with muscles, skeleton and vessels resized from the
 male model and labelled approximate on screen.

@@ -1,7 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../App";
-import { marsReplay } from "../test/replay";
+import { marsMission } from "../test/replay";
 import { fakeBodyScene } from "../test/fakeBodyScene";
 import type { CardContent } from "../contracts";
 
@@ -16,7 +16,7 @@ const heartCard: CardContent = {
 };
 
 async function openCard(name: string, cards: CardContent[] = [heartCard]) {
-  render(<App replay={marsReplay()} bodyScene={fakeBodyScene().factory} cards={cards} />);
+  render(<App {...marsMission()} bodyScene={fakeBodyScene().factory} cards={cards} />);
   await userEvent.click(screen.getByRole("button", { name: `${name} details` }));
   return screen.getByRole("dialog", { name });
 }
@@ -25,8 +25,16 @@ describe("measurement card", () => {
   it("shows the value, its source and a sparkline", async () => {
     const card = await openCard("Heart rate");
     expect(card).toHaveTextContent("70 bpm");
-    expect(card).toHaveTextContent("Source: wearable");
+    expect(card).toHaveTextContent("Source: Sensor");
     expect(within(card).getByRole("img", { name: /Heart rate sparkline/ })).toBeInTheDocument();
+  });
+
+  it("says plainly when a value is simulated", async () => {
+    const { replay, crew } = marsMission();
+    for (const e of replay.events) if (e.type === "reading" && e.payload.indicator === "heart_rate") e.payload.source = "sim";
+    render(<App replay={replay} crew={crew} bodyScene={fakeBodyScene().factory} />);
+    await userEvent.click(screen.getByRole("button", { name: "Heart rate details" }));
+    expect(screen.getByRole("dialog")).toHaveTextContent("Source: Simulated");
   });
 
   it("renders How, Why and If abnormal from the content", async () => {
@@ -58,7 +66,7 @@ describe("measurement card", () => {
 
 describe("measurement card keyboard use", () => {
   it("keeps Tab inside the card and returns focus to Details on close", async () => {
-    render(<App replay={marsReplay()} bodyScene={fakeBodyScene().factory} cards={[heartCard]} />);
+    render(<App {...marsMission()} bodyScene={fakeBodyScene().factory} cards={[heartCard]} />);
     const details = screen.getByRole("button", { name: "Heart rate details" });
     await userEvent.click(details);
     const card = screen.getByRole("dialog", { name: "Heart rate" });

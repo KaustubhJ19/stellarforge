@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import type { IndicatorId, MissionTime, ReplayFile } from "../contracts";
-import { byIndicatorOrder, indicatorLabel } from "../indicators";
+import type { CrewRecord, IndicatorId, MissionTime, ReplayFile } from "../contracts";
+import { byIndicatorOrder, displayScale, indicatorLabel } from "../indicators";
 import type { MissionState } from "../replay/state";
-import { seriesOf } from "../replay/state";
+import { baselineFor, seriesOf } from "../replay/state";
 import { TrendChart } from "./TrendChart";
 import { Scrubber } from "./Scrubber";
 
@@ -20,11 +20,13 @@ function chartable(replay: ReplayFile): IndicatorId[] {
 
 export function Trends({
   replay,
+  crew,
   state,
   range,
   onScrub,
 }: {
   replay: ReplayFile;
+  crew: CrewRecord;
   state: MissionState;
   range: [MissionTime, MissionTime];
   onScrub: (t: MissionTime) => void;
@@ -34,7 +36,14 @@ export function Trends({
   const indicator = picked ?? options[0];
   const series = useMemo(() => (indicator ? seriesOf(replay, indicator) : []), [replay, indicator]);
   // Only what was known at the scrubbed time; the axis still spans the whole replay.
-  const readings = series.filter((r) => r.t <= state.t);
+  // Shown in display units (a 0-1 fraction as %), as the tiles show it.
+  const scale = displayScale(series[0]?.unit ?? "");
+  const shown = (n: number) => +(n * scale.factor).toFixed(3);
+  const readings = series
+    .filter((r) => r.t <= state.t)
+    .map((r) => ({ ...r, value: shown(r.value), unit: scale.unit }));
+  const band = indicator ? baselineFor(crew, indicator) : undefined;
+  const baseline = band && { low: shown(band.low), high: shown(band.high) };
   const alerts = state.alerts.filter((a) => a.indicator === indicator);
 
   return (
@@ -58,7 +67,7 @@ export function Trends({
             <TrendChart
               key={indicator}
               readings={readings}
-              baseline={state.baselines.get(indicator)}
+              baseline={baseline}
               alerts={alerts}
               domain={range}
               cursor={state.t}

@@ -1,29 +1,31 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../App";
-import { marsReplay } from "../test/replay";
+import { marsMission } from "../test/replay";
 import { fakeBodyScene } from "../test/fakeBodyScene";
-import type { ReplayFile } from "../contracts";
+import type { Mission } from "../test/replay";
 
 const DAY3 = 2 * 86400;
 
 /** The Mars day plus a Drift alert on heart rate at 09:00 (an Acute one is already at 14:00). */
-function replayWithHeartAlerts(): ReplayFile {
-  const replay = marsReplay();
+function missionWithHeartAlerts(): Mission {
+  const mission = marsMission();
   const t = DAY3 + 9 * 3600;
-  replay.events.push({
+  const events = mission.replay.events;
+  events.push({
     t,
     type: "alert",
     payload: {
-      id: "a-drift-hr", kind: "drift", crew: replay.crew.id, indicator: "heart_rate",
-      deviation: 1.6, status: "amber", urgency: "today", likely_causes: [], t,
+      id: "a-drift-hr", kind: "drift", crew: mission.crew.id, indicator: "heart_rate",
+      deviation: 1.6, status: "amber", urgency: "MONITOR", likely_causes: [], t,
     },
   });
-  return replay;
+  events.sort((a, b) => a.t - b.t);
+  return mission;
 }
 
 async function openTrend(name: string) {
-  render(<App replay={replayWithHeartAlerts()} bodyScene={fakeBodyScene().factory} />);
+  render(<App {...missionWithHeartAlerts()} bodyScene={fakeBodyScene().factory} />);
   const trends = screen.getByRole("region", { name: "Trends" });
   await userEvent.click(within(trends).getByRole("button", { name }));
   return screen.getByRole("figure", { name: `${name} trend` });

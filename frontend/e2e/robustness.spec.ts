@@ -4,27 +4,40 @@ import { openApp, waitForBody } from "./helpers";
 /** A big replay like Spec 1 may produce: 1 Hz heart rate plus minute-level Readings over 3 days. */
 function bigReplay(days = 3) {
   const events: unknown[] = [];
-  const reading = (t: number, indicator: string, value: number, unit: string, state = "green") =>
+  const reading = (t: number, indicator: string, value: number, unit: string, source = "sensor") =>
     events.push({
       t,
       type: "reading",
-      payload: { crew: "crew-a", indicator, value, unit, t, source: "wearable", confidence: 0.9, state },
+      payload: { crew: "A", indicator, value, unit, t, source, confidence: 0.9, state: "released" },
+    });
+  const alert = (t: number, status: string) =>
+    events.push({
+      t,
+      type: "alert",
+      payload: {
+        id: `hr-${t}`, kind: "acute", crew: "A", indicator: "heart_rate", deviation: 3, status,
+        urgency: status === "red" ? "ACT_NOW" : "ROUTINE", likely_causes: [], t,
+      },
     });
   for (let t = 0; t < days * 86400; t++) {
-    reading(t, "heart_rate", 60 + (t % 17), "bpm", t % 50000 === 0 ? "red" : "green");
+    reading(t, "heart_rate", 60 + (t % 17), "bpm");
+    if (t % 50000 === 0) alert(t, "red");
+    if (t % 50000 === 600) alert(t, "green");
     if (t % 60 === 0) {
-      reading(t, "spo2", 97, "%");
-      reading(t, "respiratory_rate", 15, "breaths/min");
-      reading(t, "stress", 30 + (t % 20), "score");
+      reading(t, "spo2", 0.97, "fraction");
+      reading(t, "respiration_rate", 15, "1/min");
+      reading(t, "stress", 1 + (t % 5), "score 1-5", "manual");
     }
   }
-  events.push({ t: 0, type: "baseline", payload: { indicator: "heart_rate", low: 55, high: 75 } });
-  return {
-    crew: { id: "crew-a", sex: "male", anchor: "earth-preflight", missionProfile: "mars-transit" },
-    profile: { id: "mars-transit", name: "Mars transit", groundDelayMin: 28.5 },
-    events,
-  };
+  return { schema_version: "1.0.0", crew: "A", profile: "mars_transit", events };
 }
+
+const CREW_RECORDS = JSON.stringify([
+  {
+    schema_version: "1.0.0", id: "A", sex: "male", missionProfile: "mars_transit",
+    anchor: { heart_rate: { mean: 65, sd: 5 } },
+  },
+]);
 
 test.describe("large replay", () => {
   test("renders a ~270k-event, 3-day replay and stays responsive to the scrubber", async ({ page }) => {
@@ -33,6 +46,10 @@ test.describe("large replay", () => {
     // openApp installs a catch-all route; routes added later win, so it must not shadow this one.
     const problems = await openApp(page, "about:blank");
     await page.route((url) => url.pathname === "/big.json", (r) => r.fulfill({ body, contentType: "application/json" }));
+    await page.route(
+      (url) => url.pathname === "/crew-records.json",
+      (r) => r.fulfill({ body: CREW_RECORDS, contentType: "application/json" }),
+    );
     await page.goto("/?replay=/big.json");
 
     const t0 = Date.now();
