@@ -103,7 +103,8 @@ class BaselineA:
         w = self.windows.get(indicator)
         return w.stats()[1] if w and w.items else None
 
-    def process(self, indicator: str, value: float, unit: str, t: float) -> dict:
+    def process(self, indicator: str, value: float, unit: str, t: float, **fields) -> dict:
+        """fields: other Reading fields (source, confidence, ...) carried unchanged on held/released Readings."""
         released = self._release() if self.hold_since is not None and t - self.hold_since >= HOLD_S else []
         alerts, level = [], "green"
 
@@ -129,7 +130,7 @@ class BaselineA:
             level = worse(level, tier)
             alerts += self._maybe_alert("acute", indicator, tier, {"sigma": za, "cusum": None}, t)
 
-        reading = {"crew": self.crew, "indicator": indicator, "value": value, "unit": unit, "t": t}
+        reading = fields | {"crew": self.crew, "indicator": indicator, "value": value, "unit": unit, "t": t}
         if alerts and self.hold_since is None:
             self.hold_since = t
         if self.hold_since is not None:  # Quarantine: held data never updates A

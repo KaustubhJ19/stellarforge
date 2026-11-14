@@ -5,13 +5,23 @@ Auto rule (Spec 3 "Auto-detect rule"): raise a Trigger when either
 - heart rate is extreme (at or above hr_high, or below hr_low) for sustain_s seconds AND systolic BP is below sbp_low.
 Works on rhythm state, HR and BP from the Pulse replay, not on an ECG waveform. Chest pain is crew-reported.
 The cut-offs are "Earth reference / team value" items kept in content/, so they are passed in.
-Indicator names ("rhythm", "heart_rate", "systolic_bp") are placeholders until the Spec 1 contracts exist.
+Indicator names follow the Spec 1 emergency replay: "cardiac_rhythm", "heart_rate", "systolic_bp".
 """
 from dataclasses import dataclass
 
 from backend.baseline_a import BaselineA, likely_causes, urgency
 
 ARREST_RHYTHMS = {"VT", "VF", "PEA", "asystole"}  # Spec 3 auto-detect rule
+# Pulse Arrhythmia names (tools/emergency_replay.py) -> rule names; any VT or VF variant counts.
+PULSE_RHYTHMS = {"VentricularFibrillation": "VF", "VentricularTachycardia": "VT",
+                 "PulselessElectricalActivity": "PEA", "Asystole": "asystole"}
+
+
+def arrest_rhythm(value) -> str | None:
+    """'VT', 'VF', 'PEA' or 'asystole' if the rhythm state is one of them (rule or Pulse name), else None."""
+    if value in ARREST_RHYTHMS:
+        return value
+    return next((short for name, short in PULSE_RHYTHMS.items() if isinstance(value, str) and name in value), None)
 
 
 @dataclass(frozen=True)
@@ -47,8 +57,8 @@ class AutoDetect:
         if self.fired:
             return None
         reason = None
-        if indicator == "rhythm" and value in ARREST_RHYTHMS:
-            reason = f"rhythm {value}"
+        if indicator == "cardiac_rhythm" and (short := arrest_rhythm(value)):
+            reason = f"rhythm {short} ({value})"
         elif indicator == "systolic_bp":
             self.sbp = value
         elif indicator == "heart_rate":
