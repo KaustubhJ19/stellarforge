@@ -74,6 +74,8 @@ export function App({
     <div className="app">
       <MissionBar replay={replay} state={state} />
       <main className="home">
+        {/* First in tab order so Emergency is one Tab away; CSS places it on screen. */}
+        <ActionButtons onEmergency={onEmergency} />
         <section className="home__body" aria-label="Body">
           {insightReading && <InsightBanner reading={insightReading} onExit={() => setInsight(null)} />}
           <Body view={view} scene={bodyScene} />
@@ -86,7 +88,6 @@ export function App({
             </>
           )}
         </section>
-        <ActionButtons onEmergency={onEmergency} />
         <div className="home__side">
           <div className="home__summaries">
             <HealthSummary kind="physical" latest={state.latest} onDetails={setCardFor} />

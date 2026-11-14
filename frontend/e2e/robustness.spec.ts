@@ -1,0 +1,77 @@
+import { expect, test } from "@playwright/test";
+import { openApp, waitForBody } from "./helpers";
+
+/** A big replay like Spec 1 may produce: 1 Hz heart rate plus minute-level Readings over 3 days. */
+function bigReplay(days = 3) {
+  const events: unknown[] = [];
+  const reading = (t: number, indicator: string, value: number, unit: string, state = "green") =>
+    events.push({
+      t,
+      type: "reading",
+      payload: { crew: "crew-a", indicator, value, unit, t, source: "wearable", confidence: 0.9, state },
+    });
+  for (let t = 0; t < days * 86400; t++) {
+    reading(t, "heart_rate", 60 + (t % 17), "bpm", t % 50000 === 0 ? "red" : "green");
+    if (t % 60 === 0) {
+      reading(t, "spo2", 97, "%");
+      reading(t, "respiratory_rate", 15, "breaths/min");
+      reading(t, "stress", 30 + (t % 20), "score");
+    }
+  }
+  events.push({ t: 0, type: "baseline", payload: { indicator: "heart_rate", low: 55, high: 75 } });
+  return {
+    crew: { id: "crew-a", sex: "male", anchor: "earth-preflight", missionProfile: "mars-transit" },
+    profile: { id: "mars-transit", name: "Mars transit", groundDelayMin: 28.5 },
+    events,
+  };
+}
+
+test.describe("large replay", () => {
+  test("renders a ~270k-event, 3-day replay and stays responsive to the scrubber", async ({ page }) => {
+    const body = JSON.stringify(bigReplay());
+    console.log(`replay size: ${(body.length / 1e6).toFixed(1)} MB`);
+    // openApp installs a catch-all route; routes added later win, so it must not shadow this one.
+    const problems = await openApp(page, "about:blank");
+    await page.route((url) => url.pathname === "/big.json", (r) => r.fulfill({ body, contentType: "application/json" }));
+    await page.goto("/?replay=/big.json");
+
+    const t0 = Date.now();
+    await expect(page.getByRole("region", { name: "Mission" })).toContainText("Day 3", { timeout: 30_000 });
+    const firstRender = Date.now() - t0;
+
+    // One scrub step: from the moment of input until the mission bar shows the new day.
+    const slider = page.getByRole("slider", { name: "Mission clock" });
+    const s0 = Date.now();
+    await slider.fill(String(86400 + 3600));
+    await expect(page.getByRole("region", { name: "Mission" })).toContainText("Day 2");
+    const scrubStep = Date.now() - s0;
+
+    console.log(`first render ${firstRender} ms, one scrub step ${scrubStep} ms`);
+    expect(problems).toEqual([]);
+    expect(firstRender, "first render").toBeLessThan(5000);
+    expect(scrubStep, "a scrub step should feel immediate").toBeLessThan(300);
+  });
+});
+
+test.describe("slow device", () => {
+  test("body frame rate with the CPU slowed 4x", async ({ page }) => {
+    await openApp(page);
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
+    await waitForBody(page);
+    const fps = await page.evaluate(
+      () =>
+        new Promise<number>((done) => {
+          let frames = 0;
+          const start = performance.now();
+          (function tick() {
+            frames++;
+            if (performance.now() - start < 3000) requestAnimationFrame(tick);
+            else done(frames / ((performance.now() - start) / 1000));
+          })();
+        }),
+    );
+    console.log(`fps with 4x CPU slowdown: ${fps.toFixed(0)}`);
+    expect(fps).toBeGreaterThan(30);
+  });
+});

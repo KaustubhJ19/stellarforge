@@ -225,6 +225,16 @@ export const threeBodyScene: BodySceneFactory = (host, events) => {
   });
   ro.observe(host);
 
+  // Honour the system "reduce motion" setting, and follow it if it changes.
+  const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
+  let reduceMotion = motionQuery.matches;
+  controls.enableDamping = !reduceMotion;
+  const onMotionChange = (e: MediaQueryListEvent) => {
+    reduceMotion = e.matches;
+    controls.enableDamping = !reduceMotion;
+  };
+  motionQuery.addEventListener("change", onMotionChange);
+
   const start = performance.now();
   let last = start;
   renderer.setAnimationLoop((now: number) => {
@@ -232,20 +242,20 @@ export const threeBodyScene: BodySceneFactory = (host, events) => {
     const dt = Math.min((now - last) / 1000, 0.1);
     last = now;
     if (heart) {
-      const bpm = view?.heartRate ?? 0;
+      const bpm = reduceMotion ? 0 : (view?.heartRate ?? 0);
       // A short beat: quick swell then relax, once per beat.
       const phase = bpm > 0 ? (t * bpm) / 60 - Math.floor((t * bpm) / 60) : 1;
       const beat = phase < 0.15 ? Math.sin((phase / 0.15) * Math.PI) : 0;
       heart.scale.setScalar(1 + 0.08 * beat);
     }
     if (lungs) {
-      const rate = view?.breathRate ?? 0;
+      const rate = reduceMotion ? 0 : (view?.breathRate ?? 0);
       // Smooth in-and-out, once per breath.
       const swell = rate > 0 ? 0.5 - 0.5 * Math.cos((t * rate * 2 * Math.PI) / 60) : 0;
       lungs.scale.set(1 + 0.03 * swell, 1 + 0.02 * swell, 1 + 0.04 * swell);
     }
     if (fly) {
-      fly.t = Math.min(1, fly.t + dt / FLY_SECONDS);
+      fly.t = reduceMotion ? 1 : Math.min(1, fly.t + dt / FLY_SECONDS);
       const k = 1 - Math.pow(1 - fly.t, 3); // ease out
       controls.target.lerpVectors(fly.from[0], fly.to[0], k);
       camera.position.lerpVectors(fly.from[1], fly.to[1], k);
@@ -261,6 +271,7 @@ export const threeBodyScene: BodySceneFactory = (host, events) => {
       disposed = true;
       renderer.setAnimationLoop(null);
       ro.disconnect();
+      motionQuery.removeEventListener("change", onMotionChange);
       controls.dispose();
       draco.dispose();
       for (const p of parts.values()) {

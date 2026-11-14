@@ -7,7 +7,9 @@
     "preview": "vite preview",
     "typecheck": "tsc",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "audit:a11y": "node scripts/a11y-audit.mjs"
   },
   "type": "module",
   "dependencies": {
@@ -17,6 +19,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.65.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.10",
@@ -24,6 +27,7 @@
     "@types/react-dom": "^19.3.0",
     "@types/three": "^0.187.0",
     "@vitejs/plugin-react": "^6.3.0",
+    "@vitest/coverage-v8": "^5.1.0",
     "jsdom": "^31.0.1",
     "playwright": "^1.65.1",
     "typescript": "^7.0.2",
