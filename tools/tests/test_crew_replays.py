@@ -82,6 +82,7 @@ def test_reads_daily_indicators_from_the_pmdata_files(pm):
     assert day["steps"] == 600                   # per-minute steps summed per day
     assert day["sleep_score"] == 72
     assert (day["fatigue"], day["mood"], day["readiness"], day["sleep_quality"], day["stress"]) == (3, 3, 7, 3, 2)
+    assert day["soreness"] == 2  # PMData wellness soreness, 1-5 (Spec 3 request 2026-11-15)
 
 
 def test_zero_resting_heart_rate_means_no_reading(tmp_path):
@@ -153,7 +154,7 @@ def test_units_and_sources(pm):
     units = {p["indicator"]: p["unit"] for p in payloads}
     assert units == {"resting_heart_rate": "bpm", "sleep_duration": "min", "steps": "steps", "sleep_score": "score 0-100",
                      "fatigue": "score 1-5", "mood": "score 1-5", "readiness": "score 0-10",
-                     "sleep_quality": "score 1-5", "stress": "score 1-5"}
+                     "sleep_quality": "score 1-5", "stress": "score 1-5", "soreness": "score 1-5"}
     sources = {p["indicator"]: p["source"] for p in payloads}
     assert sources["resting_heart_rate"] == "sensor" and sources["fatigue"] == "manual"
     assert all(p["state"] == "released" for p in payloads)

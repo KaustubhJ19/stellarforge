@@ -9,7 +9,7 @@ Daily indicators (PMData file -> indicator, unit, Reading.source):
   fitbit/sleep.json               sleep_duration      min          sensor  (main sleep minutesAsleep)
   fitbit/steps.json               steps               steps        sensor  (per-minute steps summed per day)
   fitbit/sleep_score.csv          sleep_score         score 0-100  sensor  (overall_score)
-  pmsys/wellness.csv              fatigue, mood, sleep_quality, stress (score 1-5), readiness (score 0-10)  manual
+  pmsys/wellness.csv              fatigue, mood, sleep_quality, stress, soreness (score 1-5), readiness (score 0-10)  manual
 Scales from the PMData page: 1-5 with 3 normal; readiness 0-10.
 
 Planted drift (crew A, team-planted): over the last 9 days with a resting heart rate, resting HR
@@ -52,8 +52,9 @@ INDICATORS = {
     "readiness": ("score 0-10", "manual"),
     "sleep_quality": ("score 1-5", "manual"),
     "stress": ("score 1-5", "manual"),
+    "soreness": ("score 1-5", "manual"),  # added 2026-11-15 at Spec 3's request (forecast input)
 }
-WELLNESS = ("fatigue", "mood", "readiness", "sleep_quality", "stress")
+WELLNESS = ("fatigue", "mood", "readiness", "sleep_quality", "stress", "soreness")
 
 NOTES = [
     "Earth wearable data (PMData, Fitbit Versa 2 and PMSys) shaped to look like a crew; no open astronaut wearable stream exists.",

@@ -26,7 +26,8 @@ BUNDLE = ROOT / "data" / "pulse" / "PulseExplorer-3.3.0-Windows-AMD64"
 
 HEADER = ["Time(s)", "HeartRate(1/min)", "HeartStrokeVolume(mL)", "SystolicArterialPressure(mmHg)",
           "DiastolicArterialPressure(mmHg)", "MeanArterialPressure(mmHg)", "CardiacOutput(L/min)",
-          "OxygenSaturation", "RespirationRate(1/min)", "EndTidalCarbonDioxidePressure(mmHg)", "Unused(x)"]
+          "OxygenSaturation", "RespirationRate(1/min)", "EndTidalCarbonDioxidePressure(mmHg)", "Unused(x)",
+          "CoreTemperature(degC)"]
 
 
 def fixture_csv(seconds=6, dt=0.5):
@@ -125,6 +126,7 @@ def test_indicators_and_units_come_from_the_csv_header():
         "heart_rate": "1/min", "stroke_volume": "mL", "systolic_bp": "mmHg", "diastolic_bp": "mmHg",
         "mean_arterial_pressure": "mmHg", "cardiac_output": "L/min", "spo2": "fraction",
         "respiration_rate": "1/min", "etco2": "mmHg", "cardiac_rhythm": "rhythm",
+        "body_temperature": "degC",  # Pulse CoreTemperature (Spec 2/5 request 2026-11-15)
     }
 
 
