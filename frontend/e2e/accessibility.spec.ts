@@ -141,3 +141,15 @@ test.describe("crew forms for gloved hands", () => {
     expect(problems).toEqual([]);
   });
 });
+
+test("forecast panel and 'Why this forecast?' view are axe-clean with large targets", async ({ page }) => {
+  await openApp(page);
+  await page.getByRole("button", { name: "Why this forecast?" }).click();
+  const { AxeBuilder } = await import("@axe-core/playwright");
+  const axe = await new AxeBuilder({ page }).include(".forecast").include(".why-forecast").withTags(["wcag2a", "wcag2aa", "wcag22aa"]).analyze();
+  expect(axe.violations.map((v) => v.id)).toEqual([]);
+  const small = await page.locator(".forecast button, .why-forecast button").evaluateAll((els) =>
+    els.map((el) => ({ text: el.textContent, h: el.getBoundingClientRect().height })).filter((e) => e.h < 56),
+  );
+  expect(small).toEqual([]);
+});

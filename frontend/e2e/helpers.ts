@@ -22,7 +22,7 @@ export async function waitForBody(page: Page) {
   await page.waitForTimeout(700); // let the camera settle
 }
 
-/** Count canvas pixels near each Status colour in a screenshot of the body. */
+/** Count canvas pixels near each Status colour (and the "Why this forecast?" violet) in a screenshot of the body. */
 export async function statusPixels(page: Page) {
   const png = await page.locator(".body-host canvas").screenshot();
   return page.evaluate(async (b64) => {
@@ -34,7 +34,7 @@ export async function statusPixels(page: Page) {
     ctx.drawImage(img, 0, 0);
     const d = ctx.getImageData(0, 0, img.width, img.height).data;
     // Lit surfaces vary in brightness, so classify by hue and saturation.
-    const counts = { green: 0, amber: 0, red: 0 };
+    const counts = { green: 0, amber: 0, red: 0, explain: 0 };
     for (let i = 0; i < d.length; i += 4) {
       const [r, g, b] = [d[i] / 255, d[i + 1] / 255, d[i + 2] / 255];
       const max = Math.max(r, g, b), min = Math.min(r, g, b), l = max - min;
@@ -45,6 +45,7 @@ export async function statusPixels(page: Page) {
       if (h >= 160 && h <= 185) counts.green++; // teal-green #29c0b1
       else if (h >= 38 && h <= 56) counts.amber++; // #ffcc33
       else if (h <= 10 || h >= 350) counts.red++;
+      else if (h >= 255 && h <= 290) counts.explain++; // --explain #b48cff
     }
     return counts;
   }, png.toString("base64"));

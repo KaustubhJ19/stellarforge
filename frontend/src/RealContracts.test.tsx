@@ -235,7 +235,7 @@ describe("your normal band stays inside the scale", () => {
 });
 
 describe("recorded replays from Spec 3's proposed script", () => {
-  it("ignores reading_state and forecast events: no doubled Readings, nothing breaks", async () => {
+  it("loads reading_state events without doubling Readings, and shows the forecast", async () => {
     const mission = missionWith([
       { indicator: "heart_rate", value: 70, t: 8 * HOUR },
       { indicator: "heart_rate", value: 131, t: 9 * HOUR, status: "red" },
@@ -257,6 +257,7 @@ describe("recorded replays from Spec 3's proposed script", () => {
     await userEvent.click(within(screen.getByRole("region", { name: "Trends" })).getByRole("button", { name: "Heart rate" }));
     await userEvent.click(screen.getByRole("button", { name: "Show as table" }));
     expect(within(screen.getByRole("table")).getAllByRole("row")).toHaveLength(3); // header + 2 Readings, not 4
+    expect(screen.getByRole("region", { name: "Readiness forecast" })).toHaveTextContent("6.2 of 10");
   });
 });
 

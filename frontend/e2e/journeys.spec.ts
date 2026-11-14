@@ -223,3 +223,22 @@ test.describe("cabin CO₂ banner", () => {
     expect(problems).toEqual([]);
   });
 });
+
+test.describe('"Why this forecast?"', () => {
+  test("draws what drove the model on the body with no Status colours", async ({ page }) => {
+    const problems = await openApp(page);
+    await waitForBody(page);
+    await expect(page.getByRole("region", { name: "Readiness forecast" })).toContainText("6.4 of 10");
+    await page.getByRole("button", { name: "Why this forecast?" }).click();
+    await expect(page.getByRole("heading", { name: "What drove the model" })).toBeVisible();
+    await page.waitForTimeout(1200); // camera settles on the whole body
+    await page.locator(".body-host").screenshot({ path: "test-results/why-forecast.png" });
+    const px = await statusPixels(page);
+    console.log(`status pixels in the why view: ${JSON.stringify(px)}`);
+    expect(px.green + px.amber + px.red).toBeLessThan(150);
+    expect(px.explain).toBeGreaterThan(100); // the brain heat-map at whole-body zoom
+    await page.getByRole("button", { name: "Back to body" }).click();
+    await expect(page.getByRole("heading", { name: "What drove the model" })).toHaveCount(0);
+    expect(problems).toEqual([]);
+  });
+});

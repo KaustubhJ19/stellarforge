@@ -19,6 +19,9 @@ import { glowFrom } from "./body/glow";
 import { ZoomControls } from "./body/ZoomControls";
 import { buildBodyView } from "./body/buildView";
 import { FlaggedList, InsightBanner } from "./body/InsightControls";
+import { ForecastPanel } from "./forecast/ForecastPanel";
+import { WhyForecast } from "./forecast/WhyForecast";
+import { explainWeights } from "./forecast/drivers";
 import type { BodySceneFactory, Focus, LayerId, LayerView } from "./body/view";
 
 /** See-through by default: outer layers faint, organs and brain nearly solid. */
@@ -85,6 +88,7 @@ export function App({
   const [layers, setLayers] = useState(DEFAULT_LAYERS);
   const [focus, setFocus] = useState<Focus>({ level: "body" });
   const [insight, setInsight] = useState<IndicatorId | null>(null);
+  const [why, setWhy] = useState(false);
   const [openCard, setOpenCard] = useState<IndicatorId | null>(null);
   const closeCard = useCallback(() => setOpenCard(null), []);
 
@@ -100,10 +104,16 @@ export function App({
     if (openCard && !cardReading) setOpenCard(null);
   }, [insight, insightReading, openCard, cardReading]);
   const examined = insightReading ? { indicator: insightReading.indicator, status: insightReading.status } : null;
+  // "Why this forecast?" needs a forecast at the scrubbed time; scrubbing to before one closes it.
+  const whyForecast = why ? state.forecast : null;
+  useEffect(() => {
+    if (why && !state.forecast) setWhy(false);
+  }, [why, state.forecast]);
+  const explain = useMemo(() => (whyForecast ? explainWeights(whyForecast.drivers) : null), [whyForecast]);
   const view = useMemo(
-    () => buildBodyView({ model, focus, layers, glow, heartRate, breathRate, insight: examined }),
+    () => buildBodyView({ model, focus, layers, glow, heartRate, breathRate, insight: examined, explain }),
     // `examined` is a new object each render, so depend on its parts.
-    [model, focus, layers, glow, heartRate, breathRate, examined?.indicator, examined?.status],
+    [model, focus, layers, glow, heartRate, breathRate, examined?.indicator, examined?.status, explain],
   );
 
   return (
@@ -114,14 +124,15 @@ export function App({
         {/* First in tab order so Emergency is one Tab away; CSS places it on screen. */}
         <ActionButtons onEmergency={onEmergency} />
         <section className="home__body" aria-label="Body">
-          {insightReading && <InsightBanner reading={insightReading} onExit={() => setInsight(null)} />}
+          {whyForecast && <WhyForecast forecast={whyForecast} onExit={() => setWhy(false)} />}
+          {!whyForecast && insightReading && <InsightBanner reading={insightReading} onExit={() => setInsight(null)} />}
           <Body view={view} scene={bodyScene} />
           {model === "female" && (
             <p className="body-note">
               Female organs. Muscles, skeleton and vessels are approximate (resized from the male model).
             </p>
           )}
-          {!insightReading && (
+          {!insightReading && !whyForecast && (
             <>
               <ZoomControls focus={focus} onFocus={setFocus} />
               <FlaggedList latest={state.latest} onShow={setInsight} />
@@ -135,6 +146,14 @@ export function App({
             <HealthSummary kind="physical" latest={state.latest} onDetails={setOpenCard} />
             <HealthSummary kind="mental" latest={state.latest} onDetails={setOpenCard} />
           </div>
+          <ForecastPanel
+            forecast={state.forecast}
+            now={state.t}
+            onWhy={() => {
+              setInsight(null);
+              setWhy(true);
+            }}
+          />
           <Trends replay={replay} crew={crew} state={state} range={range} onScrub={setT} />
           <TaskList tasks={state.tasks} notes={notes} onLog={setForm} />
         </div>
