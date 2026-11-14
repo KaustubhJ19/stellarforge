@@ -17,7 +17,8 @@ npx playwright install chromium   # only for the browser tests and the audit
 ## Run
 
 ```
-npm run dev          # http://localhost:5173 with the bundled Mars day-3 replay
+npm run dev          # http://localhost:5173 with the bundled Mars day-3 replay (male crew)
+npm run dev:female   # same day for a female crew member: opens the female body
 npm run build        # production build in dist/ (static files, works offline)
 npm run preview      # serve the build
 ```
@@ -64,7 +65,8 @@ public/draco/         vendored Draco decoder so models load offline
 
 ## Female body
 
-When the replay's Crew record has `sex: "female"`, the app loads `body-female.glb`: female
+When the replay's Crew record has `sex: "female"`, the app loads `body-female.glb`
+(try it with `npm run dev:female`, or open `/?replay=/replay/mars-day3-female.json`): female
 organs from the Human Reference Atlas, with muscles, skeleton and vessels resized from the
 male model and labelled approximate on screen.
 
