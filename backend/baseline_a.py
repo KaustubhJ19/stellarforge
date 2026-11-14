@@ -51,7 +51,8 @@ def urgency(kind: str | None, level: str) -> str:
 
 def status(level: str, value: float, bound: dict | None) -> dict:
     """The one Status rule: the worse of A's level and the Safety bound. Always carries text, not colour alone."""
-    outside = bound is not None and not (bound["low"] <= value <= bound["high"])
+    low, high = (bound.get("low"), bound.get("high")) if bound else (None, None)
+    outside = (low is not None and value < low) or (high is not None and value > high)  # None: no limit that side
     result = worse(level, "red" if outside else "green")
     text = {"green": "Normal", "amber": "Watch", "red": "Alert"}[result]
     if outside:
