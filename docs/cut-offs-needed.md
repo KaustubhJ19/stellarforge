@@ -45,7 +45,7 @@ Code: `EmergencyThresholds` in `backend/emergency.py`. Spec 3 says to label thes
 | Name | Meaning | Unit | Suggested start | Possible source / label |
 |---|---|---|---|---|
 | `hr_high` | Heart rate counted as extremely high | bpm | 150 | **Not confirmed.** AHA 2020 Part 3 (Panchal et al., https://www.ahajournals.org/doi/10.1161/CIR.0000000000000916) only defines tachycardia as above 100/min; 150 is not in it. Check the AHA 2025 Adult Tachyarrhythmia algorithm (cpr.heart.org, PDF) before use. |
-| `hr_low` | Heart rate counted as extremely low | bpm | 50 | **Not confirmed.** AHA 2020 Part 3 only defines bradycardia as below 60/min ("can be a normal finding, especially for athletes or during sleep"); 50 is not in it. Check the AHA 2025 Adult Bradycardia algorithm before use. |
+| `hr_low` | Heart rate counted as extremely low | bpm | 50 | **Checked.** AHA 2025 Adult Bradycardia With a Pulse Algorithm, Box 1: "Heart rate typically less than 50 per minute if bradyarrhythmia"; Box 2 lists hypotension as a sign of compromise (https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms). Label "Earth reference, no space data". AHA 2020 Part 3 defines bradycardia as below 60/min and notes it "can be a normal finding" in athletes and during sleep. |
 | `sbp_low` | Systolic blood pressure counted as low | mmHg | 90 | **Checked, with a caveat.** AHA 2020 Part 3, post-arrest care: definitions of hypotension vary, systolic 90 mmHg is a common cutoff. Label "Earth reference, no space data". |
 | `sustain_s` | How long the heart rate must stay extreme | seconds | 30 | Team value; tune on the Pulse replay |
 
