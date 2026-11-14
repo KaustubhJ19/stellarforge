@@ -37,14 +37,14 @@ The app reads Spec 1's frozen shapes: the JSON Schemas in `contracts/` at the re
 
 - **Status comes only from Alerts.** A Reading's `state` is a data state, not a Status. An
   Indicator shows the Status of its newest Alert at the scrubbed time; with no Alert it is
-  Normal. OPEN: Spec 3 raises Alerts only when an Indicator gets worse and sends no green
-  Alert yet, so a Status never clears; asked of the Spec 3 lead. The sample uses a green Alert.
+  Normal. Spec 3 sends one green Alert when a kind (drift, acute, Safety bound) returns to
+  green; it ends only that kind, so an Indicator shows the worst of its open kinds. Status
+  words are Spec 3's: Normal / Watch / Alert.
 - **Quarantined Readings are shown.** Spec 3 holds Readings out of the baseline while an Alert
   is open; they are the abnormal values. `Alert.deviation` is Spec 3's object
   (`{sigma, cusum, combined}` or `{value, bound}`).
-- **"Your normal" band** on a trend is the Crew record's anchor mean ± 2 SD. OPEN QUESTION for
-  the Spec 3 owner: on a bounded scale this can pass the edge (stress 2 ± 1.2 on 1-5 gives
-  0.8-3.2; SpO₂ could pass 100%). Trim to the scale, or another rule?
+- **"Your normal" band** on a trend is the Crew record's anchor mean ± 2 SD, drawn only inside the
+  scale's possible range (a 1-5 score stops at 1 and 5; SpO₂ stops at 100%); agreed with Spec 3.
 - **Mission profile** name and Earth delay come from Spec 5's `content/profiles/<id>.json`
   (`name`, `comm_delay`), with the delay's direction and "team value" label shown; an
   unknown profile shows its id and "Not known".

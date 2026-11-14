@@ -116,6 +116,15 @@ export function displayScale(unit: string): { factor: number; unit: string } {
   return unit === "fraction" ? { factor: 100, unit: "%" } : { factor: 1, unit };
 }
 
+/** The possible range of a bounded unit ("score 1-5", "fraction", "%"); null if open-ended. */
+export function scaleRange(unit: string): [number, number] | null {
+  const scale = /^(?:score )?(\d+)-(\d+)$/.exec(unit);
+  if (scale) return [Number(scale[1]), Number(scale[2])];
+  if (unit === "fraction") return [0, 1];
+  if (unit === "%") return [0, 100];
+  return null;
+}
+
 export function sourceLabel(source: string): string {
   return SOURCE_TEXT[source as ReadingSource] ?? source;
 }
