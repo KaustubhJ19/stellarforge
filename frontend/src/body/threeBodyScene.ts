@@ -51,7 +51,12 @@ export const threeBodyScene: BodySceneFactory = (host, events) => {
     amber: cssColor("--status-amber", "#f5b53d"),
     red: cssColor("--status-red", "#ff5a5a"),
   };
-  const layerColor = (layer: LayerId) => cssColor(`--layer-${layer}`, "#cccccc");
+  // Read theme colours once; apply() runs on every scrub step.
+  const layerColors = new Map<LayerId, THREE.Color>();
+  const layerColor = (layer: LayerId) => {
+    if (!layerColors.has(layer)) layerColors.set(layer, cssColor(`--layer-${layer}`, "#cccccc"));
+    return layerColors.get(layer)!;
+  };
 
   const parts = new Map<string, Part>();
   let heart: THREE.Mesh | null = null;
@@ -258,7 +263,13 @@ export const threeBodyScene: BodySceneFactory = (host, events) => {
       ro.disconnect();
       controls.dispose();
       draco.dispose();
+      for (const p of parts.values()) {
+        p.mesh.geometry.dispose();
+        p.material.dispose();
+      }
+      parts.clear();
       renderer.dispose();
+      renderer.forceContextLoss();
       renderer.domElement.remove();
     },
   };

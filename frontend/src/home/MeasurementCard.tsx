@@ -25,19 +25,49 @@ export function MeasurementCard({
   const label = indicatorLabel(reading.indicator);
   const shown = formatValue(reading.value, reading.unit);
   const close = useRef<HTMLButtonElement>(null);
+  const dialog = useRef<HTMLDivElement>(null);
   const ids = useId();
-  useEffect(() => close.current?.focus(), []);
+
+  // Modal: focus starts on Close, Tab stays inside, Escape closes, focus goes back on close.
+  useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    close.current?.focus();
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab" || !dialog.current) return;
+      const focusable = dialog.current.querySelectorAll<HTMLElement>(
+        "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
+      );
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      opener?.focus();
+    };
+  }, [onClose]);
 
   return (
     <div className="card-backdrop" onClick={onClose}>
       <div
         className="card"
+        ref={dialog}
         role="dialog"
         aria-modal="true"
         aria-label={label}
         data-status={reading.state}
         onClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => e.key === "Escape" && onClose()}
       >
         <header className="card__head">
           <h2>{label}</h2>

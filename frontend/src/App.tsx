@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CardContent, IndicatorId, ReplayFile } from "./contracts";
 import { missionStateAt, replayRange, seriesOf } from "./replay/state";
 import { MeasurementCard } from "./home/MeasurementCard";
@@ -51,17 +51,23 @@ export function App({
   const [focus, setFocus] = useState<Focus>({ level: "body" });
   const [insight, setInsight] = useState<IndicatorId | null>(null);
   const [cardFor, setCardFor] = useState<IndicatorId | null>(null);
+  const closeCard = useCallback(() => setCardFor(null), []);
 
   const glow = useMemo(() => glowFrom(state.latest), [state]);
   const heartRate = state.latest.get("heart_rate")?.value ?? null;
   const breathRate = state.latest.get("respiratory_rate")?.value ?? null;
-  // Insight needs a Reading at the scrubbed time; scrubbing to before one leaves insight.
+  // Insight and cards need a Reading at the scrubbed time; scrubbing to before one closes them.
   const insightReading = insight ? state.latest.get(insight) : undefined;
-  const activeInsight = insightReading ? insight : null;
   const cardReading = cardFor ? state.latest.get(cardFor) : undefined;
+  useEffect(() => {
+    if (insight && !insightReading) setInsight(null);
+    if (cardFor && !cardReading) setCardFor(null);
+  }, [insight, insightReading, cardFor, cardReading]);
+  const examined = insightReading ? { indicator: insightReading.indicator, status: insightReading.state } : null;
   const view = useMemo(
-    () => buildBodyView({ focus, layers, glow, heartRate, breathRate, insight: activeInsight }),
-    [focus, layers, glow, heartRate, breathRate, activeInsight],
+    () => buildBodyView({ focus, layers, glow, heartRate, breathRate, insight: examined }),
+    // `examined` is a new object each render, so depend on its parts.
+    [focus, layers, glow, heartRate, breathRate, examined?.indicator, examined?.status],
   );
 
   return (
@@ -71,7 +77,7 @@ export function App({
         <section className="home__body" aria-label="Body">
           {insightReading && <InsightBanner reading={insightReading} onExit={() => setInsight(null)} />}
           <Body view={view} scene={bodyScene} />
-          {!activeInsight && (
+          {!insightReading && (
             <>
               <ZoomControls focus={focus} onFocus={setFocus} />
               <FlaggedList latest={state.latest} onShow={setInsight} />
@@ -95,7 +101,7 @@ export function App({
           reading={cardReading}
           history={seriesOf(replay, cardReading.indicator).filter((r) => r.t <= state.t)}
           content={cards.find((c) => c.indicator === cardReading.indicator)}
-          onClose={() => setCardFor(null)}
+          onClose={closeCard}
         />
       )}
       <footer className="disclaimer">Decision support, not diagnosis.</footer>

@@ -1,5 +1,5 @@
 import type { IndicatorId, Reading } from "../contracts";
-import { INDICATORS, type HealthKind } from "../indicators";
+import { INDICATORS, byIndicatorOrder, type HealthKind } from "../indicators";
 import { IndicatorTile } from "./IndicatorTile";
 
 const TITLE: Record<HealthKind, string> = { physical: "Physical health", mental: "Mental health" };
@@ -16,10 +16,9 @@ export function HealthSummary({
   latest: Map<IndicatorId, Reading>;
   onDetails?: (indicator: IndicatorId) => void;
 }) {
-  const order = Object.keys(INDICATORS);
   const readings = [...latest.values()]
     .filter((r) => (INDICATORS[r.indicator]?.kind ?? "physical") === kind && !IN_MISSION_BAR.includes(r.indicator))
-    .sort((a, b) => order.indexOf(a.indicator) - order.indexOf(b.indicator));
+    .sort((a, b) => byIndicatorOrder(a.indicator, b.indicator));
   return (
     <section className="summary" aria-label={TITLE[kind]}>
       <h2>{TITLE[kind]}</h2>

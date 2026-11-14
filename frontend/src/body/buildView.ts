@@ -1,4 +1,4 @@
-import type { IndicatorId } from "../contracts";
+import type { IndicatorId, Status } from "../contracts";
 import { INDICATORS } from "../indicators";
 import type { Glow } from "./glow";
 import { STRUCTURES, type StructureId } from "./structures";
@@ -35,10 +35,11 @@ export function buildBodyView(input: {
   glow: Glow;
   heartRate: number | null;
   breathRate: number | null;
-  insight: IndicatorId | null;
+  /** The Indicator being examined and its own Status, or null outside insight view. */
+  insight: { indicator: IndicatorId; status: Status } | null;
 }): BodyView {
   const { focus, layers, glow, heartRate, breathRate, insight } = input;
-  const ids = insight ? insightStructures(insight) : [];
+  const ids = insight ? insightStructures(insight.indicator) : [];
 
   if (ids.length === 0) {
     return {
@@ -75,7 +76,7 @@ export function buildBodyView(input: {
       (Object.keys(glow.structures) as StructureId[]).map((id) => [
         id,
         focused.has(id)
-          ? { status: glow.structures[id], opacity: 1 }
+          ? { status: insight!.status, opacity: 1 }
           : { status: null, opacity: INSIGHT_OTHER_STRUCTURE },
       ]),
     ),

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { IndicatorId, MissionTime, ReplayFile } from "../contracts";
-import { INDICATORS, indicatorLabel } from "../indicators";
+import { byIndicatorOrder, indicatorLabel } from "../indicators";
 import type { MissionState } from "../replay/state";
 import { seriesOf } from "../replay/state";
 import { TrendChart } from "./TrendChart";
@@ -12,11 +12,10 @@ function chartable(replay: ReplayFile): IndicatorId[] {
   for (const e of replay.events) {
     if (e.type === "reading") counts.set(e.payload.indicator, (counts.get(e.payload.indicator) ?? 0) + 1);
   }
-  const order = Object.keys(INDICATORS);
   return [...counts]
     .filter(([, n]) => n > 1)
     .map(([id]) => id)
-    .sort((a, b) => order.indexOf(a) - order.indexOf(b));
+    .sort(byIndicatorOrder);
 }
 
 export function Trends({
@@ -33,12 +32,10 @@ export function Trends({
   const options = useMemo(() => chartable(replay), [replay]);
   const [picked, setPicked] = useState<IndicatorId | null>(null);
   const indicator = picked ?? options[0];
-  const readings = useMemo(() => (indicator ? seriesOf(replay, indicator) : []), [replay, indicator]);
-  const alerts = useMemo(
-    () =>
-      replay.events.flatMap((e) => (e.type === "alert" && e.payload.indicator === indicator ? [e.payload] : [])),
-    [replay, indicator],
-  );
+  const series = useMemo(() => (indicator ? seriesOf(replay, indicator) : []), [replay, indicator]);
+  // Only what was known at the scrubbed time; the axis still spans the whole replay.
+  const readings = series.filter((r) => r.t <= state.t);
+  const alerts = state.alerts.filter((a) => a.indicator === indicator);
 
   return (
     <section className="trends" aria-label="Trends">
@@ -55,13 +52,18 @@ export function Trends({
               </button>
             ))}
           </div>
-          <TrendChart
-            key={indicator}
-            readings={readings}
-            baseline={state.baselines.get(indicator)}
-            alerts={alerts}
-            cursor={state.t}
-          />
+          {readings.length === 0 ? (
+            <p className="empty">No {indicatorLabel(indicator).toLowerCase()} readings yet at this time.</p>
+          ) : (
+            <TrendChart
+              key={indicator}
+              readings={readings}
+              baseline={state.baselines.get(indicator)}
+              alerts={alerts}
+              domain={range}
+              cursor={state.t}
+            />
+          )}
         </>
       )}
     </section>

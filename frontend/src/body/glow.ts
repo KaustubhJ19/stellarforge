@@ -2,12 +2,13 @@ import type { IndicatorId, Reading, Status } from "../contracts";
 import { INDICATORS } from "../indicators";
 import { STRUCTURE_IDS, type StructureId } from "./structures";
 
-const RANK: Record<Status, number> = { green: 0, amber: 1, red: 2 };
+/** Severity order: higher is worse. */
+export const STATUS_RANK: Record<Status, number> = { green: 0, amber: 1, red: 2 };
 
 export function worse(a: Status | null, b: Status | null): Status | null {
   if (a === null) return b;
   if (b === null) return a;
-  return RANK[b] > RANK[a] ? b : a;
+  return STATUS_RANK[b] > STATUS_RANK[a] ? b : a;
 }
 
 export interface Glow {

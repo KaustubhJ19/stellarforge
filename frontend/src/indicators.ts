@@ -50,6 +50,14 @@ export function formatValue(value: number, unit: string): { value: string; unit:
   return scale ? { value: String(value), unit: `of ${scale[1]}` } : { value: String(value), unit };
 }
 
+const ORDER = Object.keys(INDICATORS);
+
+/** Sort comparator: the display order of INDICATORS; unknown Indicators go last. */
+export function byIndicatorOrder(a: IndicatorId, b: IndicatorId): number {
+  const rank = (id: IndicatorId) => (ORDER.includes(id) ? ORDER.indexOf(id) : ORDER.length);
+  return rank(a) - rank(b);
+}
+
 export function indicatorLabel(id: IndicatorId): string {
   return INDICATORS[id]?.label ?? id;
 }
