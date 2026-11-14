@@ -874,6 +874,16 @@ h2 {
 }
 .tasks__forms button { min-height: var(--tap-min); flex: 1 1 200px; font-size: var(--font-size); }
 .form-dialog { font-size: var(--font-size); }
+/* Post-EVA warning signs: their own group, set apart by a frame and words, not a Status colour. */
+.form-warning {
+  margin: 0 0 20px;
+  padding: 12px 16px 0;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+}
+.form-warning legend { font-weight: 700; padding: 0 6px; }
+.form-warning__note { margin: 0 0 16px; }
+
 .form-field {
   display: grid;
   gap: 8px;

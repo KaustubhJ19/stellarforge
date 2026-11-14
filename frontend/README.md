@@ -132,7 +132,11 @@ public/draco/         vendored Draco decoder so models load offline (Google, Apa
 ## Hooks for other specs
 
 - **Spec 4 (emergency flow):** pass `onEmergency` to `<App>`; it receives `"emergency"` or
-  `"help-crewmate"`. Until then a placeholder alert shows.
+  `"help-crewmate"`. Until then a placeholder alert shows. The post-EVA check also calls it
+  with `"emergency"` when the crew answers Yes to any warning sign: NASA's Type II
+  decompression sickness signs (numbness, weakness, confusion, dizziness or ear problems,
+  chest pain or trouble breathing; OCHMO-TB-037 Rev D, p. 3). The Readings are saved first.
+  The question wording awaits the medical reviewer.
 - **Readings logged on screen** (stand test, post-EVA check from today's tasks): pass
   `onReadings` to `<App>`; it receives a list of Readings (`source: "manual"`) and the
   optional post-EVA note. Each Reading is complete on its own (with `schema_version`) and

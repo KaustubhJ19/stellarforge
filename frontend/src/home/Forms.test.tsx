@@ -12,10 +12,15 @@ const validReading = new Ajv2020({ allErrors: true, strict: false }).compile(rea
 const schemaProblems = (readings: Reading[]) =>
   readings.flatMap((r) => (validReading(r) ? [] : [`${r.indicator}: ${JSON.stringify(validReading.errors)}`]));
 
-function renderHome(mission: Mission = marsMission(), onReadings = vi.fn()) {
-  render(<App {...mission} bodyScene={fakeBodyScene().factory} onReadings={onReadings} />);
+function renderHome(mission: Mission = marsMission(), onReadings = vi.fn(), onEmergency = vi.fn()) {
+  render(<App {...mission} bodyScene={fakeBodyScene().factory} onReadings={onReadings} onEmergency={onEmergency} />);
   return onReadings;
 }
+
+/** Type I complaints after a spacewalk. */
+const SYMPTOMS = ["Hand or finger pain", "Joint pain", "Skin itch or rash", "Tingling"];
+/** NASA's Type II decompression sickness warning signs (OCHMO-TB-037 Rev D, p. 3). */
+const WARNING_SIGNS = ["Numbness", "Weakness", "Confusion", "Dizziness or ear problems", "Chest pain or trouble breathing"];
 
 async function openForm(name: string) {
   const tasks = screen.getByRole("region", { name: "Today's tasks" });
@@ -138,7 +143,7 @@ describe("post-EVA check form", () => {
     await fill(dialog, "Heart rate (bpm)", "88");
     await userEvent.click(within(dialog).getByRole("radio", { name: "4" }));
     await answer(dialog, "Hand or finger pain", "Yes");
-    for (const symptom of ["Joint pain", "Skin itch or rash", "Tingling or numbness"]) await answer(dialog, symptom, "No");
+    for (const symptom of [...SYMPTOMS.slice(1), ...WARNING_SIGNS]) await answer(dialog, symptom, "No");
     await userEvent.type(within(dialog).getByLabelText("Note (optional)"), "Left index finger sore");
     await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
 
@@ -150,6 +155,11 @@ describe("post-EVA check form", () => {
       ["joint_pain", 0, "yes/no"],
       ["skin_irritation", 0, "yes/no"],
       ["tingling", 0, "yes/no"],
+      ["numbness", 0, "yes/no"],
+      ["weakness", 0, "yes/no"],
+      ["confusion", 0, "yes/no"],
+      ["dizziness", 0, "yes/no"],
+      ["chest_or_breathing", 0, "yes/no"],
     ]);
     expect(saved.every((r) => r.source === "manual")).toBe(true);
     expect(schemaProblems(saved)).toEqual([]);
@@ -170,7 +180,7 @@ describe("post-EVA check form", () => {
     await answer(dialog, "Hand or finger pain", "No");
     await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
     expect(within(dialog).getByRole("alert")).toHaveTextContent(
-      "Enter fatigue, joint pain, skin itch or rash and tingling or numbness.",
+      "Enter fatigue, joint pain, skin itch or rash, tingling, numbness, weakness, confusion, dizziness or ear problems and chest pain or trouble breathing.",
     );
     expect(onReadings).not.toHaveBeenCalled();
   });
@@ -182,9 +192,45 @@ describe("post-EVA check form", () => {
     const dialog = await openForm("Log post-EVA check");
     await fill(dialog, "Heart rate (bpm)", "130");
     await userEvent.click(within(dialog).getByRole("radio", { name: "2" }));
-    for (const symptom of ["Hand or finger pain", "Joint pain", "Skin itch or rash", "Tingling or numbness"]) await answer(dialog, symptom, "No");
+    for (const symptom of [...SYMPTOMS, ...WARNING_SIGNS]) await answer(dialog, symptom, "No");
     await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
     expect(body.view.heartRate).toBe(before);
     expect(screen.getByRole("group", { name: "Heart rate after EVA" })).toHaveTextContent("130 bpm");
+  });
+});
+
+describe("post-EVA warning signs (Type II decompression sickness)", () => {
+  async function check(yes: string[]) {
+    const onReadings = vi.fn();
+    const onEmergency = vi.fn();
+    renderHome(marsMission(), onReadings, onEmergency);
+    const dialog = await openForm("Log post-EVA check");
+    await fill(dialog, "Heart rate (bpm)", "88");
+    await userEvent.click(within(dialog).getByRole("radio", { name: "3" }));
+    for (const q of [...SYMPTOMS, ...WARNING_SIGNS]) await answer(dialog, q, yes.includes(q) ? "Yes" : "No");
+    return { dialog, onReadings, onEmergency };
+  }
+
+  it("asks them as their own group and says a Yes opens the emergency flow", async () => {
+    const { dialog } = await check([]);
+    const group = within(dialog).getByRole("group", { name: "Warning signs" });
+    for (const q of WARNING_SIGNS) expect(within(group).getByRole("radiogroup", { name: q })).toBeInTheDocument();
+    expect(group).toHaveTextContent("A Yes to any of these opens the emergency flow when you save.");
+  });
+
+  it.each(WARNING_SIGNS)("saves the check, then opens the emergency flow, on a Yes to %s", async (sign) => {
+    const { dialog, onReadings, onEmergency } = await check([sign]);
+    await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+    const saved = onReadings.mock.calls[0][0] as Reading[];
+    expect(saved.filter((r) => r.value === 1).map((r) => r.indicator)).toHaveLength(1);
+    expect(onEmergency).toHaveBeenCalledWith("emergency");
+    expect(onReadings.mock.invocationCallOrder[0]).toBeLessThan(onEmergency.mock.invocationCallOrder[0]);
+  });
+
+  it("does not open the emergency flow for Type I complaints alone", async () => {
+    const { dialog, onReadings, onEmergency } = await check(SYMPTOMS);
+    await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+    expect(onReadings).toHaveBeenCalled();
+    expect(onEmergency).not.toHaveBeenCalled();
   });
 });

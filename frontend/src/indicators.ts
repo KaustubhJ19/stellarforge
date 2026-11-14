@@ -51,7 +51,13 @@ export const INDICATORS: Record<IndicatorId, IndicatorInfo> = {
   hand_pain: { label: "Hand or finger pain", kind: "physical", place: [] },
   joint_pain: { label: "Joint pain", kind: "physical", place: [] },
   skin_irritation: { label: "Skin itch or rash", kind: "physical", place: [] },
-  tingling: { label: "Tingling or numbness", kind: "physical", place: [] },
+  tingling: { label: "Tingling", kind: "physical", place: [] },
+  // Post-EVA warning signs: NASA's Type II decompression sickness signs (OCHMO-TB-037 Rev D, p. 3)
+  numbness: { label: "Numbness", kind: "physical", place: [] },
+  weakness: { label: "Weakness", kind: "physical", place: [] },
+  confusion: { label: "Confusion", kind: "physical", place: [] },
+  dizziness: { label: "Dizziness or ear problems", kind: "physical", place: [] },
+  chest_or_breathing: { label: "Chest pain or trouble breathing", kind: "physical", place: [] },
   radiation_dose_accumulated: { label: "Radiation dose", kind: "physical", place: "whole-body" },
   body_temperature: { label: "Body temperature", kind: "physical", place: "whole-body" },
   // Mental

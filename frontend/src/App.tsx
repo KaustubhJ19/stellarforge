@@ -170,7 +170,15 @@ export function App({
         />
       )}
       {form === "stand-test" && <StandTestForm crew={crew} t={range[1]} onSave={log} onClose={closeForm} />}
-      {form === "post-eva" && <PostEvaForm crew={crew.id} t={range[1]} onSave={log} onClose={closeForm} />}
+      {form === "post-eva" && (
+        <PostEvaForm
+          crew={crew.id}
+          t={range[1]}
+          onSave={log}
+          onClose={closeForm}
+          onWarningSign={() => onEmergency("emergency")}
+        />
+      )}
       <footer className="disclaimer">Decision support, not diagnosis.</footer>
     </div>
   );
