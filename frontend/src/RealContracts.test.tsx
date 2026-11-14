@@ -130,3 +130,29 @@ describe("review fixes for real replay files", () => {
     expect(within(screen.getByRole("figure", { name: "Heart rate trend" })).queryByLabelText(/Your normal/)).not.toBeInTheDocument();
   });
 });
+
+describe("habitat Readings in the trends", () => {
+  it("offers the accumulated dose but not cabin air or dose-rate breakdowns", () => {
+    const mission = missionWith([
+      { indicator: "heart_rate", value: 70, t: 8 * HOUR },
+      { indicator: "heart_rate", value: 72, t: 9 * HOUR },
+    ]);
+    for (const indicator of ["radiation_dose_accumulated", "cabin_co2", "cabin_temperature", "radiation_dose_gcr"]) {
+      for (const t of [8 * HOUR, 9 * HOUR]) {
+        mission.replay.events.push({
+          t, type: "reading",
+          payload: { crew: "habitat", indicator, value: 1, unit: "x", t, source: "sensor", confidence: 1, state: "released" },
+        });
+      }
+    }
+    mission.replay.events.sort((a, b) => a.t - b.t);
+    render(<App {...mission} bodyScene={fakeBodyScene().factory} />);
+    const picker = within(screen.getByRole("region", { name: "Trends" }));
+    expect(picker.getAllByRole("button", { pressed: undefined }).map((b) => b.textContent)).toEqual(
+      expect.arrayContaining(["Heart rate", "Radiation dose"]),
+    );
+    for (const raw of ["cabin_co2", "cabin_temperature", "radiation_dose_gcr"]) {
+      expect(picker.queryByRole("button", { name: raw })).not.toBeInTheDocument();
+    }
+  });
+});
