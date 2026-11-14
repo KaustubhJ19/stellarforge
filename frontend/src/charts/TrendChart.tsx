@@ -40,6 +40,20 @@ export function TrendChart({ readings, baseline, alerts, domain, cursor }: Trend
   const yTicks = niceTicks(lo - pad, hi + pad, 4);
   const xTicks = hourTicks(x.domain[0], x.domain[1]);
 
+  // A green Alert only clears a Status, so it gets no marker. In a group of close markers only
+  // the last shows its word (to its right, clear of the others); every marker keeps its shape
+  // and its name for screen readers.
+  const shownAlerts = alerts.filter((a) => a.status !== "green").sort((p, q) => p.t - q.t);
+  const marked: { alert: Alert; words: string | null }[] = [];
+  let group: string[] = [];
+  shownAlerts.forEach((a, i) => {
+    const word = ALERT_WORD[a.kind];
+    if (!group.includes(word)) group.push(word);
+    const last = i === shownAlerts.length - 1 || x(shownAlerts[i + 1].t) - x(a.t) >= 64;
+    marked.push({ alert: a, words: last ? group.join(", ") : null });
+    if (last) group = [];
+  });
+
   const path = readings.map((r, i) => `${i ? "L" : "M"}${x(r.t).toFixed(1)},${y(r.value).toFixed(1)}`).join("");
   const last = readings[readings.length - 1];
   const shown = hover !== null ? readings[hover] : null;
@@ -106,7 +120,7 @@ export function TrendChart({ readings, baseline, alerts, domain, cursor }: Trend
               height={H - M.top - M.bottom}
             />
           )}
-          {alerts.map((a) => {
+          {marked.map(({ alert: a, words }) => {
             const ax = x(a.t);
             const word = ALERT_WORD[a.kind];
             return (
@@ -121,9 +135,11 @@ export function TrendChart({ readings, baseline, alerts, domain, cursor }: Trend
               >
                 <line x1={ax} x2={ax} y1={M.top + 18} y2={H - M.bottom} />
                 <AlertMark shape={ALERT_SHAPE[a.kind]} cx={ax} cy={M.top + 8} />
-                <text x={ax + 9} y={M.top + 12}>
-                  {word}
-                </text>
+                {words && (
+                  <text x={ax + 9} y={M.top + 12}>
+                    {words}
+                  </text>
+                )}
               </g>
             );
           })}

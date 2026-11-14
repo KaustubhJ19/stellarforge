@@ -103,3 +103,41 @@ test.describe("reduced motion", () => {
     expect(frames.size).toBe(1);
   });
 });
+
+test.describe("crew forms for gloved hands", () => {
+  for (const [button, width] of [
+    ["Log stand test", 1440],
+    ["Log post-EVA check", 1440],
+    ["Log post-EVA check", 390],
+  ] as const) {
+    test(`${button} at ${width}px: axe-clean, every control at least 56 px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await openApp(page);
+      await page.getByRole("button", { name: button }).click();
+      const dialog = page.getByRole("dialog");
+      await expect(dialog).toBeVisible();
+      const { AxeBuilder } = await import("@axe-core/playwright");
+      const axe = await new AxeBuilder({ page }).include(".form-dialog").withTags(["wcag2a", "wcag2aa", "wcag22aa"]).analyze();
+      expect(axe.violations.map((v) => v.id)).toEqual([]);
+      const small = await dialog.locator("input:not([type=radio]), textarea, .form-choice, button").evaluateAll((els) =>
+        els.map((el) => ({ text: el.textContent?.trim() || el.id, h: el.getBoundingClientRect().height })).filter((e) => e.h < 56),
+      );
+      expect(small).toEqual([]);
+      await page.screenshot({ path: `test-results/form-${button.split(" ").pop()}-${width}.png`, fullPage: false });
+    });
+  }
+
+  test("a stand test logged in the browser shows on the home screen with the comparison", async ({ page }) => {
+    const problems = await openApp(page);
+    await page.getByRole("button", { name: "Log stand test" }).click();
+    await page.getByLabel("Lying heart rate (bpm)").fill("62");
+    await page.getByLabel("Standing heart rate (bpm)").fill("92");
+    await page.getByLabel("Standing systolic blood pressure (mmHg)").fill("110");
+    await page.getByRole("button", { name: "Save" }).click();
+    await expect(page.getByRole("row", { name: /Standing heart rate/ })).toContainText("+23.4 bpm");
+    await page.screenshot({ path: "test-results/form-stand-results.png" });
+    await page.getByRole("button", { name: "Done" }).click();
+    await expect(page.getByRole("group", { name: "Standing heart rate" })).toContainText("92 bpm");
+    expect(problems).toEqual([]);
+  });
+});

@@ -92,6 +92,10 @@ public/draco/         vendored Draco decoder so models load offline
 
 - **Spec 4 (emergency flow):** pass `onEmergency` to `<App>`; it receives `"emergency"` or
   `"help-crewmate"`. Until then a placeholder alert shows.
+- **Readings logged on screen** (stand test, post-EVA check from today's tasks): pass
+  `onReadings` to `<App>`; it receives the Readings (`source: "manual"`) and the optional
+  post-EVA note, for the service's `POST /reading`. Until that is wired they live only on
+  the page and are gone on reload.
 - **Spec 5 (content):** pass `cards` to `<App>` (shape `CardContent` in `contracts.ts`);
   missing sections read "Not added yet".
 

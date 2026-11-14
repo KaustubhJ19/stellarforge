@@ -1,4 +1,5 @@
-import { useEffect, useId, useRef } from "react";
+import { useId, useRef } from "react";
+import { useModal } from "./useModal";
 import type { CardContent } from "../contracts";
 import type { ShownReading } from "../replay/state";
 import { formatValue, indicatorLabel, sourceLabel } from "../indicators";
@@ -29,35 +30,7 @@ export function MeasurementCard({
   const dialog = useRef<HTMLDivElement>(null);
   const ids = useId();
 
-  // Modal: focus starts on Close, Tab stays inside, Escape closes, focus goes back on close.
-  useEffect(() => {
-    const opener = document.activeElement as HTMLElement | null;
-    close.current?.focus();
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        onClose();
-        return;
-      }
-      if (e.key !== "Tab" || !dialog.current) return;
-      const focusable = dialog.current.querySelectorAll<HTMLElement>(
-        "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
-      );
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    }
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      opener?.focus();
-    };
-  }, [onClose]);
+  useModal(dialog, close, onClose);
 
   return (
     <div className="card-backdrop" onClick={onClose}>

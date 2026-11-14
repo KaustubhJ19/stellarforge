@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { CardContent, CrewRecord, IndicatorId, ReplayFile } from "./contracts";
+import type { CardContent, CrewRecord, IndicatorId, Reading, ReplayFile } from "./contracts";
 import { missionStateAt, replayRange, seriesOf } from "./replay/state";
 import { MeasurementCard } from "./home/MeasurementCard";
 import { MissionBar } from "./home/MissionBar";
 import { Co2Banner } from "./home/Co2Banner";
 import { HealthSummary } from "./home/HealthSummary";
-import { TaskList } from "./home/TaskList";
+import { TaskList, type CrewForm } from "./home/TaskList";
+import { StandTestForm } from "./forms/StandTestForm";
+import { PostEvaForm } from "./forms/PostEvaForm";
 import { Trends } from "./charts/Trends";
 import { ActionButtons, type EmergencyRequest } from "./home/ActionButtons";
 import { Body } from "./body/Body";
@@ -33,11 +35,12 @@ function emergencyNotWired(request: EmergencyRequest) {
 }
 
 export function App({
-  replay,
+  replay: givenReplay,
   crew,
   bodyScene = threeBodyScene,
   onEmergency = emergencyNotWired,
   cards = [],
+  onReadings = () => {},
 }: {
   replay: ReplayFile;
   /** The Crew record the replay belongs to (sex picks the body; anchor gives "your normal"). */
@@ -47,7 +50,32 @@ export function App({
   onEmergency?: (request: EmergencyRequest) => void;
   /** Measurement card content (Spec 5). */
   cards?: CardContent[];
+  /** Readings the crew logged in a form (stand test, post-EVA), for the service (POST /reading). */
+  onReadings?: (readings: Reading[], note?: string) => void;
 }) {
+  // Readings logged on this screen join the replay, so every part of the app shows them.
+  const [logged, setLogged] = useState<Reading[]>([]);
+  const replay = useMemo<ReplayFile>(
+    () =>
+      logged.length === 0
+        ? givenReplay
+        : {
+            ...givenReplay,
+            events: [...givenReplay.events, ...logged.map((r) => ({ t: r.t, type: "reading" as const, payload: r }))].sort(
+              (a, b) => a.t - b.t,
+            ),
+          },
+    [givenReplay, logged],
+  );
+  const [form, setForm] = useState<CrewForm | null>(null);
+  const closeForm = useCallback(() => setForm(null), []);
+  // Logged at the mission time now (the end of the replay), and the screen returns to now.
+  const log = (readings: Reading[], note?: string) => {
+    setLogged((l) => [...l, ...readings]);
+    setT(range[1]);
+    onReadings(readings, note);
+  };
+
   const range = useMemo(() => replayRange(replay), [replay]);
   const [t, setT] = useState(range[1]);
   const state = useMemo(() => missionStateAt(replay, t), [replay, t]);
@@ -105,7 +133,7 @@ export function App({
             <HealthSummary kind="mental" latest={state.latest} onDetails={setCardFor} />
           </div>
           <Trends replay={replay} crew={crew} state={state} range={range} onScrub={setT} />
-          <TaskList tasks={state.tasks} />
+          <TaskList tasks={state.tasks} onLog={setForm} />
         </div>
       </main>
       {cardReading && (
@@ -116,6 +144,8 @@ export function App({
           onClose={closeCard}
         />
       )}
+      {form === "stand-test" && <StandTestForm crew={crew} t={range[1]} onSave={log} onClose={closeForm} />}
+      {form === "post-eva" && <PostEvaForm crew={crew.id} t={range[1]} onSave={log} onClose={closeForm} />}
       <footer className="disclaimer">Decision support, not diagnosis.</footer>
     </div>
   );
