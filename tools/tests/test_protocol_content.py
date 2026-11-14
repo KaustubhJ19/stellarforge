@@ -77,6 +77,17 @@ def test_chest_pain_phase_records_an_ecg_and_readies_the_aed():
     assert "ecg" in texts and "defibrillat" in texts
 
 
+def test_medical_review_sheet_lists_every_step_and_bound():
+    # Ticket 14 gate: a clinician signs every item; the sheet must not fall behind the content.
+    sheet = (ROOT / "docs" / "medical-review.md").read_text(encoding="utf-8")
+    for pid in ("microgravity-cpr", "chest-pain"):
+        for s in steps(pid):
+            assert f"`{s['id']}`" in sheet, s["id"]
+    bounds = json.loads((ROOT / "content" / "profiles" / "detection-cut-offs.json").read_text(encoding="utf-8"))
+    for b in bounds["safety_bounds"]:
+        assert f"`{b['indicator']}`" in sheet, b["indicator"]
+
+
 @pytest.mark.parametrize("pid", ["microgravity-cpr", "chest-pain"])
 def test_step_ids_are_unique(pid):
     ids = [s["id"] for s in steps(pid)]
