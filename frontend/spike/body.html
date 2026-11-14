@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Spike B: body GLB</title>
+    <style>body{margin:0;background:#0b0f17;color:#eee;font:14px system-ui}#out{position:fixed;top:8px;left:8px;white-space:pre}</style>
+  </head>
+  <body>
+    <pre id="out">loading…</pre>
+    <script type="module">
+      // Spike B (ticket 01): load the body GLB, list mapped nodes, measure load + fps.
+      import * as THREE from "three";
+      import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+      import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+
+      const out = document.getElementById("out");
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(innerWidth, innerHeight);
+      document.body.appendChild(renderer.domElement);
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0b0f17);
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x334455, 2));
+      const camera = new THREE.PerspectiveCamera(35, innerWidth / innerHeight, 0.01, 100);
+
+      const draco = new DRACOLoader().setDecoderPath("/draco/");
+      const t0 = performance.now();
+      const gltf = await new GLTFLoader().setDRACOLoader(draco).loadAsync("/models/body-male.glb");
+      const loadMs = performance.now() - t0;
+      scene.add(gltf.scene);
+
+      const nodes = [];
+      gltf.scene.traverse((o) => o.isMesh && nodes.push({ name: o.name, ...o.userData }));
+      const box = new THREE.Box3().setFromObject(gltf.scene);
+      const size = box.getSize(new THREE.Vector3()), center = box.getCenter(new THREE.Vector3());
+      camera.position.set(center.x, center.y, center.z + size.y * 1.6);
+      camera.lookAt(center);
+
+      let frames = 0; const f0 = performance.now();
+      await new Promise((done) => {
+        (function loop() {
+          gltf.scene.rotation.y += 0.01; renderer.render(scene, camera); frames++;
+          performance.now() - f0 < 3000 ? requestAnimationFrame(loop) : done();
+        })();
+      });
+      const fps = frames / ((performance.now() - f0) / 1000);
+      window.spikeResult = { loadMs: Math.round(loadMs), fps: Math.round(fps), size: size.toArray().map((v) => +v.toFixed(3)), nodes, gl: renderer.getContext().getParameter(renderer.getContext().VERSION) };
+      out.textContent = `load ${window.spikeResult.loadMs} ms · ${window.spikeResult.fps} fps · ${nodes.length} nodes`;
+      (function keep() { gltf.scene.rotation.y += 0.01; renderer.render(scene, camera); requestAnimationFrame(keep); })();
+    </script>
+  </body>
+</html>
