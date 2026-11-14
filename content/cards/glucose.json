@@ -1,0 +1,30 @@
+{
+  "indicator": "glucose",
+  "unit": "mg/dL",
+  "how": [
+    "Measure blood glucose with the onboard analyser, in mg/dL.",
+    "Note whether the crewmember has eaten recently."
+  ],
+  "why": {
+    "text": "No NASA HRP risk names blood glucose. It is tracked because a very low or very high value needs a doctor's attention.",
+    "hrp_risk": "uncovered",
+    "uncovered_reason": "No HRP risk names glucose; the closest is Risk of Inadequate Food and Nutrition.",
+    "source": "https://www.nasa.gov/hrp/risks/"
+  },
+  "if_abnormal": {
+    "now": "Check the sample and the analyser. Compare with the crewmember's own normal.",
+    "remeasure": "Measure again after the crewmember has rested, with the same device.",
+    "tell_crew": "Tell the crew medical officer. Any treatment is per flight surgeon / onboard medical checklist.",
+    "tell_ground": "Add the readings to the next ground report."
+  },
+  "space_note": "Safety bound 54 to 250 mg/dL: ADA level 2 limits (Table 6.2), an Earth reference, no space data. Inspiration4 astronauts (NASA OSDR OSD-575) had 3 of 28 values below 54 mg/dL, all 45 days after return.",
+  "labels": [
+    "team value (how and if_abnormal steps)",
+    "Earth reference, no space data (Safety bound)"
+  ],
+  "sources": [
+    "https://www.nasa.gov/hrp/risks/",
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC11635034/",
+    "https://osdr.nasa.gov/bio/repo/data/studies/OSD-575"
+  ]
+}

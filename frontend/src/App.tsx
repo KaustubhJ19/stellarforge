@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CardContent, CrewRecord, IndicatorId, Reading, ReplayFile } from "./contracts";
 import { missionStateAt, replayRange, seriesOf } from "./replay/state";
 import { MeasurementCard } from "./home/MeasurementCard";
+import { CONTENT_CARDS, cardFor } from "./content";
 import { MissionBar } from "./home/MissionBar";
 import { Co2Banner } from "./home/Co2Banner";
 import { HealthSummary } from "./home/HealthSummary";
@@ -39,7 +40,7 @@ export function App({
   crew,
   bodyScene = threeBodyScene,
   onEmergency = emergencyNotWired,
-  cards = [],
+  cards = CONTENT_CARDS,
   onReadings = () => {},
 }: {
   replay: ReplayFile;
@@ -48,7 +49,7 @@ export function App({
   bodyScene?: BodySceneFactory;
   /** Hand-off to the emergency flow (Spec 4). */
   onEmergency?: (request: EmergencyRequest) => void;
-  /** Measurement card content (Spec 5). */
+  /** Measurement card content (Spec 5); defaults to content/cards/ at the repo root. */
   cards?: CardContent[];
   /** Readings the crew logged in a form (stand test, post-EVA), for the service (POST /reading). */
   onReadings?: (readings: Reading[], note?: string) => void;
@@ -82,8 +83,8 @@ export function App({
   const [layers, setLayers] = useState(DEFAULT_LAYERS);
   const [focus, setFocus] = useState<Focus>({ level: "body" });
   const [insight, setInsight] = useState<IndicatorId | null>(null);
-  const [cardFor, setCardFor] = useState<IndicatorId | null>(null);
-  const closeCard = useCallback(() => setCardFor(null), []);
+  const [openCard, setOpenCard] = useState<IndicatorId | null>(null);
+  const closeCard = useCallback(() => setOpenCard(null), []);
 
   const glow = useMemo(() => glowFrom(state.latest), [state]);
   const model = crew.sex === "female" ? "female" : "male";
@@ -91,11 +92,11 @@ export function App({
   const breathRate = state.latest.get("respiration_rate")?.value ?? null;
   // Insight and cards need a Reading at the scrubbed time; scrubbing to before one closes them.
   const insightReading = insight ? state.latest.get(insight) : undefined;
-  const cardReading = cardFor ? state.latest.get(cardFor) : undefined;
+  const cardReading = openCard ? state.latest.get(openCard) : undefined;
   useEffect(() => {
     if (insight && !insightReading) setInsight(null);
-    if (cardFor && !cardReading) setCardFor(null);
-  }, [insight, insightReading, cardFor, cardReading]);
+    if (openCard && !cardReading) setOpenCard(null);
+  }, [insight, insightReading, openCard, cardReading]);
   const examined = insightReading ? { indicator: insightReading.indicator, status: insightReading.status } : null;
   const view = useMemo(
     () => buildBodyView({ model, focus, layers, glow, heartRate, breathRate, insight: examined }),
@@ -129,8 +130,8 @@ export function App({
         </section>
         <div className="home__side">
           <div className="home__summaries">
-            <HealthSummary kind="physical" latest={state.latest} onDetails={setCardFor} />
-            <HealthSummary kind="mental" latest={state.latest} onDetails={setCardFor} />
+            <HealthSummary kind="physical" latest={state.latest} onDetails={setOpenCard} />
+            <HealthSummary kind="mental" latest={state.latest} onDetails={setOpenCard} />
           </div>
           <Trends replay={replay} crew={crew} state={state} range={range} onScrub={setT} />
           <TaskList tasks={state.tasks} onLog={setForm} />
@@ -140,7 +141,7 @@ export function App({
         <MeasurementCard
           reading={cardReading}
           history={seriesOf(replay, cardReading.indicator).filter((r) => r.t <= state.t)}
-          content={cards.find((c) => c.indicator === cardReading.indicator)}
+          content={cardFor(cards, cardReading.indicator)}
           onClose={closeCard}
         />
       )}

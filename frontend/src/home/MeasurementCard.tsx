@@ -1,4 +1,4 @@
-import { useId, useRef } from "react";
+import { useId, useRef, type ReactNode } from "react";
 import { useModal } from "./useModal";
 import type { CardContent } from "../contracts";
 import type { ShownReading } from "../replay/state";
@@ -6,11 +6,22 @@ import { formatValue, indicatorLabel, sourceLabel } from "../indicators";
 import { StatusBadge } from "../status";
 import { Sparkline } from "../charts/Sparkline";
 
-const SECTIONS = [
-  ["how", "How it is measured"],
-  ["why", "Why it matters"],
-  ["ifAbnormal", "If abnormal"],
+const STEPS = [
+  ["now", "Now"],
+  ["remeasure", "Measure again"],
+  ["tell_crew", "Tell the crew"],
+  ["tell_ground", "Tell the ground"],
 ] as const;
+
+/** One card section; "Not added yet." until Spec 5 writes it. */
+function Section({ id, heading, children }: { id: string; heading: string; children?: ReactNode }) {
+  return (
+    <section className="card__section" aria-labelledby={id}>
+      <h3 id={id}>{heading}</h3>
+      {children ?? <p className="empty">Not added yet.</p>}
+    </section>
+  );
+}
 
 /** One measurement: value, source, trend, and How / Why / If abnormal from content. */
 export function MeasurementCard({
@@ -62,12 +73,52 @@ export function MeasurementCard({
             {l}
           </span>
         ))}
-        {SECTIONS.map(([key, heading]) => (
-          <section key={key} className="card__section" aria-labelledby={`${ids}-${key}`}>
-            <h3 id={`${ids}-${key}`}>{heading}</h3>
-            {content?.[key] ? <p>{content[key]}</p> : <p className="empty">Not added yet.</p>}
-          </section>
-        ))}
+        <Section id={`${ids}-how`} heading="How it is measured">
+          {content?.how?.length ? (
+            <ol className="card__steps">
+              {content.how.map((step, i) => (
+                <li key={i}>{step}</li>
+              ))}
+            </ol>
+          ) : undefined}
+        </Section>
+        <Section id={`${ids}-why`} heading="Why it matters">
+          {content?.why ? (
+            <>
+              <p>{content.why.text}</p>
+              {content.why.hrp_risk && (
+                <p>
+                  <strong>NASA HRP risk:</strong>{" "}
+                  {content.why.hrp_risk === "uncovered"
+                    ? `not covered. ${content.why.uncovered_reason ?? ""}`.trim()
+                    : content.why.hrp_risk}
+                </p>
+              )}
+              {content.why.source && (
+                <p className="card__source">
+                  Source: <a href={content.why.source}>{content.why.source}</a>
+                </p>
+              )}
+              {content.space_note && (
+                <p>
+                  <strong>In space:</strong> {content.space_note}
+                </p>
+              )}
+            </>
+          ) : undefined}
+        </Section>
+        <Section id={`${ids}-abnormal`} heading="If abnormal">
+          {content?.if_abnormal ? (
+            <dl className="card__abnormal">
+              {STEPS.filter(([key]) => content.if_abnormal?.[key]).map(([key, label]) => (
+                <div key={key}>
+                  <dt>{label}</dt>
+                  <dd>{content.if_abnormal![key]}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : undefined}
+        </Section>
         {content?.sources?.length ? (
           <footer className="card__sources">
             <h3>Sources</h3>

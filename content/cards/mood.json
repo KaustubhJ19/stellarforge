@@ -1,0 +1,27 @@
+{
+  "indicator": "mood",
+  "unit": "score 1-5",
+  "how": [
+    "Each morning, rate your mood from 1 to 5 in the app.",
+    "Answer honestly; the rating is private to the crew medical officer."
+  ],
+  "why": {
+    "text": "Isolation and confinement over long missions can lead to behavioral changes.",
+    "hrp_risk": "Risk of Behavioral Changes and Psychiatric Disorders",
+    "source": "https://www.nasa.gov/hrp/risks/"
+  },
+  "if_abnormal": {
+    "now": "Talk with the crewmember privately.",
+    "remeasure": "Look at the next few days' ratings; one low day is normal.",
+    "tell_crew": "Tell the crew medical officer.",
+    "tell_ground": "Raise it at the next private medical conference with the ground."
+  },
+  "space_note": "A 1 to 5 self-rating has no clinical limit, so mood has no Safety bound and is judged against the crewmember's own normal. Normal-day data come from Earth wearable users (PMData), not astronauts.",
+  "labels": [
+    "team value (how and if_abnormal steps)"
+  ],
+  "sources": [
+    "https://www.nasa.gov/hrp/risks/",
+    "https://www.nasa.gov/hrp/hazards/"
+  ]
+}

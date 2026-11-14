@@ -1,0 +1,30 @@
+{
+  "indicator": "sleep_duration",
+  "unit": "min",
+  "how": [
+    "Wear the sleep tracker through the main sleep period.",
+    "Check last night's time asleep each morning."
+  ],
+  "why": {
+    "text": "Crews face chronic sleep loss and irregularities in their internal biological clocks.",
+    "hrp_risk": "Risk of Inadequate Sleep and Irregular Schedules",
+    "source": "https://www.nasa.gov/hrp/risks/"
+  },
+  "if_abnormal": {
+    "now": "Compare with the crewmember's own normal, not with one night.",
+    "remeasure": "Look at the next nights; one short night is common in flight.",
+    "tell_crew": "Tell the crew medical officer.",
+    "tell_ground": "Add the sleep trend to the next ground report."
+  },
+  "space_note": "NASA schedules an 8.5 hour sleep period (NASA-STD-3001 [V1 6001]). ISS crews actually slept about 6.1 hours a night in flight (Barger 2014). On Earth, adults need 7 or more hours (AASM). No Safety bound: judged against the personal baseline only.",
+  "labels": [
+    "team value (how and if_abnormal steps)",
+    "Earth reference, no space data (AASM 7 hours)"
+  ],
+  "sources": [
+    "https://www.nasa.gov/hrp/risks/",
+    "https://standards.nasa.gov/sites/default/files/standards/NASA/C//nasa-std-3001-vol-1-rev-c-signature.pdf",
+    "https://pubmed.ncbi.nlm.nih.gov/25127232/",
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC4442216/"
+  ]
+}

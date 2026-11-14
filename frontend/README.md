@@ -45,8 +45,12 @@ The app reads Spec 1's frozen shapes: the JSON Schemas in `contracts/` at the re
 - **"Your normal" band** on a trend is the Crew record's anchor mean ± 2 SD. OPEN QUESTION for
   the Spec 3 owner: on a bounded scale this can pass the edge (stress 2 ± 1.2 on 1-5 gives
   0.8-3.2; SpO₂ could pass 100%). Trim to the scale, or another rule?
-- **Mission profile** name and Earth delay come from `src/profiles.ts` (team values) until
-  Spec 5's profiles exist; an unknown profile shows its id and "Not known".
+- **Mission profile** name and Earth delay come from Spec 5's `content/profiles/<id>.json`
+  (`name`, `comm_delay`), with the delay's direction and "team value" label shown; an
+  unknown profile shows its id and "Not known".
+- **Measurement cards** come from Spec 5's structured `content/cards/*.json` (How as steps,
+  Why with the NASA HRP risk and space note, If abnormal in four parts). A card also covers
+  its `related_indicators`. Fields in another shape read "Not added yet."
 - **Habitat Readings** (`radiation_dose_*`, `cabin_*`) stay out of the health summaries; the
   mission bar shows `radiation_dose_accumulated`.
 - **CO₂ banner** shows while the latest cabin CO₂ is over 5,000 ppm, a team value (not yet

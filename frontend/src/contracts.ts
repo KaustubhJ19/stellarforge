@@ -99,14 +99,26 @@ export interface ReplayFile {
 }
 
 /**
- * ASSUMED: one measurement card's content from Spec 5 (content/cards/).
- * Every field is optional so a card renders before its content is written.
+ * One measurement card from Spec 5 (content/cards/*.json at the repo root, the structured
+ * source of truth). Every field but `indicator` is optional so a card renders before its
+ * content is written.
  */
 export interface CardContent {
   indicator: IndicatorId;
-  how?: string;
-  why?: string;
-  ifAbnormal?: string;
+  /** Other Indicators this card also explains, e.g. resting_heart_rate on heart_rate's card. */
+  related_indicators?: IndicatorId[];
+  unit?: string;
+  /** Steps, in order. */
+  how?: string[];
+  why?: {
+    text: string;
+    /** A NASA HRP risk name, or "uncovered" with `uncovered_reason`. */
+    hrp_risk?: string;
+    uncovered_reason?: string;
+    source?: string;
+  };
+  if_abnormal?: { now?: string; remeasure?: string; tell_crew?: string; tell_ground?: string };
+  space_note?: string;
   /** Honest labels, e.g. "team value", "Earth reference, no space data". */
   labels?: string[];
   /** Citations for the content. */
