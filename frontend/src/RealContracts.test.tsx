@@ -233,3 +233,29 @@ describe("your normal band stays inside the scale", () => {
     expect(within(chart).getByLabelText("Your normal: 56–72 bpm")).toBeInTheDocument();
   });
 });
+
+describe("recorded replays from Spec 3's proposed script", () => {
+  it("ignores reading_state and forecast events: no doubled Readings, nothing breaks", async () => {
+    const mission = missionWith([
+      { indicator: "heart_rate", value: 70, t: 8 * HOUR },
+      { indicator: "heart_rate", value: 131, t: 9 * HOUR, status: "red" },
+    ]);
+    const held = mission.replay.events.find((e) => e.type === "reading" && e.payload.value === 131)!.payload as Reading;
+    const extra = [
+      { t: 9 * HOUR, type: "reading_state", payload: { ...held, state: "quarantined" } },
+      { t: 10 * HOUR, type: "reading_state", payload: { ...held, state: "released" } },
+      {
+        t: 10 * HOUR, type: "forecast",
+        payload: { crew: "A", t: 10 * HOUR, value: 6.2, low: 4.5, high: 7.9, label: "", population: 6.0,
+          personal_correction: 0.2, base: 5.5, drivers: { fatigue: -0.4, sleep_duration_h: 0.9 } },
+      },
+    ];
+    mission.replay.events.push(...(extra as never[]));
+    mission.replay.events.sort((a, b) => a.t - b.t);
+    render(<App {...mission} bodyScene={fakeBodyScene().factory} />);
+    expect(screen.getByRole("group", { name: "Heart rate" })).toHaveTextContent("131");
+    await userEvent.click(within(screen.getByRole("region", { name: "Trends" })).getByRole("button", { name: "Heart rate" }));
+    await userEvent.click(screen.getByRole("button", { name: "Show as table" }));
+    expect(within(screen.getByRole("table")).getAllByRole("row")).toHaveLength(3); // header + 2 Readings, not 4
+  });
+});
