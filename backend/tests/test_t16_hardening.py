@@ -37,3 +37,16 @@ def test_demo_endpoints_work_when_enabled(eng, monkeypatch):
     monkeypatch.setenv("SF_SIM", "1")
     with TestClient(create_app(eng, ticker=False)) as c:
         assert c.post("/api/sim/reset").status_code == 200
+
+
+# ---- the default service runs the real content --------------------------------
+
+def test_default_service_uses_real_protocol_profile_and_crew(monkeypatch):
+    for var in ("SF_PROTOCOL", "SF_PROFILE", "SF_RECORDS", "SF_HABITAT_URL"):
+        monkeypatch.delenv(var, raising=False)
+    with TestClient(create_app(ticker=False)) as c:
+        info = c.get("/api/sim/crew").json()
+        assert info["stub"] is False and info["protocol"] == "microgravity-cpr" and info["profile"] == "mars_transit"
+        assert info["crew"] == ["A", "B", "C", "D"]
+        record = c.get("/api/record", params={"actor": "A", "subject": "A"}).json()
+        assert record["id"] == "A" and record["anchor"]

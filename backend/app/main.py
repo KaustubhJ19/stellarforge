@@ -19,7 +19,7 @@ from . import replay as replay_mod
 from .clock import MissionClock
 from .contracts import ContractError
 from .flow import AccessDenied, FlowEngine, FlowError
-from .runtime import build
+from .runtime import REAL_RECORDS, build
 from .store import StoreError
 
 DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
@@ -49,8 +49,10 @@ class Reply(BaseModel):
 
 def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI:
     eng = engine or build(
-        protocol=os.environ.get("SF_PROTOCOL", "stub-protocol"),
-        profile=os.environ.get("SF_PROFILE", "stub-mars"),
+        # Real content by default; SF_PROTOCOL=stub-protocol SF_PROFILE=stub-mars SF_RECORDS=<stub file> runs the test doubles.
+        protocol=os.environ.get("SF_PROTOCOL", "microgravity-cpr"),
+        profile=os.environ.get("SF_PROFILE", "mars_transit"),
+        records_path=Path(os.environ.get("SF_RECORDS", REAL_RECORDS)),
         db=os.environ.get("SF_DB", ":memory:"),
         clock=MissionClock(speed=float(os.environ.get("SF_CLOCK_SPEED", "1"))),
     )

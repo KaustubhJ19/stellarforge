@@ -8,7 +8,7 @@ export default function App() {
   const params = new URLSearchParams(window.location.search);
   const crew = params.get("crew");
   if (params.get("view") === "console") return <Console />;
-  if (crew) return <Tablet crew={crew} />;
+  if (crew) return <Tablet crew={crew} autoStart={params.get("start") === "emergency"} />;
   return <Picker />;
 }
 

@@ -41,4 +41,4 @@ About 3 minutes. Check the length against the Submission Guide (ticket 01). Ever
 
 - **Measurement cards are empty in the app:** Spec 2's `main.tsx` does not pass `cards` yet. Wire `content/cards-frontend.json` (see `docs/notes-from-integration.md`), or skip the card close-up in the morning-check scene.
 - **No Accuracy or Credits page in the app:** show the repo pages (`docs/accuracy.md`, `docs/credits.md`) in the close.
-- **Spec 4 defaults to the stub content:** always start with the `SF_PROTOCOL` / `SF_PROFILE` / `SF_RECORDS` settings above.
+- **Spec 4 now defaults to the real content** (`microgravity-cpr`, `mars_transit`, `replay/crew-records.json`). The `SF_PROTOCOL` / `SF_PROFILE` / `SF_RECORDS` settings above still work and are only needed to run the stub test doubles.

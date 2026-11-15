@@ -74,7 +74,7 @@ To switch: set `SF_PROTOCOL=microgravity-cpr` (or change `DEFAULT_PROTOCOL` / `D
 - **Offline:** "Why this step?" uses the recorded answers, and the ground delay is 1710 s.
 
 **Still open:**
-- **Spec 4:** `backend/app/runtime.py` still defaults to `stub-protocol` / `stub-mars`. Switch the defaults to `microgravity-cpr` / `mars_transit` (or set `SF_PROTOCOL` and the profile) for the demo.
+- **Spec 4 (done):** the service now defaults to `microgravity-cpr` / `mars_transit` and the real crew records, and accepts the bare-list `replay/crew-records.json`. The health app's Emergency button opens the flow on the person's tablet.
 - **Spec 2 and Spec 4:** `test_no_external_urls_in_runtime_code` fails on `frontend/src/references.ts` (link to `https://nlsp.nasa.gov`). Agree whether reference links may appear in the frontend, or move them to content.
 - **Browser tests (Playwright):** all 37 pass as committed, on the stub content.
   - With the real content and crew ids, the real steps, citations, the auto Trigger and the offline steps all render.

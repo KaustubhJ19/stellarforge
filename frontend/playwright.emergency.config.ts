@@ -15,6 +15,6 @@ export default defineConfig({
     command: `"${PY}" -m uvicorn app.main:app --app-dir ../backend --host 127.0.0.1 --port 8770`,
     url: "http://127.0.0.1:8770/api/health",
     reuseExistingServer: false,
-    env: { SF_SIM: "1", SF_CLOCK_SPEED: "1", SF_OLLAMA_URL: "http://127.0.0.1:9" },
+    env: { SF_PROTOCOL: "stub-protocol", SF_PROFILE: "stub-mars", SF_RECORDS: path.resolve(process.cwd(), "../replay/stub-crew-records.json"), SF_SIM: "1", SF_CLOCK_SPEED: "1", SF_OLLAMA_URL: "http://127.0.0.1:9" },
   },
 });
