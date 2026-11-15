@@ -28,12 +28,18 @@
     "note": "NASA CCT-REQ-1130 Rev E-1 (ISS Crew Transportation and Services Requirements, 2016), p. 6: the crew will return to Earth within 24 hours of a declaration of an intention to return early, for example for a medical event. A requirement on the crew vehicle, not a promise for every case."
   },
   "medical_kit": {
-    "value": ["on-board medical kit (contents not listed)"],
+    "value": [
+      "on-board medical kit (contents not listed)"
+    ],
     "status": "not confirmed: team value",
     "note": "No public kit list was read for this profile. Contents are not listed so no drug name appears in content."
   },
   "exercise_kit": {
-    "value": ["T2/COLBERT treadmill", "CEVIS cycle ergometer", "ARED resistive exercise device"],
+    "value": [
+      "T2/COLBERT treadmill",
+      "CEVIS cycle ergometer",
+      "ARED resistive exercise device"
+    ],
     "status": "sourced",
     "source": "https://www.nasa.gov/reference/jsc-exercise-countermeasures/",
     "note": "Devices NASA JSC lists for the ISS."
@@ -60,5 +66,27 @@
     "status": "sourced",
     "source": "https://www.nasa.gov/hrp/hazards/",
     "note": "NASA HRP hazards: isolation and confinement, and hostile closed environments inside a spacecraft."
-  }
+  },
+  "crew": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "equipment": [
+    "Crew Medical Restraint System",
+    "automated chest compression device (if available)",
+    "automated external defibrillator (AED)",
+    "self-adhesive defibrillation pads",
+    "second-generation supraglottic airway device",
+    "manual suction device",
+    "tracheal intubation equipment",
+    "peripheral venous cannula",
+    "intraosseous access device",
+    "ECG recorder",
+    "communication link to Mission Control"
+  ],
+  "delay_one_way_s": 0,
+  "delay_label": "near real time from low Earth orbit (sourced: comm_delay)",
+  "spec4_note": "Spec 4 fields. crew: Spec 1 replay crew ids (team value). equipment: every item the CPR and chest-pain protocols use. A defibrillator is part of the crew health care system (CHeCS) on the ISS (Hinkelbein et al. 2020, rationale for Recommendation 10); the other items are assumed on board (team value)."
 }

@@ -1,0 +1,11 @@
+{
+  "protocol": "chest-pain",
+  "note": "Recorded answers for 'Why this step?' when the explainer is off. Written by the team from the cited excerpts; not clinically reviewed (see docs/medical-review.md).",
+  "answers": {
+    "cp-1-ecg": "An Earth guideline for suspected heart attack recommends recording an ECG straight away. There is no space-specific guidance for this step.",
+    "cp-2-defibrillator-ready": "The same Earth guideline says everyone caring for a suspected heart attack should have a defibrillator to hand.",
+    "cp-3-restrain": "If a shock is needed, the defibrillator may only be used on a patient restrained to an electrically isolated, safe surface, so restrain early.",
+    "cp-4-mission-control": "The crew must tell Mission Control about an ongoing medical emergency. On a Mars mission the reply is delayed, so the crew does not wait for it.",
+    "cp-5-medication": "This tool never names a drug or a dose. Any medication is decided by the flight surgeon or the onboard medical checklist."
+  }
+}

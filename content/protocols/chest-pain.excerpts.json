@@ -1,0 +1,36 @@
+{
+  "protocol": "chest-pain",
+  "note": "Verbatim excerpts from the cited source for each step.",
+  "excerpts": [
+    {
+      "step": "cp-1-ecg",
+      "section": "ESC 2023 ACS Guidelines (doi:10.1093/eurheartj/ehad191), Earth reference, no space data, 3.2 Diagnostic tools, Electrocardiogram",
+      "text": "It is recommended that an ECG is obtained immediately upon FMC"
+    },
+    {
+      "step": "cp-2-defibrillator-ready",
+      "section": "ESC 2023 ACS Guidelines (doi:10.1093/eurheartj/ehad191), Earth reference, no space data, 4.1 Pre-hospital logistics of care",
+      "text": "It is recommended that all medical and paramedical personnel caring for ACS patients within the EMS setting have access to defibrillation equipment and are trained in basic cardiac life support."
+    },
+    {
+      "step": "cp-3-restrain",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 10",
+      "text": "A defibrillator SHOULD only be used on a patient that is restrained to an electrically isolated and safe surface."
+    },
+    {
+      "step": "cp-3-restrain",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), rationale for Recommendation 10",
+      "text": "we recommend the use of a defibrillator only on a patient that has been restrained on an electrical isolated surface such as the CMRS"
+    },
+    {
+      "step": "cp-4-mission-control",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), rationale for Recommendation 21",
+      "text": "However, the crew will be obliged to inform Mission Control of an ongoing medical emergency."
+    },
+    {
+      "step": "cp-5-medication",
+      "section": "Spec 5, Protocol content rules (team rule)",
+      "text": "Medication steps read \"per flight surgeon / onboard medical checklist\"."
+    }
+  ]
+}

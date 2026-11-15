@@ -1,0 +1,29 @@
+{
+  "purpose": "Names the content linter blocks in protocol content. Drugs stay with the flight surgeon; protocols never name them.",
+  "groups": [
+    {
+      "source": "Wotring VE. Chemical Potency and Degradation Products of Medications Stored Over 550 Earth Days at the International Space Station. AAPS J. 2016;18(1):210-216. doi:10.1208/s12248-015-9834-5 (PMC4706284)",
+      "basis": "Table I: medications from the ISS crew medical kit",
+      "names": ["aspirin", "acetaminophen", "ibuprofen", "loratadine", "loperamide", "pseudoephedrine",
+                "melatonin", "zolpidem", "modafinil"]
+    },
+    {
+      "source": "Du B, et al. Evaluation of Physical and Chemical Changes in Pharmaceuticals Flown on Space Missions. AAPS J. 2011;13(2):299-308. doi:10.1208/s12248-011-9270-0 (PMC3085701)",
+      "basis": "Tables II and IV and text: formulations in pharmaceutical kits stowed on the ISS, and drugs named in the discussion",
+      "names": ["acyclovir", "amoxicillin", "clavulanate", "cefadroxil", "ciprofloxacin", "dextroamphetamine",
+                "furosemide", "levothyroxine", "metronidazole", "promethazine", "temazepam", "sulfamethoxazole",
+                "trimethoprim", "imipenem", "cilastatin", "fluconazole", "triamcinolone", "silver sulfadiazine",
+                "mupirocin", "clotrimazole", "famotidine", "amantadine", "rimantadine", "tetracycline",
+                "vancomycin", "atorvastatin"]
+    },
+    {
+      "source": "team value",
+      "basis": "Common emergency and cardiac drugs from terrestrial advanced life support; no space source. Hinkelbein et al. 2020 (the CPR guideline) names no drugs.",
+      "names": ["epinephrine", "adrenaline", "norepinephrine", "noradrenaline", "amiodarone", "lidocaine",
+                "atropine", "vasopressin", "adenosine", "acetylsalicylic", "nitroglycerin", "glyceryl trinitrate",
+                "morphine", "fentanyl", "ketamine", "heparin", "clopidogrel", "ticagrelor", "alteplase",
+                "tenecteplase", "magnesium sulfate", "sodium bicarbonate", "calcium chloride", "naloxone",
+                "midazolam", "diazepam", "propofol", "dextrose", "glucagon"]
+    }
+  ]
+}

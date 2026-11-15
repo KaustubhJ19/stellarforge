@@ -39,3 +39,6 @@ replay/generated/
 test-results/
 playwright-report/
 *.tsbuildinfo
+
+# Demo recordings (tools/demo)
+out/

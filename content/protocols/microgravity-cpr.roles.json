@@ -1,0 +1,17 @@
+{
+  "protocol": "microgravity-cpr",
+  "note": "team value: role split between Rescuer 1 and Rescuer 2, not stated by the guideline. Unmapped steps show to everyone.",
+  "roles": {
+    "cpr-1-start": "R1",
+    "cpr-2-er-compressions": "R1",
+    "cpr-3-hs-on-cmrs": "R1",
+    "cpr-4-restrained-alternative": "R1",
+    "cpr-5-accd": "R2",
+    "cpr-6-aed": "R2",
+    "cpr-7-defibrillate": "R2",
+    "cpr-8-airway-gate": "R2",
+    "cpr-9-supraglottic": "R2",
+    "cpr-10-intubation": "R2",
+    "cpr-11-venous-access": "R2"
+  }
+}
