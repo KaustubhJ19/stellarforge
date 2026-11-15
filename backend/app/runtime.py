@@ -45,6 +45,8 @@ def build(protocol: str = DEFAULT_PROTOCOL, profile: str = DEFAULT_PROFILE, db: 
         explainer = ollama_transport(os.environ.get("SF_OLLAMA_MODEL", "llama3.2:3b"),
                                      os.environ.get("SF_OLLAMA_URL", "http://127.0.0.1:11434"))
     eng.explainer = Explainer(eng, explainer)
+    from copilot.hot_summary import PushedHotSummaries  # Spec 3: latest Spec 2 snapshot per crew
+    eng.hot_summaries = PushedHotSummaries(habitat_configured=bool(habitat_url))
     if habitat_url:
         from .habitat import Habitat
         eng.habitat = Habitat(eng, habitat_url)
