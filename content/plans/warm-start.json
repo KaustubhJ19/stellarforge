@@ -1,0 +1,32 @@
+{
+ "about": "Prior bias per action for the plan bandit (backend/bandit.py): mean change in tomorrow's readiness (0-10, divided by 10) from the what-if forecast when today's answers move as in tools/plan_warm_start.py WHAT_IF.",
+ "label": "estimate, not validated (what-if forecast); action-to-answer mapping is a team value",
+ "source": "backend/forecast_b.py what_if on PMData wellness answers (16 people, CC BY 4.0); rerun: python tools/plan_warm_start.py",
+ "what_if": {
+  "hydration": {
+   "fatigue": -1
+  },
+  "sleep-timing": {
+   "sleep_duration_h": 1,
+   "sleep_quality": 1
+  },
+  "exercise-countermeasure": {
+   "stress": -1,
+   "mood": 1
+  },
+  "co2-check": {
+   "fatigue": -1
+  },
+  "crew-check-in": {
+   "mood": 1,
+   "stress": -1
+  }
+ },
+ "prior_bias": {
+  "hydration": 0.0042,
+  "sleep-timing": 0.0047,
+  "exercise-countermeasure": -0.0107,
+  "co2-check": 0.0042,
+  "crew-check-in": -0.0107
+ }
+}

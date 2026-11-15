@@ -12,7 +12,9 @@ Transport: Server-Sent Events over the Python standard library (no extra depende
   GET  /events?window=patient|rescuer|ground   event stream
   GET  /clock                                  {"t", "speed", "label"}
   GET  /crew/<id>?requester=<id>[&emergency=1] crew record (others' only in emergency, logged)
+  GET  /hot_summary/<crew>?requester=<id>[&emergency=1]  Spec 2 HotSummary (others' only in emergency, logged)
   POST /reading /trigger /label /ground_reply  JSON body
+  POST /form /location                         Spec 2 provisional shapes (backend/crew_data.py)
   POST /clock/speed {"speed": 1|60}            POST /clock/skip
 
 Run: python backend/service.py --db habitat.sqlite --replay replay/a.json --crew crew.json
@@ -33,6 +35,7 @@ from urllib.parse import parse_qs, urlparse
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "contracts"))
 from mission_clock import MissionClock  # noqa: E402
+from crew_data import PROVISIONAL, validate_provisional  # noqa: E402
 from store import Store  # noqa: E402
 from validate import validate  # noqa: E402
 
@@ -61,6 +64,8 @@ class HabitatService:
                 if event["type"] in EVENT_CONTRACTS:
                     payload = {"schema_version": rp["schema_version"], **payload}
                     validate(EVENT_CONTRACTS[event["type"]], payload)
+                elif event["type"] in PROVISIONAL:  # Spec 2: form, location
+                    payload = validate_provisional(event["type"], {"schema_version": rp["schema_version"], **payload})
                 self._queue.append((event["t"], r_index, e_index, {"t": event["t"], "type": event["type"], "payload": payload}))
         self._queue.sort(key=lambda item: item[:3])
         fingerprint = hashlib.sha256(json.dumps(replays, sort_keys=True).encode("utf-8")).hexdigest()
@@ -109,7 +114,16 @@ class HabitatService:
 
     def _push_and_detect(self, message):
         """Push an incoming event, then the Alerts, Triggers and Reading states detection makes from it."""
-        self._push(message)
+        pushed = message
+        annotate = getattr(self.detection, "annotate", None)  # Spec 2: Trigger + HotSummary; form without its text
+        if annotate is not None:
+            try:
+                pushed = annotate(message)
+            except Exception:  # noqa: BLE001
+                logging.getLogger(__name__).exception("annotate failed; pushing the message without free text")
+                if message["type"] == "form":  # privacy fails closed: a form's answers never go to every window
+                    pushed = {**message, "payload": {k: v for k, v in message["payload"].items() if k != "answers"}}
+        self._push(pushed)  # detection below still gets the full message
         for out in self._detected(self.detection and self.detection.on_message, message):
             self._push(out)
 
@@ -142,6 +156,8 @@ class HabitatService:
                     message = self._queue[i][3]
                     if message["type"] == "reading":
                         self.store.add("reading", message["payload"], commit=False)
+                    elif message["type"] in PROVISIONAL:
+                        self.store.add(message["type"], message["payload"], commit=False)
                     due.append(message)
                     i += 1
                 self._delivered = i
@@ -179,6 +195,33 @@ class HabitatService:
         with self._lock:
             validate("Trigger", doc)
             self._push_and_detect({"t": doc["t"], "type": "trigger", "payload": doc})
+
+    def post_form(self, doc):
+        """Spec 2: post-EVA form, meal or crew note (provisional CrewForm)."""
+        self._post_provisional("form", doc)
+
+    def post_location(self, doc):
+        """Spec 2: a crew member moved to another cabin (provisional CrewLocation)."""
+        self._post_provisional("location", doc)
+
+    def _post_provisional(self, kind, doc):
+        with self._lock:
+            validate_provisional(kind, doc)
+            self.store.add(kind, doc)
+            self._push_and_detect({"t": doc["t"], "type": kind, "payload": doc})
+
+    def hot_summary(self, crew_id, requester, emergency=False):
+        """Spec 2 HotSummary with its free text: own always; another person's only in emergency mode, logged
+        like a crew record (KeyError if unknown or no daily loop)."""
+        with self._lock:
+            if crew_id not in self._crew or not hasattr(self.detection, "hot_summary"):
+                raise KeyError(crew_id)
+            if requester != crew_id:
+                if not emergency:
+                    raise PermissionError("Another crew member's HotSummary opens only in emergency mode")
+                self.store.add("access_log", {"crew": crew_id, "t": self.clock.now(), "opened_by": requester,
+                                              "emergency": True, "what": "hot_summary"})
+            return self.detection.hot_summary(crew_id)
 
     def post_label(self, doc):
         with self._lock:
@@ -281,13 +324,18 @@ class _Handler(BaseHTTPRequestHandler):
             requester = query.get("requester", [""])[0]
             emergency = query.get("emergency", ["0"])[0] in ("1", "true")
             return self._guarded(lambda: svc.open_crew_record(crew_id, requester, emergency))
+        if url.path.startswith("/hot_summary/"):
+            crew_id = url.path[len("/hot_summary/"):]
+            requester = query.get("requester", [""])[0]
+            emergency = query.get("emergency", ["0"])[0] in ("1", "true")
+            return self._guarded(lambda: svc.hot_summary(crew_id, requester, emergency))
         self._send(404, {"error": "not found"})
 
     def do_POST(self):
         svc = self.server.service
         routes = {
             "/reading": svc.post_reading, "/trigger": svc.post_trigger, "/label": svc.post_label,
-            "/ground_reply": svc.post_ground_reply,
+            "/ground_reply": svc.post_ground_reply, "/form": svc.post_form, "/location": svc.post_location,
             "/clock/speed": lambda body: svc.set_speed(body.get("speed")),
             "/clock/skip": lambda body: {"t": svc.skip()},
         }
@@ -353,9 +401,8 @@ def main(argv=None):
         doc = load(path)
         crew.extend(doc if isinstance(doc, list) else [doc])
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    from backend.detection import Detection, load_content  # Spec 3
-    cutoffs, bounds = load_content()
-    service = HabitatService(args.db, [load(p) for p in args.replay], crew, detection=Detection(crew, cutoffs, bounds))
+    from backend.daily_loop import build_loop  # Spec 3 detection wrapped by the Spec 2 daily loop
+    service = HabitatService(args.db, [load(p) for p in args.replay], crew, detection=build_loop(crew))
     httpd = make_server(service, port=args.port)
     print(f"Habitat network on http://127.0.0.1:{args.port} ({service.clock.label})")
     try:

@@ -1,6 +1,8 @@
 """Adapter to Spec 1's habitat-network service (ticket 15). Optional: set SF_HABITAT_URL.
 
-In:  SSE /events?window=rescuer -> Readings, Alerts (after Spec 3's hook), Triggers.
+In:  SSE /events?window=rescuer -> Readings, Alerts (after Spec 3's hook), Triggers. An Alert or Trigger
+     message may carry a Spec 2 "hot_summary" beside its payload; the latest per crew is kept on the engine
+     (eng.hot_summaries) so the emergency service needs no history store of its own.
 Out: manual Triggers -> POST /trigger; ground reply -> POST /ground_reply (Spec 1 stores the
      report and its Label together); emergency record opening -> GET /crew/<id>?emergency=1
      (Spec 1 logs it). The local access log is still written first, for the owner's view.
@@ -80,6 +82,13 @@ class Habitat:
 
     def handle(self, msg: dict) -> None:
         kind, payload = msg.get("type"), msg.get("payload") or {}
+        summary = msg.get("hot_summary")
+        if kind in ("alert", "trigger") and isinstance(summary, dict) and summary.get("crew") == payload.get("crew"):
+            try:  # a summary the copilot cannot read never blocks the Alert or Trigger itself
+                self.eng.hot_summaries.update(summary)
+            except ValueError as e:
+                self.errors.append(f"hot_summary: {e}")
+                self.eng.emit("habitat_message_rejected", message_type="hot_summary", error=str(e))
         try:
             if kind in ("alert", "trigger") and "hot_summary" in payload:  # Spec 2 snapshot rides on the push
                 payload = dict(payload)

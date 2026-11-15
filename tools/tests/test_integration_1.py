@@ -122,13 +122,19 @@ def chain(tmp_path, records_file):
     svc = HabitatService(str(tmp_path / "h.sqlite"), [json.loads(EMERGENCY.read_text(encoding="utf-8"))], records,
                          monotonic=mono, detection=Detection(records, cutoffs, bounds))
     mono.now += ARREST_T + 30 - svc.clock.now()  # jump the Mission clock to just after the arrest
-    httpd = make_server(svc, port=port, tick_interval=0.05)
+    httpd = make_server(svc, port=port, tick_interval=None)  # no ticks yet: pushed events are not replayed later
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
     url = f"http://127.0.0.1:{port}"
     eng = build(protocol="microgravity-cpr", profile="mars_transit", records_path=records_file,
                 explainer=None, habitat_url=url)
     eng.habitat.start()
     assert eng.habitat.connected.wait(5)
+    assert svc.wait_for_subscribers(1)
+
+    def ticker():  # start playing only once the emergency service listens, or the replay is pushed to nobody
+        while not httpd.stopping.wait(0.05):
+            svc.tick()
+    threading.Thread(target=ticker, daemon=True).start()
     yield svc, eng, mono
     eng.habitat.stop()
     httpd.shutdown()

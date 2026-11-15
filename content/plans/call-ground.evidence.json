@@ -1,0 +1,12 @@
+{
+ "plan": "call-ground",
+ "note": "Evidence pack skeleton (Spec 1 workflow, step 1). Candidate sources picked by the AI lead; NOT checked. The team pastes verbatim excerpts, then drafts steps from them, then approves. No step text is written by AI.",
+ "candidates": [
+  {
+   "source": "Spec 2 escalation rule: home-side actions failed -> ESCALATE_TO_GROUND",
+   "label": "team value",
+   "status": "candidate, not checked",
+   "excerpt": null
+  }
+ ]
+}

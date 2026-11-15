@@ -34,7 +34,9 @@ def store(tmp_path):
 
 
 def test_has_the_six_spec_stores():
-    assert set(KINDS) == {"reading", "alert", "label", "event", "ground_report", "access_log"}
+    spec1 = {"reading", "alert", "label", "event", "ground_report", "access_log"}
+    assert spec1 <= set(KINDS)
+    assert set(KINDS) - spec1 == {"form", "location"}  # Spec 2 provisional shapes, add-only
 
 
 def test_creates_one_table_per_store(store):

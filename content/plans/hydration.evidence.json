@@ -1,0 +1,12 @@
+{
+ "plan": "hydration",
+ "note": "Evidence pack skeleton (Spec 1 workflow, step 1). Candidate sources picked by the AI lead; NOT checked. The team pastes verbatim excerpts, then drafts steps from them, then approves. No step text is written by AI.",
+ "candidates": [
+  {
+   "source": "EFSA Panel on Dietetic Products, Nutrition and Allergies. Scientific Opinion on Dietary Reference Values for water. EFSA Journal 2010;8(3):1459. doi:10.2903/j.efsa.2010.1459",
+   "label": "Earth reference, no space data",
+   "status": "candidate, not checked",
+   "excerpt": null
+  }
+ ]
+}

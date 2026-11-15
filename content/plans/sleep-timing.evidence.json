@@ -1,0 +1,18 @@
+{
+ "plan": "sleep-timing",
+ "note": "Evidence pack skeleton (Spec 1 workflow, step 1). Candidate sources picked by the AI lead; NOT checked. The team pastes verbatim excerpts, then drafts steps from them, then approves. No step text is written by AI.",
+ "candidates": [
+  {
+   "source": "Watson NF et al. Recommended Amount of Sleep for a Healthy Adult: A Joint Consensus Statement of the AASM and SRS. Sleep 2015;38(6):843-844. doi:10.5665/sleep.4716",
+   "label": "Earth reference, no space data",
+   "status": "candidate, not checked",
+   "excerpt": null
+  },
+  {
+   "source": "Barger LK et al. Prevalence of sleep deficiency and use of hypnotics in astronauts before, during, and after spaceflight. Lancet Neurol 2014;13(9):904-912. doi:10.1016/S1474-4422(14)70122-X",
+   "label": "astronaut study",
+   "status": "candidate, not checked",
+   "excerpt": null
+  }
+ ]
+}

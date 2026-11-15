@@ -37,10 +37,18 @@ def schema(name: str) -> dict:
     return json.loads(FILES[name].read_text(encoding="utf-8"))
 
 
+@lru_cache(maxsize=None)
+def _validator(name: str):
+    """Built once per contract: jsonschema.validate re-checks the schema on every call (about 1.6 ms per Reading)."""
+    s = schema(name)
+    cls = jsonschema.validators.validator_for(s)
+    cls.check_schema(s)
+    return cls(s)
+
+
 def validate(name: str, obj) -> dict:
-    try:
-        jsonschema.validate(obj, schema(name))
-    except jsonschema.ValidationError as e:
+    e = jsonschema.exceptions.best_match(_validator(name).iter_errors(obj))  # the error jsonschema.validate would raise
+    if e is not None:
         path = "/".join(str(p) for p in e.absolute_path) or "$"
         raise ContractError(f"{name}: {path}: {e.message}") from None
     return obj
