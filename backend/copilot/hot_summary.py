@@ -51,6 +51,35 @@ class HotSummary:
         return hashlib.sha256(json.dumps(self.to_dict(), sort_keys=True).encode()).hexdigest()
 
 
+def _cusum(c):
+    """Spec 2 keeps both one-sided CuSum sums; the copilot reads one signed number (the larger side)."""
+    if not isinstance(c, dict):
+        return c
+    up, down = c.get("up") or 0.0, c.get("down") or 0.0
+    return up if up >= down else -down
+
+
+def from_spec2(d: dict) -> dict:
+    """Map the snapshot the habitat service pushes (backend/features.py, Spec 2) to the copilot's shape.
+    Spec 2's own keys stay in `context` beside the mapped ones, so nothing is lost. Units: slopes stay per day;
+    radiation stays mGy under its own key and the copilot's mSv fields are None (no mGy -> mSv factor agreed);
+    the push carries no free text (privacy option A), so `form_answers` is empty."""
+    indicators = {}
+    for name, ind in d["indicators"].items():
+        slopes = ind.get("slope_per_day") or {}
+        indicators[name] = {"z_anchor": ind.get("z_anchor"), "z_adaptive": ind.get("z_adaptive"),
+                            "cusum": _cusum(ind.get("cusum")), "value": ind.get("value"), "unit": ind.get("unit"),
+                            **{f"slope_{w}": slopes.get(w) for w in ("1h", "24h", "72h", "7d")}}
+    c = d["context"]
+    sleep = c.get("sleep_debt_3d_min")
+    context = {**c, "sleep_debt_3d_h": sleep / 60 if sleep is not None else None,
+               "dose_mission_msv": None, "dose_7d_msv": None,
+               "glucose_trend": c.get("glucose_trend_per_day"), "temperature_trend": c.get("temperature_trend_per_day"),
+               "last_meal_logged_t": c.get("last_meal_t"), "mission_day": d.get("mission_day")}
+    return {"crew": d["crew"], "t": d["t"], "label": d["label"], "indicators": indicators, "context": context,
+            "form_answers": {}, "open_alerts": d.get("open_alerts", [])}
+
+
 @dataclass(frozen=True)
 class NoHistory:
     """Explicit 'no history' answer: L1-L3 skip, only L0 runs."""
@@ -67,6 +96,11 @@ class PushedHotSummaries:
         self._lock = threading.Lock()
 
     def update(self, payload: dict) -> HotSummary:
+        if isinstance(payload, dict) and "form_answers" not in payload and "mission_day" in payload:
+            try:
+                payload = from_spec2(payload)  # the real Spec 2 push
+            except (KeyError, TypeError, AttributeError) as e:
+                raise ValueError(f"hot summary (Spec 2 shape) unreadable: {e!r}") from None
         snap = HotSummary.from_dict(payload)  # raises ValueError on a bad push; the caller logs it
         with self._lock:
             old = self._latest.get(snap.crew)
