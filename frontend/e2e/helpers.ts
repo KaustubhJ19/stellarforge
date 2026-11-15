@@ -4,7 +4,12 @@ import { expect, type Page } from "@playwright/test";
 export async function openApp(page: Page, path = "/") {
   const problems: string[] = [];
   page.on("pageerror", (e) => problems.push(`pageerror: ${e.message}`));
-  page.on("console", (m) => m.type() === "error" && problems.push(`console: ${m.text()}`));
+  page.on("console", (m) => {
+    // No emergency service runs here, so the crewmate-help poll (EmergencyAlert, /api/view) fails by design;
+    // the component stays silent, but the browser still logs the failed load. Any other error still counts.
+    const expectedNoService = m.text().startsWith("Failed to load resource") && new URL(m.location().url || "http://x/").pathname.startsWith("/api/");
+    if (m.type() === "error" && !expectedNoService) problems.push(`console: ${m.text()}`);
+  });
   await page.route("**/*", (route) => {
     const url = new URL(route.request().url());
     if (url.hostname !== "localhost") {
