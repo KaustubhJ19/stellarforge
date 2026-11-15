@@ -28,9 +28,9 @@
     },
     {
       "id": "collapse-responsive",
-      "when": {"main_problem": "collapse", "responsive": "yes"},
+      "when": {"main_problem": "collapse", "responsive": "yes", "breathing": "normal"},
       "protocol": "fainting",
-      "reason": "Rescuer reports a collapse in a patient who now responds."
+      "reason": "Rescuer reports a collapse in a patient who now responds and breathes normally."
     },
     {
       "id": "cabin-alert-reported",

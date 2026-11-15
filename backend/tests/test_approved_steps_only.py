@@ -169,3 +169,10 @@ def test_no_pending_protocol_file_ships_without_approved_steps():
     for pid in REAL_ROUTES["pending_protocols"]:
         if (CONTENT / "protocols" / f"{pid}.json").exists():
             assert load_protocol(pid).steps == (), f"{pid} has approved steps: move it out of pending_protocols"
+
+
+@pytest.mark.parametrize("breathing", ["abnormal", "none"])
+def test_collapse_row_never_catches_a_patient_not_breathing_normally(breathing):
+    intake = {"responsive": "yes", "breathing": breathing, "main_problem": "collapse", "source": "tap"}
+    r = triage.route(REAL_ROUTES, intake, {}, available={"microgravity-cpr", "chest-pain", "fainting"})
+    assert r["rule_id"] != "collapse-responsive" and r["protocol_id"] != "fainting"

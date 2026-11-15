@@ -52,7 +52,7 @@ Condition records are in `content/conditions/<id>.json`. Not done yet for the 9 
 
 - **Approvers list.** `content/approvers.json` is empty. Until a team member adds names and approves the existing CPR and chest-pain steps, the build linter fails and those protocols serve no steps.
 - **Contract change** (README "Contracts first"; contracts/README: add a field only by team-chat agreement). The add-only fields `status`, `drafted_by`, `approved_by`, `approved_on`, `approved_hash` and `condition_ids` in `contracts/protocol.schema.json` need that agreement recorded before merge.
-- **`collapse-responsive` router row** (collapse + responds → `fainting`) is a new routing team value; it resolves to "not covered" until `fainting` is approved.
+- **`collapse-responsive` router row** (collapse + responds + breathes normally → `fainting`) is a new routing team value; it resolves to "not covered" until `fainting` is approved.
 - **Stub exemption.** Stub protocols skip approval (they are the engine's test doubles) but may only carry "STUB" text or the exact medication hand-off, and are never routed.
 - **New intake `main_problem` values** (contract rule, team agreement). The proposed values are listed in `content/triage/routes.json` under `unrouted_conditions`.
 - **Evidence-pack licences.** Every pack source has `licence_checked: false` until a person confirms the licence.
