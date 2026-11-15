@@ -212,6 +212,8 @@ class HotSummary:
             "temperature_trend_per_day": trend("body_temperature"),
             "last_meal": meal, "last_note": note, "last_post_eva": eva,
             "last_meal_t": meal["t"] if meal else None,
+            "last_note_t": note["t"] if note else None,
+            "last_post_eva_t": eva["t"] if eva else None,
         }
         return {"crew": crew, "t": now, "mission_day": int(now // DAY) + 1, "indicators": indicators,
                 "context": context, "open_alerts": list(person.open_alerts.values()),

@@ -36,6 +36,10 @@ Messages the habitat service pushes for Spec 2 (not stored contracts): `plan` (a
 `plan_result` (reversed / not reversed at the follow-up), and a `hot_summary` object beside the `payload` of every
 `alert` and `trigger` message (the HotSummary, `backend/features.py`). The envelope is not a contract, so the
 seven contracts are unchanged.
+Privacy (team decision, option A): pushed HotSummaries carry numbers and times but no free text (crew note, meal,
+post-EVA answers), and pushed `form` messages carry no `answers`. The full summary comes from
+`GET /hot_summary/<crew>?requester=<id>`: always for its owner, for anyone else only with `emergency=1`, logged in the
+access log like a crew record.
 
 ## Proposed Alert additions (Spec 2, pending team agreement, add-only)
 The frozen Alert schema allows extra properties, so these already validate; they are listed here so the team can

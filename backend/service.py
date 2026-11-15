@@ -12,7 +12,7 @@ Transport: Server-Sent Events over the Python standard library (no extra depende
   GET  /events?window=patient|rescuer|ground   event stream
   GET  /clock                                  {"t", "speed", "label"}
   GET  /crew/<id>?requester=<id>[&emergency=1] crew record (others' only in emergency, logged)
-  GET  /hot_summary/<crew>                     Spec 2 HotSummary snapshot (needs the daily loop as detection)
+  GET  /hot_summary/<crew>?requester=<id>[&emergency=1]  Spec 2 HotSummary (others' only in emergency, logged)
   POST /reading /trigger /label /ground_reply  JSON body
   POST /form /location                         Spec 2 provisional shapes (backend/crew_data.py)
   POST /clock/speed {"speed": 1|60}            POST /clock/skip
@@ -114,13 +114,14 @@ class HabitatService:
 
     def _push_and_detect(self, message):
         """Push an incoming event, then the Alerts, Triggers and Reading states detection makes from it."""
-        annotate = getattr(self.detection, "annotate", None)  # Spec 2: a Trigger carries the HotSummary
+        pushed = message
+        annotate = getattr(self.detection, "annotate", None)  # Spec 2: Trigger + HotSummary; form without its text
         if annotate is not None:
             try:
-                message = annotate(message)
+                pushed = annotate(message)
             except Exception:  # noqa: BLE001
                 logging.getLogger(__name__).exception("annotate failed; pushing the message as it is")
-        self._push(message)
+        self._push(pushed)  # detection below still gets the full message
         for out in self._detected(self.detection and self.detection.on_message, message):
             self._push(out)
 
@@ -207,11 +208,17 @@ class HabitatService:
             self.store.add(kind, doc)
             self._push_and_detect({"t": doc["t"], "type": kind, "payload": doc})
 
-    def hot_summary(self, crew_id):
-        """Spec 2 HotSummary snapshot for one crew member (KeyError if unknown or no daily loop)."""
+    def hot_summary(self, crew_id, requester, emergency=False):
+        """Spec 2 HotSummary with its free text: own always; another person's only in emergency mode, logged
+        like a crew record (KeyError if unknown or no daily loop)."""
         with self._lock:
             if crew_id not in self._crew or not hasattr(self.detection, "hot_summary"):
                 raise KeyError(crew_id)
+            if requester != crew_id:
+                if not emergency:
+                    raise PermissionError("Another crew member's HotSummary opens only in emergency mode")
+                self.store.add("access_log", {"crew": crew_id, "t": self.clock.now(), "opened_by": requester,
+                                              "emergency": True, "what": "hot_summary"})
             return self.detection.hot_summary(crew_id)
 
     def post_label(self, doc):
@@ -317,7 +324,9 @@ class _Handler(BaseHTTPRequestHandler):
             return self._guarded(lambda: svc.open_crew_record(crew_id, requester, emergency))
         if url.path.startswith("/hot_summary/"):
             crew_id = url.path[len("/hot_summary/"):]
-            return self._guarded(lambda: svc.hot_summary(crew_id))
+            requester = query.get("requester", [""])[0]
+            emergency = query.get("emergency", ["0"])[0] in ("1", "true")
+            return self._guarded(lambda: svc.hot_summary(crew_id, requester, emergency))
         self._send(404, {"error": "not found"})
 
     def do_POST(self):

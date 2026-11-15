@@ -32,6 +32,9 @@ ESCALATION_PLAN = "call-ground"
 PLAN_LABEL = "suggestion, not diagnosis"
 DRIVER_LABEL = "likely driver: suggestion, not diagnosis"
 ESCALATE = "ESCALATE_TO_GROUND"
+# Free text stays out of what is pushed to every window (team decision, option A): only its times go out.
+# The full summary opens for its owner, or for another crew member in an emergency (logged by the service).
+PRIVATE_CONTEXT = ("last_meal", "last_note", "last_post_eva")
 
 
 def load_values(path=VALUES):
@@ -105,6 +108,9 @@ class DailyLoop:
         return self.detection.briefing(crew)
 
     def annotate(self, message):
+        """The copy pushed to every window: a Trigger carries the public HotSummary, a form loses its answers."""
+        if message["type"] == "form":
+            return {**message, "payload": {k: v for k, v in message["payload"].items() if k != "answers"}}
         return self._with_summary(message)
 
     def hot_summary(self, crew):
@@ -203,7 +209,9 @@ class DailyLoop:
     def _with_summary(self, message):
         crew = (message.get("payload") or {}).get("crew")
         if message["type"] in ("alert", "trigger") and crew in self.summary.people:
-            return {**message, "hot_summary": self.summary.snapshot(crew)}
+            snap = self.summary.snapshot(crew)
+            snap["context"] = {k: v for k, v in snap["context"].items() if k not in PRIVATE_CONTEXT}
+            return {**message, "hot_summary": snap}
         return message
 
 

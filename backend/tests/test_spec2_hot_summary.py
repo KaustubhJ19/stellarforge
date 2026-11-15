@@ -64,7 +64,7 @@ def test_snapshot_matches_recomputation_from_full_history(tmp_path):
     rp, ev = merged_replay(30)
     rec = load(ROOT / "replay" / "crew-records.json")
     svc, _ = play(tmp_path, [rp], records=[r for r in rec if r["id"] == "A"])
-    snap = svc.hot_summary("A")
+    snap = svc.hot_summary("A", requester="A")
     now = max(e["t"] for e in ev)
     assert snap["t"] == now and snap["mission_day"] == int(now // DAY) + 1
 
