@@ -233,6 +233,11 @@ def _load(path):
         return None, [f"invalid JSON: {exc}"]
 
 
+def _stub(doc):
+    """Spec 4's non-clinical test doubles declare "stub": true; they are not Spec 5 content."""
+    return isinstance(doc, dict) and doc.get("stub") is True
+
+
 def lint_dir(content_dir):
     """Lint protocols and their coverage under content_dir/protocols. Returns {path: [problems]} for failing files."""
     failures = {}
@@ -241,6 +246,8 @@ def lint_dir(content_dir):
     # <id>.roles/.excerpts/.recorded.json are Spec 4 companion files, not protocols.
     for path in sorted(p for p in folder.glob("*.json") if p.name != COVERAGE_FILE and p.name.count(".") == 1):
         doc, problems = _load(path)
+        if _stub(doc):
+            continue
         if doc is not None:
             problems = lint_protocol(doc)
             if isinstance(doc, dict) and "id" in doc:
@@ -257,6 +264,8 @@ def lint_dir(content_dir):
             failures[cov_path] = problems
     for path in sorted((Path(content_dir) / "profiles").glob("*.json")):
         doc, problems = _load(path)
+        if _stub(doc):
+            continue
         problems = problems or (lint_bounds(doc) if path.name == BOUNDS_FILE else lint_profile(doc))
         if problems:
             failures[path] = problems

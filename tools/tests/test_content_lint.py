@@ -425,3 +425,18 @@ def test_repo_content_lints_clean():
     assert protocols, "expected at least one protocol in content/protocols"
     result = run_cli(ROOT / "content")
     assert result.returncode == 0, result.stderr
+
+
+def test_stub_test_doubles_are_not_linted_as_content(tmp_path):
+    # Spec 4's non-clinical test doubles declare "stub": true; they are not Spec 5 content.
+    (tmp_path / "protocols").mkdir()
+    (tmp_path / "profiles").mkdir()
+    (tmp_path / "protocols" / "stub-protocol.json").write_text(json.dumps({"id": "stub-protocol", "stub": True, "steps": []}))
+    (tmp_path / "profiles" / "stub-mars.json").write_text(json.dumps({"id": "stub-mars", "stub": True}))
+    assert cl.lint_dir(tmp_path) == {}
+
+
+def test_a_real_protocol_without_stub_flag_is_still_linted(tmp_path):
+    (tmp_path / "protocols").mkdir()
+    (tmp_path / "protocols" / "p.json").write_text(json.dumps({"id": "p", "steps": []}))
+    assert cl.lint_dir(tmp_path)

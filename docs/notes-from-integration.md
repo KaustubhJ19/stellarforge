@@ -63,6 +63,19 @@ To switch: set `SF_PROTOCOL=microgravity-cpr` (or change `DEFAULT_PROTOCOL` / `D
 - **Crew ids:** your stubs use `cmdr`, `eng`, `sci`, `cmo`. The data lead's replays use `A` to `D`, so the profiles use `A` to `D`.
 - **Equipment:** both profiles list every item the protocols use, so no step is hidden. On a Mars vehicle that is a team value; on the ISS the defibrillator is sourced (part of the crew health care system).
 
+## Integration #1 result (Spec 5 ticket 08)
+
+`tools/tests/test_integration_1.py` runs the real chain on real content: Spec 1 service + replay, Spec 3 detection, Spec 4 flow, Spec 5 protocol, profile and recorded answers.
+- **Auto trigger:** the crew B emergency replay, played through Spec 1's service, reaches the arrest (CoarseVentricularFibrillation). Spec 3's detection raises an emergency Alert and an auto Trigger, about 20 s into the test run.
+- **Then the flow:** ACT NOW, verdict, crew alarm after 15 mission seconds, the rescuer accepts, record, contributors, and the first real cited step (`cpr-1-start`).
+- **Manual trigger:** reaches the same real steps. A solo rescuer sees only one-rescuer steps.
+- **Offline:** "Why this step?" uses the recorded answers, and the ground delay is 1710 s.
+
+**Still open:**
+- **Spec 4:** `backend/app/runtime.py` still defaults to `stub-protocol` / `stub-mars`. Switch the defaults to `microgravity-cpr` / `mars_transit` (or set `SF_PROTOCOL` and the profile) for the demo.
+- **Spec 2 and Spec 4:** `test_no_external_urls_in_runtime_code` fails on `frontend/src/references.ts` (link to `https://nlsp.nasa.gov`). Agree whether reference links may appear in the frontend, or move them to content.
+- **Not run:** the browser end-to-end (Playwright) tests on the merged branch.
+
 ## For everyone
 
 Every protocol step and Safety bound is listed in `docs/medical-review.md` for a qualified clinician to sign. If nobody signs, the write-up says "Medical content not clinically reviewed."
