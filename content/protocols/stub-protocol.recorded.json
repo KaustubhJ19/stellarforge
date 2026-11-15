@@ -1,0 +1,9 @@
+{
+  "protocol": "stub-protocol",
+  "stub": true,
+  "answers": {
+    "stub-1": "STUB recorded answer: placeholder explanation for step 1.",
+    "stub-2": "STUB recorded answer: placeholder explanation for step 2.",
+    "stub-3": "STUB recorded answer: placeholder explanation for step 3."
+  }
+}

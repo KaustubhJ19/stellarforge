@@ -1,0 +1,21 @@
+{
+  "protocol": "stub-protocol",
+  "stub": true,
+  "excerpts": [
+    {
+      "step": "stub-1",
+      "section": "STUB-S1",
+      "text": "STUB excerpt for step 1. Placeholder text explaining why the first placeholder step comes first."
+    },
+    {
+      "step": "stub-2",
+      "section": "STUB-S2",
+      "text": "STUB excerpt for step 2. Placeholder text explaining why stub equipment A is used."
+    },
+    {
+      "step": "stub-3",
+      "section": "STUB-S3",
+      "text": "STUB excerpt for step 3. Placeholder text explaining why this task needs two rescuers."
+    }
+  ]
+}
