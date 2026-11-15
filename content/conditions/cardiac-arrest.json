@@ -1,0 +1,21 @@
+{
+  "id": "cardiac-arrest",
+  "name": "Cardiac arrest / arrhythmia",
+  "protocol": "microgravity-cpr",
+  "state": "existing",
+  "guidance_candidate": "Hinkelbein 2020 microgravity CPR (candidate from Spec 1; verified when the evidence pack is built)",
+  "prior_incidence": {
+    "status": "pending",
+    "value": null,
+    "source": null,
+    "note": "To fill from a public IMM/IMPACT paper that prints the value, or label 'team value'."
+  },
+  "signs": [],
+  "pulse": {
+    "model": "yes",
+    "scenario": "replay/emergency-crew-B.json"
+  },
+  "labels": [
+    "not clinically reviewed"
+  ]
+}

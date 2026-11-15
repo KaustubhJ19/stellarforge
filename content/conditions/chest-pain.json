@@ -1,0 +1,22 @@
+{
+  "id": "chest-pain",
+  "name": "Chest pain",
+  "protocol": "chest-pain",
+  "state": "existing",
+  "guidance_candidate": "ESC 2023 (Earth reference) (candidate from Spec 1; verified when the evidence pack is built)",
+  "prior_incidence": {
+    "status": "pending",
+    "value": null,
+    "source": null,
+    "note": "To fill from a public IMM/IMPACT paper that prints the value, or label 'team value'."
+  },
+  "signs": [],
+  "pulse": {
+    "model": "check",
+    "scenario": null
+  },
+  "labels": [
+    "Earth reference, no space data",
+    "not clinically reviewed"
+  ]
+}

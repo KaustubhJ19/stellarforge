@@ -2,6 +2,9 @@
   "schema_version": "1.0.0",
   "id": "microgravity-cpr",
   "title": "CPR in microgravity (weightless only; see coverage.json for each environment)",
+  "condition_ids": [
+    "cardiac-arrest"
+  ],
   "steps": [
     {
       "id": "cpr-1-start",
@@ -11,7 +14,11 @@
         "section": "Defibrillation, Recommendation 14"
       },
       "equipment": [],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:1871976acdb6e056a3f79353609fc5f44b482adaacb2795593054b749180f21c"
     },
     {
       "id": "cpr-2-er-compressions",
@@ -21,7 +28,11 @@
         "section": "Results and recommendations, Recommendation 2 (one rescuer, no restraint, no equipment: rationale for Recommendation 1)"
       },
       "equipment": [],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:6116e0e8f0bb151ea1229840fd14904e1de523e4ba1d540c71850067f96a8621"
     },
     {
       "id": "cpr-3-hs-on-cmrs",
@@ -33,7 +44,11 @@
       "equipment": [
         "Crew Medical Restraint System"
       ],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:6ce23ae6df675294e5f7c0e4024e720e213b02a2f296bf15fd99aa6b54bebd34"
     },
     {
       "id": "cpr-4-restrained-alternative",
@@ -45,7 +60,11 @@
       "equipment": [
         "Crew Medical Restraint System"
       ],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:5204adb97530b5717a52e0a70faaf3c2683621f6560a4f419d55828b1c8935f8"
     },
     {
       "id": "cpr-5-accd",
@@ -58,7 +77,11 @@
         "automated chest compression device (if available)",
         "Crew Medical Restraint System"
       ],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:57f868184c14e9ba7db84f0a89eea7a48f2799b2a306d656aef1a6c86c928ebc"
     },
     {
       "id": "cpr-6-aed",
@@ -72,7 +95,11 @@
         "self-adhesive defibrillation pads",
         "Crew Medical Restraint System"
       ],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:628474a577b54ba0d0374ac2a84c12f491204168cb0b93d20c79d9b115650007"
     },
     {
       "id": "cpr-7-defibrillate",
@@ -86,7 +113,11 @@
         "self-adhesive defibrillation pads",
         "Crew Medical Restraint System"
       ],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:e985f308fb4d729f110815c77942bc93058a5a9290d8ea3fb2b9385a3fa52a01"
     },
     {
       "id": "cpr-8-airway-gate",
@@ -98,7 +129,11 @@
       "equipment": [
         "Crew Medical Restraint System"
       ],
-      "rescuers": 2
+      "rescuers": 2,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:03db05abc556ed29656ba2e6a7ddd33d0fb804288a8309e8d27be3f83c30c142"
     },
     {
       "id": "cpr-9-supraglottic",
@@ -112,7 +147,11 @@
         "manual suction device",
         "Crew Medical Restraint System"
       ],
-      "rescuers": 2
+      "rescuers": 2,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:edd4f1c339419552a3a42f934bcaaf4371f93986dfbf084d785d6b47dc6088f6"
     },
     {
       "id": "cpr-10-intubation",
@@ -126,7 +165,11 @@
         "manual suction device",
         "Crew Medical Restraint System"
       ],
-      "rescuers": 2
+      "rescuers": 2,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:c1511caabe50707259986d9b2296ac384539b1581a6b06d5f50fe6248e16b0ad"
     },
     {
       "id": "cpr-11-venous-access",
@@ -139,7 +182,11 @@
         "peripheral venous cannula",
         "intraosseous access device"
       ],
-      "rescuers": 3
+      "rescuers": 3,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:343610d6e38044727d987902b5c241854c4e94353a9074414ae140c8f8028b68"
     },
     {
       "id": "cpr-12-medication",
@@ -149,7 +196,11 @@
         "section": "Spec 5, Protocol content rules"
       },
       "equipment": [],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:a7449b3ffd4e068c77fa7bf0a6bdf660808be2f575e02ca34d215995814347e8"
     },
     {
       "id": "cpr-13-termination",
@@ -159,7 +210,11 @@
         "section": "Termination of CPR, Recommendation 22"
       },
       "equipment": [],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:52c73e856016521990d8beaac6d7632c26b883effc20aa48eaf2a05ecdd9aeeb"
     }
   ]
 }

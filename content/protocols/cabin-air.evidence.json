@@ -1,0 +1,46 @@
+{
+  "note": "Spec 1 evidence pack drafted by Claude Code (Claude Opus 5.5). Every quote was checked by script as verbatim in the guideline PDF text (ignoring line breaks and ligatures). Dose amounts and deny-listed product names in the guideline were left out (Rule 4).",
+  "protocol": "cabin-air",
+  "conditions": [
+    "cabin-air"
+  ],
+  "why": "Low oxygen or CO2 build-up in the cabin causes hypoxia and loss of responsiveness. ERC 2025 'Use of a pulse oximetry and use of oxygen' is first-aid guidance a trained non-doctor can follow. It does not cover fixing the cabin air itself.",
+  "sources": [
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "licence": "© 2025 European Resuscitation Council, published by Elsevier B.V.; open copy in the KU Leuven repository (Lirias). Quote recommendation text only",
+      "licence_checked": false,
+      "url": "https://lirias.kuleuven.be/retrieve/f38482b2-c212-4a30-88fe-f999cc5f5516"
+    }
+  ],
+  "recommendations": [
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, ABCDE (Table 3), B-Breathing",
+      "quotes": [
+        "Are there any signs of hypoxia (bluish discoloration of lips, nails or skin)?",
+        "Assess oxygen saturation level with a pulse oximetry."
+      ]
+    },
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Use of a pulse oximetry and use of oxygen",
+      "quotes": [
+        "Give oxygen to a person with difficulty breathing and looking cyanosed (blue tinged) but only if you are trained in its use.",
+        "Give oxygen via a simple facemask or non-rebreathing mask and then titrate flow rate to maintain an oxygen saturation of 94–98 %."
+      ]
+    },
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Use of a pulse oximetry and use of oxygen, life-threatening hypoxaemia",
+      "quotes": [
+        "In the presence of life-threatening hypoxaemia (oxygen saturation <88 %) give oxygen with a higher flow to everyone"
+      ]
+    }
+  ],
+  "microgravity": "Earth reference, no space data. Restoring cabin air (CO2 removal, NASA-STD-3001 limits) is a vehicle procedure outside this guideline; NASA-STD-3001 could not be fetched. Oxygen is treated as first aid by ERC; the team should confirm it is not a 'medication' under Rule 4.",
+  "pulse": {
+    "model": "yes",
+    "scenario": null
+  }
+}

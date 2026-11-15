@@ -8,6 +8,7 @@
 The in-app attention test is meant to be an input too, but PMData has no such column, so it is not used yet.
 Status: "estimate, not validated".
 """
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -49,7 +50,9 @@ def train(train_pairs: pd.DataFrame, calib_pairs: pd.DataFrame, confidence: floa
     trees = HistGradientBoostingRegressor(max_depth=3, max_iter=100, learning_rate=0.05, min_samples_leaf=40,
                                           random_state=0).fit(train_pairs[FEATURES], train_pairs["target"])
     mapie = SplitConformalRegressor(trees, confidence_level=confidence, prefit=True)
-    mapie.conformalize(calib_pairs[FEATURES], calib_pairs["target"])
+    with warnings.catch_warnings():  # MAPIE strips the DataFrame's column names internally; ours are correct
+        warnings.filterwarnings("ignore", message="X does not have valid feature names", category=UserWarning)
+        mapie.conformalize(calib_pairs[FEATURES], calib_pairs["target"])
     return {"trees": trees, "mapie": mapie, "explainer": shap.TreeExplainer(trees)}
 
 

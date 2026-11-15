@@ -1,6 +1,6 @@
 {
   "note": "Router table (docs/spec-intent-routing.md). First matching row wins. A row picks a protocol; it never contains clinical steps. Routing rules are team values, not clinical guidance.",
-  "pending_protocols": ["cabin-air"],
+  "pending_protocols": ["decompression-sickness", "seizure"],
   "thresholds": {
     "spo2_low": {"value": 0.9, "unit": "fraction", "source": "team value (placeholder, not clinically reviewed; Spec 1 to cite a bound)"}
   },
@@ -40,6 +40,12 @@
       "reason": "Rescuer reports chest pain in a patient who responds (crew-reported symptom)."
     },
     {
+      "id": "collapse-responsive",
+      "when": {"main_problem": "collapse", "responsive": "yes", "breathing": "normal"},
+      "protocol": "fainting",
+      "reason": "Rescuer reports a collapse in a patient who now responds and breathes normally."
+    },
+    {
       "id": "cabin-alert-reported",
       "when": {"main_problem": "cabin_alert"},
       "protocol": "cabin-air",
@@ -50,6 +56,48 @@
       "when": {"live_cabin_alert": true},
       "protocol": "cabin-air",
       "reason": "A cabin air alert is active."
+    },
+    {
+      "id": "low-blood-sugar-reported",
+      "when": {"main_problem": "low_blood_sugar"},
+      "protocol": "low-blood-sugar",
+      "reason": "Rescuer reports low blood sugar."
+    },
+    {
+      "id": "bleeding-reported",
+      "when": {"main_problem": "bleeding"},
+      "protocol": "severe-bleeding",
+      "reason": "Rescuer reports severe bleeding."
+    },
+    {
+      "id": "head-injury-reported",
+      "when": {"main_problem": "head_injury"},
+      "protocol": "head-injury",
+      "reason": "Rescuer reports a head injury."
+    },
+    {
+      "id": "infection-reported",
+      "when": {"main_problem": "infection"},
+      "protocol": "sepsis",
+      "reason": "Rescuer reports a severe infection."
+    },
+    {
+      "id": "overheating-reported",
+      "when": {"main_problem": "overheating"},
+      "protocol": "overheating",
+      "reason": "Rescuer reports overheating or fever."
+    },
+    {
+      "id": "after-eva-reported",
+      "when": {"main_problem": "after_eva"},
+      "protocol": "decompression-sickness",
+      "reason": "Rescuer reports a problem after a spacewalk (EVA)."
+    },
+    {
+      "id": "seizure-reported",
+      "when": {"main_problem": "seizure"},
+      "protocol": "seizure",
+      "reason": "Rescuer reports a seizure."
     }
   ],
   "fallback": {

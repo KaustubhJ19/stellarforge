@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "id": "fainting",
+  "title": "Fainting / feeling faint (Earth reference, no space data)",
+  "condition_ids": [
+    "fainting"
+  ],
+  "steps": [
+    {
+      "id": "faint-1-safe",
+      "text": "Make sure the crewmember is safe and cannot be hurt if they lose consciousness.",
+      "source": {
+        "guideline": "Zideman DA, Singletary EM, Borra V, et al. European Resuscitation Council Guidelines 2021: First aid. Resuscitation. 2021;161:270-290. doi:10.1016/j.resuscitation.2021.02.013 (Earth reference, no space data)",
+        "section": "Management of presyncope"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:cf67849e9d85505cbe833f3171c55d94b71c738d1b1e8c65cfa2a3b06a31c011"
+    },
+    {
+      "id": "faint-2-counterpressure",
+      "text": "Coach the crewmember to use physical counterpressure manoeuvres. Lower-body manoeuvres (squatting, with or without leg crossing) work better than upper-body ones (hand clenching, neck flexion).",
+      "source": {
+        "guideline": "Zideman DA, Singletary EM, Borra V, et al. European Resuscitation Council Guidelines 2021: First aid. Resuscitation. 2021;161:270-290. doi:10.1016/j.resuscitation.2021.02.013 (Earth reference, no space data)",
+        "section": "Management of presyncope"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:aabba96812606c134fc98f12fddfe49962ee39859a3461ddec47a2611716c769"
+    },
+    {
+      "id": "faint-3-recovery-position",
+      "text": "If they respond less but do not need CPR, place them on their side in the recovery position.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Recovery position"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:8b0adaced38892ce07761b1866e2ef78d190fa60b83d420b3527de5a12b4bd3f"
+    }
+  ]
+}

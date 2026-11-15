@@ -13,7 +13,7 @@ Work out what is happening first, then pick one pre-written, cited protocol. If 
 ## Principles (from the README working rules, not negotiable)
 
 1. **Rules decide, the model only explains.** The router is a fixed table. A language model may only turn free text into structured answers, and a person confirms them before the router uses them.
-2. **Every step is cited.** No step is ever written by a model. No drug names or doses.
+2. **Every step is cited; AI drafts, humans approve, AI never overrides.** A model may draft step text only from a cited guideline section, marked `status: "draft"` with `drafted_by`. Drafts are never rendered, routed or shown to crew; only a named team member approves (`approved_by`, `approved_on`), and any change to an approved step returns it to draft (Spec 1, Rule 1). No drug names or doses.
 3. **Honest labels.** New protocols are "Earth reference, no space data" and "not clinically reviewed" until someone reviews them.
 4. **Contracts do not change** without team agreement. This spec adds none (see Contracts).
 
@@ -45,7 +45,7 @@ Structured form, held on the `Emergency` and never sent to a model as a decision
 |---|---|
 | `responsive` | `yes`, `no` |
 | `breathing` | `normal`, `abnormal`, `none` |
-| `main_problem` | `chest_pain`, `breathing_trouble`, `cabin_alert`, `collapse`, `injury`, `other` |
+| `main_problem` | `chest_pain`, `breathing_trouble`, `cabin_alert`, `collapse`, `bleeding`, `head_injury`, `injury`, `low_blood_sugar`, `seizure`, `overheating`, `infection`, `after_eva`, `other` (library values added by team agreement 2026-11-15, Spec 1) |
 | `source` | `tap`, `text_confirmed` |
 
 Tap questions come from `content/flow/confirm-questions.json` (currently a stub; wording is to be replaced).

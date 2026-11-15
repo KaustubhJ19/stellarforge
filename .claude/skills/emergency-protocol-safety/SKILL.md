@@ -9,7 +9,7 @@ Decision support, not diagnosis. Published guidelines decide; the language model
 
 ## The ten rules
 
-1. **No AI-written clinical steps.** Never generate, paraphrase or "improve" protocol step text, wording or parameters — in code, content, fixtures meant for the demo, or prompts. Real content comes from the integration lead (Spec 5) citing Hinkelbein et al. 2020. Test fixtures must be visibly fake ("STUB step 1", fake source).
+1. **AI drafts, humans approve, AI never overrides.** AI may draft protocol step text, but only from a cited guideline section, and every draft is marked `status: "draft"`, `drafted_by: "<tool and model>"`. A draft is never rendered in the app, used by the engine, or shown to crew. Only a named team member can set `status: "approved"` with `approved_by` and `approved_on`. AI never approves, never edits an approved step, and never bypasses review; any change to an approved step goes back to draft. Test fixtures stay visibly fake ("STUB step 1").
 2. **Every step has an approved source** (`source.guideline` + `source.section`). Same for every threshold. No source → the build fails (linter) and the engine refuses to render it.
 3. **AI never modifies approved instructions.** The explainer and the ground console get read-only access to steps; their output is shown beside a step, never written into it.
 4. **No medication names or doses**, anywhere: content, UI strings, explainer output, ground report. Medication steps read exactly: "per flight surgeon / onboard medical checklist".

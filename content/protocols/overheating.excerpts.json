@@ -1,0 +1,26 @@
+{
+  "protocol": "overheating",
+  "note": "Verbatim recommendation text for each step (ERC First Aid).",
+  "excerpts": [
+    {
+      "step": "heat-1-suspect",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Heat stroke",
+      "text": "Consider symptoms of heat stroke with high ambient temperature, like elevated core body temperature, confusion, agitation, disorientation, seizures or unresponsiveness."
+    },
+    {
+      "step": "heat-2-passive-cooling",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Heat stroke, passive cooling",
+      "text": "With suspected heat stroke remove the person from the heat source and commence passive cooling by removing excess clothing and placing the person in a cooler/shaded location"
+    },
+    {
+      "step": "heat-3-active-cooling",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Heat stroke, active cooling",
+      "text": "Use any technique immediately available to provide active cooling, if core temperature >40°C."
+    },
+    {
+      "step": "heat-4-keep-cooling",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Heat stroke, duration",
+      "text": "If a core temperature cannot be obtained, continue cooling for 15 min or until neurological symptoms resolve, whichever is first."
+    }
+  ]
+}

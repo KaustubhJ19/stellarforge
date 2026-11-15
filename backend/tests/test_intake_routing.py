@@ -86,10 +86,13 @@ def test_not_covered_shows_no_steps_but_keeps_contributors_and_report(reng):
     assert v["route"]["rule_id"] == "no-match"
 
 
-def test_cabin_alert_is_not_covered_until_a_cited_protocol_exists(reng):
+def test_cabin_alert_routes_to_the_approved_cabin_air_protocol(reng):
+    """Was "not covered until a cited protocol exists"; cabin-air was approved 2026-11-15 (Spec 1)."""
     alarmed(reng)
     reng.submit_intake("B", dict(responsive="yes", breathing="normal", main_problem="cabin_alert"))
-    assert reng.view("B")["route"]["protocol_id"] is None
+    assert reng.view("B")["route"]["protocol_id"] == "cabin-air"
+    to_steps(reng, "B")
+    assert reng.view("B")["step"]["id"] == "air-1-check"
 
 
 def test_auto_trigger_skips_the_questions_and_uses_cpr(reng):

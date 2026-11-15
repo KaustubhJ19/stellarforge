@@ -1,0 +1,31 @@
+{
+  "protocol": "severe-bleeding",
+  "note": "Verbatim recommendation text for each step (ERC First Aid).",
+  "excerpts": [
+    {
+      "step": "bleed-1-direct-pressure",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Control of life-threatening bleeding",
+      "text": "Apply firm direct manual pressure to the bleeding injury"
+    },
+    {
+      "step": "bleed-2-dressing",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Control of life-threatening bleeding",
+      "text": "Apply a standard or haemostatic dressing directly into the bleeding injury and then apply firm direct manual pressure on top of the dressing."
+    },
+    {
+      "step": "bleed-3-pressure-dressing",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Control of life-threatening bleeding",
+      "text": "Once bleeding is under control, apply a pressure dressing."
+    },
+    {
+      "step": "bleed-4-tourniquet",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Control of life-threatening bleeding, tourniquet",
+      "text": "Apply a tourniquet as soon as possible for life-threatening extremity bleeding that is not controlled by direct manual pressure."
+    },
+    {
+      "step": "bleed-4-tourniquet",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Control of life-threatening bleeding, tourniquet",
+      "text": "Write the time of application on the tourniquet."
+    }
+  ]
+}
