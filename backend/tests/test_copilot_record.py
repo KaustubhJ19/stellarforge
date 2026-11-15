@@ -36,6 +36,11 @@ def chain(eng, e):
     return record.chain_of(eng.store.events(), e.id)
 
 
+def last_choice(eng, e):
+    """The async investigator note may land after the choice, so the newest event is not always the choice."""
+    return [x for x in chain(eng, e) if x["type"] == "copilot_choice"][-1]
+
+
 def to_contributors(eng, rescuer="B"):
     eng.next(rescuer)  # record -> contributors
     assert eng.view(rescuer)["screen"] == "contributors"
@@ -45,7 +50,7 @@ def test_router_default_is_logged_with_the_actor_and_the_protocol_is_unchanged(r
     e = routed(reng)
     before = e.protocol_id
     reng.copilot_choice("B", "router")
-    last = chain(reng, e)[-1]
+    last = last_choice(reng, e)
     assert (last["type"], last["kind"], last["by"], last["protocol_id"]) == ("copilot_choice", "router", "B", before)
     assert e.protocol_id == before and not [x for x in reng.events if x["type"] == "protocol_switched"]
 
@@ -56,13 +61,13 @@ def test_other_protocol_uses_the_override_and_logs_the_actor(reng):
     assert e.protocol_id == "microgravity-cpr"
     sw = next(x for x in reng.events if x["type"] == "protocol_switched")
     assert sw["crew"] == "B" and sw["to"] == "microgravity-cpr"
-    assert chain(reng, e)[-1]["kind"] == "other" and chain(reng, e)[-1]["by"] == "B"
+    assert last_choice(reng, e)["kind"] == "other" and last_choice(reng, e)["by"] == "B"
 
 
 def test_the_existing_override_control_counts_as_the_choice(reng):
     e = routed(reng)
     reng.switch_protocol("B", "microgravity-cpr")
-    assert e.choice["kind"] == "other" and chain(reng, e)[-1]["type"] == "copilot_choice"
+    assert e.choice["kind"] == "other" and last_choice(reng, e)["kind"] == "other"
 
 
 def test_suggestion_switches_through_the_override_and_is_refused_when_there_is_none(reng):

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, type ConsoleView } from "./api";
+import { CopilotRecord } from "./CopilotRecord";
 import { SummaryList } from "./Report";
 
 // Ground console (demo): a teammate plays the flight surgeon.
@@ -7,6 +8,7 @@ export default function Console() {
   const [data, setData] = useState<ConsoleView | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [text, setText] = useState<Record<string, string>>({});
+  const [outcome, setOutcome] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const load = () => api.console().then((d) => { setData(d); setError(null); }).catch((e) => setError(String(e.message ?? e)));
@@ -18,6 +20,16 @@ export default function Console() {
   const send = async (id: string, scripted: boolean) => {
     try {
       await api.reply(id, scripted ? "" : text[id] ?? "", scripted);
+      setError(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    }
+  };
+
+  const saveOutcome = async (id: string) => {
+    try {
+      await api.outcome(id, outcome[id] ?? "");
+      setOutcome({ ...outcome, [id]: "" });
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -38,6 +50,7 @@ export default function Console() {
           ) : (
             <>
               <SummaryList text={r.report.summary} />
+              <CopilotRecord section={r.report.copilot} status={r.copilot_chain} />
               <details><summary>Full report</summary><pre>{JSON.stringify(r.report, null, 1)}</pre></details>
               {r.replied ? (
                 <p className="note">Reply sent.</p>
@@ -52,6 +65,14 @@ export default function Console() {
                   <button className="big" onClick={() => send(r.id, true)}>Send scripted fallback reply</button>
                 </>
               )}
+              <h3>Outcome</h3>
+              {r.outcomes?.map((o) => <p key={o.id} data-testid="outcome">{o.text}</p>)}
+              <textarea
+                aria-label="Outcome"
+                value={outcome[r.id] ?? ""}
+                onChange={(e) => setOutcome({ ...outcome, [r.id]: e.target.value })}
+              />
+              <button className="big" onClick={() => saveOutcome(r.id)}>Save outcome label</button>
             </>
           )}
         </article>

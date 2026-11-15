@@ -56,6 +56,11 @@ class CopilotChoice(CrewAction):
 class Explain(CrewAction):
     question: str | None = None
 
+class Outcome(BaseModel):
+    report: str | None = None
+    text: str = ""
+
+
 class Reply(BaseModel):
     report: str | None = None
     text: str = ""
@@ -229,6 +234,12 @@ def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI
         if not eng.ground:
             raise FlowError("ground console not available")
         return eng.ground.console_reply(r.report, r.text, scripted=r.scripted)
+
+    @app.post("/api/console/outcome")
+    def console_outcome(o: Outcome):
+        if not eng.ground:
+            raise FlowError("ground console not available")
+        return eng.ground.add_outcome(o.report, o.text)
 
     @app.get("/api/labels")
     def labels(crew: str | None = None):
