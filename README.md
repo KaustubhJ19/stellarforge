@@ -25,7 +25,8 @@ Needs Python 3.11+ and Node.js 20+.
 python3 -m venv backend/.venv && source backend/.venv/bin/activate
 pip install -r backend/requirements.txt -r contracts/requirements.txt
 python -m pytest backend contracts tools          # unit and integration tests
-python tools/lint_content.py                      # content linter: sources present, no doses
+python tools/content_lint.py                      # content linter: every step and bound sourced, no drugs or doses
+python tools/lint_content.py --deny tools/drug-denylist.txt   # emergency-protocol linter
 
 # Frontend
 cd frontend
@@ -61,7 +62,7 @@ docs/        Datasets, accuracy, cut-offs, rehearsal script, AI-use log (see doc
 
 - **Contracts first.** Add a field to a contract only by agreement in the team chat. Never remove one.
 - **One test seam.** A replay file goes in; the alerts, status and screens that come out are checked.
-- **Cite everything.** Every protocol step and threshold needs a source. No drug names or doses, ever (`tools/lint_content.py` enforces it).
+- **Cite everything.** Every protocol step and threshold needs a source. No drug names or doses, ever (`tools/content_lint.py` and `tools/lint_content.py` enforce it).
 - **Honest labels.** Use "team value", "Earth reference, no space data", "estimate, not validated" where they apply.
 - **Log AI use.** Add every use of an AI tool to `docs/si-log.md` (who, which tool, what for). The event requires a statement.
 - **Commits:** `type: description` (feat, fix, docs, test, chore, refactor). Open a pull request; do not push to `main`.
