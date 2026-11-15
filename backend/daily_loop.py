@@ -15,6 +15,7 @@ DailyLoop wraps Spec 3's Detection with the same hook interface the service alre
             carrying the plans tried and their results (optional field escalation, add-only, pending team agreement).
 """
 import json
+import sys
 import zlib
 from itertools import count
 from pathlib import Path
@@ -25,6 +26,8 @@ from backend.features import HotSummary, context_vector
 from backend.joint_anomaly import JointAnomaly
 
 CONTENT = Path(__file__).resolve().parents[1] / "content"
+sys.path.insert(0, str(CONTENT.parent / "tools"))
+import lint_content  # noqa: E402  (Spec 1 approval rules, shared with the protocol engine)
 PLANS = CONTENT / "plans"
 VALUES = PLANS / "daily-loop.json"
 WARM_START = PLANS / "warm-start.json"
@@ -43,7 +46,10 @@ def load_values(path=VALUES):
 
 
 def load_plans(folder=PLANS):
-    """Action plans (Protocol-shaped). A plan with a step lacking a source is refused, never shown (safety rule 2)."""
+    """Action plans (Protocol-shaped). A plan with a step lacking a source is refused, never shown (safety rule 2).
+    Spec 1 rule 1, as for protocols: a stub may carry only "STUB" text; otherwise only steps approved by a name on
+    content/approvers.json, unchanged since approval, are kept, and a plan with none is not loaded."""
+    approvers = lint_content.load_approvers(Path(folder).parent / "approvers.json")
     plans = {}
     for path in sorted(p for p in Path(folder).glob("*.json") if p.name.count(".") == 1):
         doc = json.loads(path.read_text(encoding="utf-8"))
@@ -53,6 +59,13 @@ def load_plans(folder=PLANS):
             src = step.get("source") or {}
             if not (str(src.get("guideline", "")).strip() and str(src.get("section", "")).strip()):
                 raise ValueError(f"{path.name}: step {step.get('id')} has no source; plan refused")
+        if doc.get("stub"):
+            if any(lint_content.stub_problem(s) for s in doc["steps"]):
+                raise ValueError(f"{path.name}: stub plan with non-STUB text; plan refused")
+        else:
+            doc = {**doc, "steps": [s for s in doc["steps"] if not lint_content.approval_problem(s, approvers)]}
+            if not doc["steps"]:
+                continue  # no approved step: never shown
         plans[doc["id"]] = doc
     return plans
 

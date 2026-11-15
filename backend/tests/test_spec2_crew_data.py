@@ -3,6 +3,7 @@
 Seam: HabitatService(detection=build_loop(...)) plays replay files; we observe pushed messages,
 service.hot_summary(crew) and the store. No internal running sums are inspected.
 """
+import json
 import math
 
 import pytest
@@ -140,3 +141,10 @@ def test_own_summary_has_the_text_another_persons_needs_an_emergency_and_is_logg
     assert svc.hot_summary("A", requester="B", emergency=True)["context"]["last_note"]["answers"]["text"] == "slight headache"
     log = svc.store.query("access_log", crew="A")
     assert [(e["opened_by"], e["emergency"], e["what"]) for e in log] == [("B", True, "hot_summary")]
+
+
+def test_a_form_pushed_after_a_failed_annotate_still_carries_no_answers(tmp_path, monkeypatch):
+    svc, got = play(tmp_path, [])
+    monkeypatch.setattr(svc.detection, "annotate", lambda m: 1 / 0)  # privacy must fail closed
+    svc.post_form({"schema_version": "1.0.0", "crew": "A", "form": "note", "t": 50.0, "answers": {"text": "private"}})
+    assert "answers" not in of_type(got, "form")[0]["payload"] and "private" not in json.dumps(got)

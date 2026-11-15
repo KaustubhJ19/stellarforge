@@ -120,7 +120,9 @@ class HabitatService:
             try:
                 pushed = annotate(message)
             except Exception:  # noqa: BLE001
-                logging.getLogger(__name__).exception("annotate failed; pushing the message as it is")
+                logging.getLogger(__name__).exception("annotate failed; pushing the message without free text")
+                if message["type"] == "form":  # privacy fails closed: a form's answers never go to every window
+                    pushed = {**message, "payload": {k: v for k, v in message["payload"].items() if k != "answers"}}
         self._push(pushed)  # detection below still gets the full message
         for out in self._detected(self.detection and self.detection.on_message, message):
             self._push(out)
