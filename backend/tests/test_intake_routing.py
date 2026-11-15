@@ -38,7 +38,7 @@ def step_ids(eng, crew):
 
 def to_steps(eng, crew):
     while (v := eng.view(crew))["screen"] in ("record", "contributors"):
-        if v["screen"] == "contributors" and v["choice"] is None:  # ticket 05: a choice is required before the steps
+        if v["screen"] == "contributors" and "l0" in v and v["choice"] is None:  # copilot on: a choice comes first
             eng.copilot_choice(crew, "router")
         eng.next(crew)
 
@@ -79,8 +79,7 @@ def test_not_covered_shows_no_steps_but_keeps_contributors_and_report(reng):
     reng.next("B")
     v = reng.view("B")
     assert v["screen"] == "contributors" and v["route"]["protocol_id"] is None and v["causes"]
-    reng.copilot_choice("B", "router")
-    reng.next("B")
+    reng.next("B")  # copilot off by default (Spec 3 future scope): no choice before the next screen
     v = reng.view("B")
     assert v["screen"] == "report"
     assert v["route"]["rule_id"] == "no-match"

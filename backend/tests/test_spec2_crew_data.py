@@ -195,7 +195,7 @@ def test_the_copilot_reads_the_real_pushed_hot_summary(tmp_path, eng):
 @pytest.fixture
 def reng():  # routing on, crew A-D, as the copilot runs
     from app.runtime import REAL_RECORDS, build
-    return build(protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS, explainer=None,
+    return build(copilot=True, protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS, explainer=None,
                  routing=True)
 
 

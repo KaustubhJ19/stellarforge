@@ -18,7 +18,7 @@ CHEST = {"responsive": "yes", "breathing": "normal", "main_problem": "chest_pain
 
 @pytest.fixture
 def api():
-    eng = build(protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS, explainer=None,
+    eng = build(copilot=True, protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS, explainer=None,
                 routing=True)
     with TestClient(create_app(eng, ticker=False)) as c:
         c.eng = eng
@@ -108,7 +108,7 @@ def test_the_patient_tablet_gets_no_briefing(api):
 
 
 def test_routing_off_has_no_briefing():
-    eng = build(explainer=None)
+    eng = build(copilot=True, explainer=None)
     with TestClient(create_app(eng, ticker=False)) as c:
         c.post("/api/trigger", json=trig("A"))
         eng.clock.advance(16)

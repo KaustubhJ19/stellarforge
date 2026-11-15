@@ -157,6 +157,7 @@ The P0 slice works end to end and the demo records all 13 scenes. Known gaps aga
 - Missing: the **daily briefing sentence**, **check-in streaks**, hosted replay on GitHub Pages.
 - Partial: webcam heart rate has an algorithm and accuracy test but no morning-check screen.
 - Not done: clinical review of the protocol and Safety bounds ([docs/medical-review.md](docs/medical-review.md)).
+- **Future scope: the Collapse Copilot.** Its architecture is built and tested (briefing, rescuer choice, hash-chained decision record, ground-report section, L0 airway rule, L3 investigator, HotSummary adapter), but it is **off by default** (`content/copilot/copilot.json`). It needs training data and evaluation (scenario generator, L1/L2 ranking, golden replays, degraded modes) before it may advise a rescuer. With it off, routing and the approved protocols work as without it.
 
 ## Working rules
 

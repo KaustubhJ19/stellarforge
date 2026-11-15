@@ -70,10 +70,10 @@ def test_eval_check_outside_the_verifier_would_catch_an_unverified_shown_note():
 
 def test_config_off_means_no_investigator_model(monkeypatch):
     monkeypatch.setattr(ev, "load_config", lambda: {"enabled": False, "model": "qwen2.5:3b"})
-    assert build(explainer="ollama").investigator.transport is None
+    assert build(copilot=True, explainer="ollama").investigator.transport is None
 
 
 def test_config_on_uses_the_configured_model(monkeypatch):
     monkeypatch.setattr(ev, "load_config", lambda: {"enabled": True, "model": "qwen2.5:3b"})
     monkeypatch.delenv("SF_INVESTIGATOR_MODEL", raising=False)
-    assert build(explainer="ollama").investigator.transport.model == "qwen2.5:3b"
+    assert build(copilot=True, explainer="ollama").investigator.transport.model == "qwen2.5:3b"

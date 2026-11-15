@@ -116,7 +116,7 @@ def test_time_box_is_enforced():
 
 # ------------------------------------------------------- through the emergency
 def start(investigator, snapshot=True):
-    eng = build(protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS,
+    eng = build(copilot=True, protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS,
                 explainer=None, routing=True, investigator=investigator)
     if snapshot:
         eng.hot_summaries.update(fake_hot_summary("A", t=1))

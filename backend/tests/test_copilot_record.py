@@ -17,7 +17,7 @@ INJURY = dict(responsive="yes", breathing="normal", main_problem="injury")
 
 @pytest.fixture
 def reng():
-    return build(protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS, explainer=None,
+    return build(copilot=True, protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS, explainer=None,
                  routing=True)
 
 
@@ -171,7 +171,7 @@ def test_verify_without_a_head_cannot_see_an_edit_to_the_last_event_but_with_the
 
 
 def test_api_choice_and_gate():
-    eng = build(protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS, explainer=None,
+    eng = build(copilot=True, protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS, explainer=None,
                 routing=True)
     with TestClient(create_app(eng, ticker=False)) as c:
         routed(eng)
