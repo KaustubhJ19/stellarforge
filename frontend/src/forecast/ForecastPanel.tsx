@@ -10,6 +10,26 @@ const LABEL_TEXT: Record<string, string> = {
   "re-measure": "Re-measure: the range is too wide to trust.",
 };
 
+const GAUGE_W = 300;
+const GAUGE_PAD = 8;
+
+/** The 0-10 scale as a bar: the likely range as a band, tomorrow's value as the marker. Decorative: the words say the same. */
+function ForecastGauge({ forecast }: { forecast: Forecast }) {
+  const x = (v: number) => GAUGE_PAD + (Math.min(10, Math.max(0, v)) / 10) * (GAUGE_W - 2 * GAUGE_PAD);
+  return (
+    <svg className="forecast__gauge" viewBox={`0 0 ${GAUGE_W} 36`} aria-hidden="true">
+      <rect className="forecast__track" x={GAUGE_PAD} y={8} width={GAUGE_W - 2 * GAUGE_PAD} height={10} rx={5} />
+      <rect className="forecast__range" x={x(forecast.low)} y={8} width={Math.max(2, x(forecast.high) - x(forecast.low))} height={10} rx={5} />
+      <circle className="forecast__marker" cx={x(forecast.value)} cy={13} r={9} />
+      {[0, 5, 10].map((v) => (
+        <text key={v} className="forecast__tick" x={x(v)} y={34} textAnchor="middle">
+          {v}
+        </text>
+      ))}
+    </svg>
+  );
+}
+
 /** Tomorrow's readiness (0-10) with its range; opens "Why this forecast?". */
 export function ForecastPanel({
   forecast,
@@ -30,6 +50,7 @@ export function ForecastPanel({
           <p className="forecast__value">
             <strong>{num(forecast.value)}</strong> of 10
           </p>
+          <ForecastGauge forecast={forecast} />
           <p>
             Likely between {num(forecast.low)} and {num(forecast.high)}
           </p>

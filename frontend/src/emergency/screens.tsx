@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api, type AccessEntry, type CrewRecord, type Explanation, type Route, type View } from "./api";
+import { loadBundle, type Bundle } from "./offline";
 import { EmergencyLayout } from "./EmergencyLayout";
 import { ReportPanel } from "./Report";
+import { StepCard } from "./StepCard";
 import { useAlarmSound } from "./alarm";
 
 type Act = (fn: () => Promise<unknown>) => Promise<void>;
@@ -199,10 +201,7 @@ function StepScreen({ crew, view, act }: { crew: string; view: Extract<View, { s
   return (
     <div data-screen="step">
       {view.stub && <p className="stub-banner">STUB step: non-clinical test data</p>}
-      <p className="step-text" data-testid="step-text">{view.step.text}</p>
-      <p className="source" data-testid="step-source">
-        Source: {view.step.source.guideline}, section {view.step.source.section}
-      </p>
+      <StepCard index={view.index} total={view.total} step={view.step} />
       <button className="big secondary" onClick={ask} disabled={shown?.busy}>Why this step?</button>
       {shown && (
         <div className="why" data-testid="why" aria-live="polite">
@@ -231,6 +230,24 @@ function Nav({ crew, act, canBack }: { crew: string; act: Act; canBack: boolean 
 
 // Temporary home screen. Spec 2 owns the real home screen and its Emergency / Help buttons.
 function Home({ crew, offline, act, error, t = 0 }: { crew: string; offline: boolean; act: Act; error?: React.ReactNode; t?: number }) {
+  // The health app's Help button opens this screen with ?start=help: show who to help straight away.
+  const [pick, setPick] = useState(() => new URLSearchParams(window.location.search).get("start") === "help");
+  const [others, setOthers] = useState<{ id: string; name: string }[]>([]);
+  const [helping, setHelping] = useState<string | null>(null);
+  useEffect(() => {
+    if (!pick) return;
+    // Same crew list the offline screen uses; the copy this tablet cached covers a service that just went away.
+    fetch("/api/offline-bundle")
+      .then((r) => (r.ok ? (r.json() as Promise<Bundle>) : null))
+      .catch(() => null)
+      .then((b) => b ?? loadBundle())
+      .then((b) => setOthers(b ? b.profile.crew.filter((id) => id !== crew).map((id) => ({ id, name: b.names[id] ?? id })) : []));
+  }, [pick, crew]);
+  const help = (other: { id: string; name: string }) =>
+    act(async () => {
+      await api.trigger(other.id, t, "Help a crewmate");
+      setHelping(other.name);
+    });
   return (
     <main className="home">
       <h1>Crew tablet: {crew}</h1>
@@ -239,6 +256,23 @@ function Home({ crew, offline, act, error, t = 0 }: { crew: string; offline: boo
       <button className="big emergency-button" onClick={() => act(() => api.trigger(crew, t))}>
         Emergency
       </button>
+      <button className="big" aria-expanded={pick} onClick={() => setPick(!pick)}>
+        Help a crewmate
+      </button>
+      {pick && (
+        <div className="choices">
+          {others.map((o) => (
+            <button key={o.id} className="big" onClick={() => help(o)}>
+              {o.name}
+            </button>
+          ))}
+        </div>
+      )}
+      {helping && (
+        <p className="note" role="status">
+          Emergency started for {helping}. When the crew alarm rings on this tablet, press Accept.
+        </p>
+      )}
       <AccessLog crew={crew} />
     </main>
   );

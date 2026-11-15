@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { EmergencyLayout } from "./EmergencyLayout";
 import { RecordDetails } from "./screens";
+import { StepCard } from "./StepCard";
 import { enqueue, missionNow, type Bundle } from "./offline";
 
 export type OfflineSession = { patient: string; asRescuer: boolean };
@@ -63,8 +64,7 @@ export function OfflineFlow({ crew, bundle, session, onEnd }: {
     <EmergencyLayout title={`Step ${pos + 1} of ${steps.length} (offline)`} patient={name} offline>
       <p className="note">Urgency not assessed (offline). Crew alarm unavailable while the service is down.</p>
       {bundle.protocol.stub && <p className="stub-banner">STUB step: non-clinical test data</p>}
-      <p className="step-text" data-testid="step-text">{s.text}</p>
-      <p className="source" data-testid="step-source">Source: {s.source.guideline}, section {s.source.section}</p>
+      <StepCard index={pos + 1} total={steps.length} step={s} />
       <button className="big secondary" onClick={() => setWhy(REFUSAL)}>Why this step?</button>
       {why && <div className="why" data-testid="why"><p>{why}</p><p className="note">Explainer unavailable offline.</p></div>}
       {nav}

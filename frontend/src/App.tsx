@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CardContent, CrewRecord, IndicatorId, Reading, ReplayFile } from "./contracts";
 import { isNumeric, missionStateAt, replayRange, seriesOf, type NumericReading } from "./replay/state";
 import { MeasurementCard } from "./home/MeasurementCard";
+import { useSparkHistory } from "./home/sparkHistory";
 import { CONTENT_CARDS, CONTENT_PROFILES, cardFor, type ProfileContent } from "./content";
 import { profileChoices, profileFor } from "./profiles";
 import { MissionBar } from "./home/MissionBar";
@@ -103,6 +104,7 @@ export function App({
   const [openCard, setOpenCard] = useState<IndicatorId | null>(null);
   const closeCard = useCallback(() => setOpenCard(null), []);
 
+  const history = useSparkHistory(replay, state.t);
   const glow = useMemo(() => glowFrom(state.latest), [state]);
   const model = crew.sex === "female" ? "female" : "male";
   const hr = state.latest.get("heart_rate");
@@ -149,14 +151,17 @@ export function App({
               <ZoomControls focus={focus} onFocus={setFocus} />
               <FlaggedList latest={state.latest} onShow={setInsight} />
               <BodyStatusList glow={glow} />
-              <LayerPanel layers={layers} onChange={(id, next) => setLayers((l) => ({ ...l, [id]: next }))} />
+              <details className="fold">
+                <summary>Layers</summary>
+                <LayerPanel layers={layers} onChange={(id, next) => setLayers((l) => ({ ...l, [id]: next }))} />
+              </details>
             </>
           )}
         </section>
         <div className="home__side">
           <div className="home__summaries">
-            <HealthSummary kind="physical" latest={state.latest} onDetails={setOpenCard} />
-            <HealthSummary kind="mental" latest={state.latest} onDetails={setOpenCard} />
+            <HealthSummary kind="physical" latest={state.latest} history={history} onDetails={setOpenCard} />
+            <HealthSummary kind="mental" latest={state.latest} history={history} onDetails={setOpenCard} />
           </div>
           <ForecastPanel
             forecast={state.forecast}

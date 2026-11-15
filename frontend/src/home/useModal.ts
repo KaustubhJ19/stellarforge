@@ -14,9 +14,16 @@ export function useModal(dialog: RefObject<HTMLElement | null>, initial: RefObje
         return;
       }
       if (e.key !== "Tab" || !dialog.current) return;
-      const focusable = dialog.current.querySelectorAll<HTMLElement>(
-        "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
-      );
+      // A closed dropdown (<details>) hides everything but its <summary> from Tab.
+      const focusable = [
+        ...dialog.current.querySelectorAll<HTMLElement>(
+          "button, [href], input, select, textarea, summary, [tabindex]:not([tabindex='-1'])",
+        ),
+      ].filter((el) => {
+        const closed = el.closest("details:not([open])");
+        return !closed || (el.tagName === "SUMMARY" && el.parentElement === closed);
+      });
+      if (focusable.length === 0) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
       if (e.shiftKey && document.activeElement === first) {

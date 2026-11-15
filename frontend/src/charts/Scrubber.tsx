@@ -39,7 +39,10 @@ export function Scrubber({
     <div className="scrubber">
       <label className="scrubber__label">
         <span>Mission clock</span>
-        <output className="scrubber__time">{formatMissionTime(t)}</output>
+        <span className="scrubber__when">
+          <output className="scrubber__time">{formatMissionTime(t)}</output>
+          {t === end && <b className="scrubber__now">Now</b>}
+        </span>
         <input
           type="range"
           aria-label="Mission clock"

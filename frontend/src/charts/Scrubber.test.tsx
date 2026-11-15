@@ -21,7 +21,7 @@ describe("mission-clock scrubber", () => {
   it("starts at the latest time in the replay", () => {
     renderApp();
     expect(screen.getByRole("slider", { name: "Mission clock" })).toHaveValue(at(23));
-    expect(screen.getByText("Day 3 23:00")).toBeInTheDocument();
+    expect(screen.getByText("Day 3 · 23:00")).toBeInTheDocument();
   });
 
   it("replays the Status at the scrubbed time on the body and in the summary", () => {

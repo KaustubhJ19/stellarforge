@@ -13,12 +13,14 @@ const STEPS = [
   ["tell_ground", "Tell the ground"],
 ] as const;
 
-/** One card section; "Not added yet." until Spec 5 writes it. */
-function Section({ id, heading, children }: { id: string; heading: string; children?: ReactNode }) {
+/** One card section as a dropdown; "Not added yet." until Spec 5 writes it. */
+function Section({ id, heading, open = false, children }: { id: string; heading: string; open?: boolean; children?: ReactNode }) {
   return (
     <section className="card__section" aria-labelledby={id}>
-      <h3 id={id}>{heading}</h3>
-      {children ?? <p className="empty">Not added yet.</p>}
+      <details className="fold" open={open}>
+        <summary id={id}>{heading}</summary>
+        <div className="fold__body">{children ?? <p className="empty">Not added yet.</p>}</div>
+      </details>
     </section>
   );
 }
@@ -108,7 +110,7 @@ export function MeasurementCard({
             </>
           ) : undefined}
         </Section>
-        <Section id={`${ids}-abnormal`} heading="If abnormal">
+        <Section id={`${ids}-abnormal`} heading="If abnormal" open={reading.status !== "green"}>
           {content?.if_abnormal ? (
             <dl className="card__abnormal">
               {STEPS.filter(([key]) => content.if_abnormal?.[key]).map(([key, label]) => (

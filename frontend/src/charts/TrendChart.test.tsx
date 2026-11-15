@@ -40,9 +40,9 @@ describe("trend chart", () => {
   it("marks Acute and Drift alerts at the times they happened, by shape and words", async () => {
     const chart = await openTrend("Heart rate");
     // 14:00 and 15:00 sit close together, so the word shows on the later one.
-    expect(within(chart).getByLabelText("Acute alert, Day 3 14:00")).toBeInTheDocument();
-    const acute = within(chart).getByLabelText("Acute alert, Day 3 15:00");
-    const drift = within(chart).getByLabelText("Drift alert, Day 3 09:00");
+    expect(within(chart).getByLabelText("Acute alert, Day 3 · 14:00")).toBeInTheDocument();
+    const acute = within(chart).getByLabelText("Acute alert, Day 3 · 15:00");
+    const drift = within(chart).getByLabelText("Drift alert, Day 3 · 09:00");
     expect(acute).toHaveTextContent("Acute");
     expect(drift).toHaveTextContent("Drift");
     expect(acute.dataset.shape).not.toBe(drift.dataset.shape);
@@ -63,18 +63,18 @@ describe("trend chart", () => {
     mission.replay.events.sort((a, b) => a.t - b.t);
     render(<App {...mission} bodyScene={fakeBodyScene().factory} />);
     const chart = screen.getByRole("figure", { name: "Heart rate trend" });
-    expect(within(chart).getByLabelText("Acute alert, Day 3 15:00")).toHaveTextContent("Drift, Acute");
+    expect(within(chart).getByLabelText("Acute alert, Day 3 · 15:00")).toHaveTextContent("Drift, Acute");
   });
 
   it("does not mark a green Alert, which only clears a Status", async () => {
     const chart = await openTrend("Heart rate");
-    expect(within(chart).queryByLabelText("Acute alert, Day 3 16:00")).not.toBeInTheDocument();
-    expect(within(chart).getByLabelText("Acute alert, Day 3 15:00")).toBeInTheDocument();
+    expect(within(chart).queryByLabelText("Acute alert, Day 3 · 16:00")).not.toBeInTheDocument();
+    expect(within(chart).getByLabelText("Acute alert, Day 3 · 15:00")).toBeInTheDocument();
   });
 
   it("only marks alerts for the Indicator on show", async () => {
     const chart = await openTrend("Stress");
-    expect(within(chart).getByLabelText("Drift alert, Day 3 11:00")).toBeInTheDocument();
+    expect(within(chart).getByLabelText("Drift alert, Day 3 · 11:00")).toBeInTheDocument();
     expect(within(chart).queryByLabelText(/Acute alert/)).not.toBeInTheDocument();
   });
 
@@ -83,7 +83,7 @@ describe("trend chart", () => {
     await userEvent.click(within(chart).getByRole("button", { name: "Show as table" }));
     const rows = within(within(chart).getByRole("table")).getAllByRole("row");
     expect(rows).toHaveLength(25); // header + 24 hourly Readings
-    expect(rows[15]).toHaveTextContent("Day 3 14:00");
+    expect(rows[15]).toHaveTextContent("Day 3 · 14:00");
     expect(rows[15]).toHaveTextContent("128");
     expect(rows[15]).toHaveTextContent("Alert");
   });

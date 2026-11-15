@@ -71,7 +71,7 @@ describe("readiness forecast panel", () => {
       payload: { crew: "A", indicator: "heart_rate", value: 71, unit: "bpm", t: later, source: "sensor", confidence: 1, state: "released" },
     });
     renderWith(m);
-    expect(panel()).toHaveTextContent("Made Day 1 07:00, for the next day");
+    expect(panel()).toHaveTextContent("Made Day 1 · 07:00, for the next day");
     expect(panel()).toHaveTextContent("Older than today: no newer forecast yet.");
   });
 

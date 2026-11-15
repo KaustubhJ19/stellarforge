@@ -5,6 +5,18 @@ const mmss = (s: number) => {
   return `${m} min ${Math.round(s - m * 60)} s`;
 };
 
+/** The report summary as short bullets, one per sentence. Same words, easier to scan. */
+export function SummaryList({ text }: { text: string }) {
+  const sentences = text.split(/(?<=\.)\s+/).filter(Boolean);
+  return (
+    <ul className="bullets">
+      {sentences.map((s, i) => (
+        <li key={i}>{s}</li>
+      ))}
+    </ul>
+  );
+}
+
 export function ReportPanel({ view }: { view: ReportView | null }) {
   if (!view) return <p className="note">Ground report not available.</p>;
   const r = view.report;
@@ -21,7 +33,7 @@ export function ReportPanel({ view }: { view: ReportView | null }) {
         <p className="warning">No reply yet (about {mmss(wait)}). Act on your own meanwhile.</p>
       )}
       <h2>Summary</h2>
-      <p>{r.summary}</p>
+      <SummaryList text={r.summary} />
       <details>
         <summary>History ({r.history.length}) · Timeline ({r.timeline.length}) · Actions ({r.actions.length})</summary>
         <pre>{JSON.stringify({ history: r.history, timeline: r.timeline, actions: r.actions }, null, 1)}</pre>

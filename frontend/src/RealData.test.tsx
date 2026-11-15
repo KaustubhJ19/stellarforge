@@ -69,7 +69,7 @@ describe("cabin data that stops before the crew data (RR-1 covers 42 days)", () 
     render(<App {...staleCabin()} bodyScene={fakeBodyScene().factory} />);
     const bar = screen.getByRole("region", { name: "Mission" });
     expect(bar).toHaveTextContent("12.5 mGy");
-    expect(bar).toHaveTextContent("as of Day 1 02:00");
+    expect(bar).toHaveTextContent("as of Day 1 · 02:00");
   });
 });
 
