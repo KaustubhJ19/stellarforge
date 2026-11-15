@@ -41,6 +41,10 @@ class Ground:
             f"Chest pain (crew-reported): {chest}. Observer: patient {observer}. "
             f"Rescuers: {', '.join(e.rescuers) or 'none yet'}."
         )
+        if e.route:  # intent-first routing: say which protocol the rescuer was given, and why
+            summary += f" Protocol: {e.route['protocol_id'] or 'none (not covered, ground to advise)'} (rule {e.route['rule_id']})."
+        if e.intake:
+            summary += " Intake: " + ", ".join(f"{k}={v}" for k, v in e.intake.items()) + "."
         history: list[dict] = []
         readings = eng.readings.get(e.patient, {})
         if readings:
@@ -80,6 +84,15 @@ class Ground:
         self.eng._note(e, "ground report sent", report=snap["id"])
         self.eng.emit("ground_report_sent", emergency=e.id, report=snap["id"], sent_t=now,
                       arrives_t=now + self.one_way, expected_reply_t=now + 2 * self.one_way)
+
+    def refresh(self, e: Emergency) -> None:
+        """Re-take the snapshot while the report is still in transit (the route is decided after it was sent).
+        Once it has reached ground it is fixed; the crew's own copy keeps updating."""
+        st = self.state.get(e.id)
+        if not st or self.eng.now() >= st["arrives_t"]:
+            return
+        st["snapshot"] = self.build(e)
+        self.eng.store.put_report(st["snapshot"])
 
     def report_view(self, e: Emergency) -> dict | None:
         st = self.state.get(e.id)

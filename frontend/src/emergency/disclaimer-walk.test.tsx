@@ -21,6 +21,7 @@ const views: View[] = [
   { ...base, screen: "join", ring: false },
   { ...base, screen: "join_r2", ring: false, rescuer1: "eng" },
   { ...resc, screen: "observer", question: q },
+  { ...resc, screen: "intake", fields: { responsive: ["yes", "no"] }, route: null },
   { ...resc, screen: "record", ok: true, record },
   { ...resc, screen: "record", ok: false, error: "x" },
   { ...resc, screen: "contributors", causes: ["a"], message: null },
@@ -37,7 +38,7 @@ describe("disclaimer on every emergency screen", () => {
   it("covers every non-idle screen type the API defines", () => {
     const covered = new Set(views.map((v) => v.screen));
     const all: View["screen"][] = ["verdict", "help_requested", "patient_alarm", "patient_waiting", "alarm", "join", "join_r2",
-      "observer", "record", "contributors", "step", "report"];
+      "observer", "intake", "record", "contributors", "step", "report"];
     expect(all.filter((s) => !covered.has(s))).toEqual([]);
   });
 
