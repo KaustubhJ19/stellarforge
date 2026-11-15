@@ -5,3 +5,7 @@ scikit-learn
 mapie>=1,<2  # 1.x API: SplitConformalRegressor
 shap
 pytest
+jsonschema>=4.26,<5  # contracts/validate.py
+fastapi  # emergency service (backend/app)
+uvicorn
+httpx  # explainer client and API tests
