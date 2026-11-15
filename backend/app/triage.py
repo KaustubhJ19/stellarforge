@@ -75,7 +75,9 @@ def _matches(when: dict, facts: dict) -> bool:
 def route(routes: dict, intake: dict | None, live: dict, available: set[str], trigger_kind: str | None = None) -> dict:
     """First matching row wins. Returns {protocol_id | None, rule_id, reason}."""
     facts = (intake or {}) | {"trigger_kind": trigger_kind, "live_arrest": bool(live.get("arrest")),
-                               "live_cabin_alert": bool(live.get("cabin_alert"))}
+                               "live_cabin_alert": bool(live.get("cabin_alert")),
+                               # L0 airway rule: low SpO2 on the live feed, or the rescuer reports no breathing
+                               "airway_threat": bool(live.get("low_spo2")) or (intake or {}).get("breathing") == "none"}
     for row in routes["rows"]:
         if not _matches(row["when"], facts):
             continue

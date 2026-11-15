@@ -11,6 +11,9 @@ import itertools
 import threading
 from dataclasses import dataclass, field
 
+from copilot.hot_summary import PushedHotSummaries
+from copilot.session import CopilotSession, build_session
+
 from . import contracts, triage
 from .clock import MissionClock
 from .content import Protocol, visible_steps
@@ -56,6 +59,7 @@ class Emergency:
     route: dict | None = None  # {protocol_id, rule_id, reason} once the router (or an override) has run
     intake: dict | None = None  # the confirmed Intake form
     needs_intake: bool = False  # routing is on and the Trigger was not the automatic arrest rule
+    copilot: CopilotSession | None = None  # Spec 3 L0 session; None when routing is off
 
     @property
     def open(self) -> bool:
@@ -83,6 +87,7 @@ class FlowEngine:
         self.readings: dict[str, dict[str, dict]] = {}  # crew -> indicator -> latest Reading
         self.ground = None  # set by ground module (ticket 12)
         self.habitat = None  # Spec 1 service adapter (ticket 15), optional
+        self.hot_summaries = PushedHotSummaries()  # Spec 3: latest Spec 2 snapshot per crew (runtime replaces it)
         self._ids = itertools.count(1)
         self._screens: dict[str, str] = {c: "idle" for c in self.crew}
         self._lock = threading.RLock()
@@ -165,6 +170,8 @@ class FlowEngine:
                 if not e.needs_intake:  # the arrest rule fired: skip the questions
                     self._set_route(e, triage.route(self.routes, None, self._live(e.patient), set(self.protocols),
                                                     trigger_kind="auto"))
+                if e.copilot is None:  # manual Trigger: L0 on the live facts alone, the answers come later
+                    self._copilot(e)
             self._refresh()
             return e
 
@@ -290,12 +297,28 @@ class FlowEngine:
     def _live(self, patient: str) -> dict:
         """Live facts the router may use. No cabin alert stream exists in the flow yet, so it is always False."""
         rhythm = self.readings.get(patient, {}).get("cardiac_rhythm")
-        return {"arrest": bool(rhythm) and triage.is_arrest_rhythm(rhythm["value"]), "cabin_alert": False}
+        return {"arrest": bool(rhythm) and triage.is_arrest_rhythm(rhythm["value"]), "cabin_alert": False,
+                "low_spo2": self._spo2_low(patient)}
+
+    def _spo2_low(self, patient: str) -> bool:
+        bound = ((self.routes or {}).get("thresholds") or {}).get("spo2_low")
+        value = self.readings.get(patient, {}).get("spo2", {}).get("value")
+        if not bound or isinstance(value, bool) or not isinstance(value, (int, float)):
+            return False
+        return (value / 100 if value > 1 else value) < bound["value"]  # Pulse sends a 0-1 fraction; accept percent too
+
+    def _copilot(self, e: Emergency, route: dict | None = None) -> None:
+        """Rebuild the L0 copilot session (briefing + rule verdict) from the facts known now."""
+        route = route or triage.route(self.routes, e.intake, self._live(e.patient), set(self.protocols),
+                                      trigger_kind=e.trigger["kind"])
+        e.copilot = build_session(emergency=e.id, crew=e.patient, t=round(self.now(), 3), routes=self.routes,
+                                  route=route, history=self.hot_summaries.latest(e.patient))
 
     def _set_route(self, e: Emergency, route: dict) -> None:
         e.route, e.protocol_id = route, route["protocol_id"]
         self._note(e, "routed", protocol=route["protocol_id"], rule=route["rule_id"], reason=route["reason"])
         self.emit("routed", emergency=e.id, protocol=route["protocol_id"], rule=route["rule_id"])
+        self._copilot(e, route)
         if self.ground:
             self.ground.refresh(e)
 
@@ -467,6 +490,8 @@ class FlowEngine:
         v = {"role": role, "can_back": bool(e.done.get(crew)) and e.done[crew][-1] not in ("observer", "intake")}
         if self.routing:  # the tablet shows "Using X, because Y" and the override choices
             v |= {"route": e.route, "protocols": [{"id": p.id, "title": p.title} for p in self.protocols.values()]}
+            if e.copilot:  # Spec 3 briefing beside the intake screen and the banner; context, not instruction
+                v |= {"briefing": e.copilot.briefing, "l0": e.copilot.l0}
         if cur == "observer":
             return v | {"screen": "observer", "question": self.questions["observer"]}
         if cur == "intake":

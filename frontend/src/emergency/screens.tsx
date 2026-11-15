@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api, type AccessEntry, type CrewRecord, type Explanation, type Route, type View } from "./api";
 import { loadBundle, type Bundle } from "./offline";
+import { BriefingPanel } from "./Briefing";
 import { EmergencyLayout } from "./EmergencyLayout";
 import { ReportPanel } from "./Report";
 import { StepCard } from "./StepCard";
@@ -22,6 +23,7 @@ export function Screen({ crew, view, offline, error, act }: Props) {
     <EmergencyLayout title={title} patient={view.patient_name} offline={offline}>
       {err}
       {route && view.screen !== "intake" && <RouteBanner crew={crew} route={route} protocols={protocols} act={act} />}
+      {"briefing" in view && view.briefing && <BriefingPanel briefing={view.briefing} />}
       {body}
     </EmergencyLayout>
   );
