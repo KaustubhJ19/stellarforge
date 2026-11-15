@@ -70,19 +70,25 @@ class Explainer:
         self.transport = transport
         self.timeout = timeout
         self.deny = content_mod.lint_content.load_deny_list() if deny is None else deny
-        p = eng.protocol
+        self.docs_by_protocol = {pid: self._docs_of(p) for pid, p in eng.protocols.items()}
+        self.docs = self.docs_by_protocol[eng.protocol.id]  # the default protocol's corpus
+
+    @staticmethod
+    def _docs_of(p) -> tuple[Doc, ...]:
         docs = []
         for s in p.steps:
             docs.append(Doc(s.id, s.guideline, s.section, s.text))
             docs += [Doc(s.id, s.guideline, s.section, t) for t in p.excerpts.get(s.id, ())]
-        self.docs = tuple(docs)
+        return tuple(docs)
 
     # -------------------------------------------------------------- retrieval
-    def retrieve(self, query: str, step_id: str | None = None) -> list[Doc]:
+    def retrieve(self, query: str, step_id: str | None = None, protocol_id: str | None = None) -> list[Doc]:
+        """Closed corpus: only the given protocol's steps and excerpts (default protocol if none)."""
+        corpus = self.docs_by_protocol[protocol_id] if protocol_id else self.docs
         if step_id is not None:  # "Why this step?": exact lookup on the current step
-            return [d for d in self.docs if d.step == step_id]
+            return [d for d in corpus if d.step == step_id]
         q = words(query)
-        scored = sorted(((len(q & words(d.text)), d) for d in self.docs), key=lambda x: -x[0])
+        scored = sorted(((len(q & words(d.text)), d) for d in corpus), key=lambda x: -x[0])
         if not scored or scored[0][0] < MIN_SCORE:
             return []
         best = scored[0][1].step
@@ -115,16 +121,17 @@ class Explainer:
         cur = eng._current(e, crew) if e else None
         if not cur or not cur.startswith("step:"):
             raise content_mod.contracts.ContractError("explain: no protocol step on this tablet")
-        step = eng.protocol.step(cur[5:])
+        proto = eng.proto(e)  # the protocol this emergency was routed to
+        step = proto.step(cur[5:])
         before = step.text
-        docs = self.retrieve(question, None) if question else self.retrieve("", step.id)
-        result = self._answer(step, docs, question)
-        assert eng.protocol.step(step.id).text == before  # never edits a step
+        docs = self.retrieve(question, None, proto.id) if question else self.retrieve("", step.id, proto.id)
+        result = self._answer(step, docs, question, proto)
+        assert proto.step(step.id).text == before  # never edits a step
         eng.emit("explain", emergency=e.id, crew=crew, step=step.id, mode=result["mode"],
                  reason=result.pop("_reason", None), question=bool(question))
         return result | {"step": step.id}
 
-    def _answer(self, step, docs: list[Doc], question: str | None) -> dict:
+    def _answer(self, step, docs: list[Doc], question: str | None, proto=None) -> dict:
         if not docs:
             return self._refuse("no match in protocol or excerpts")
         src = {"guideline": docs[0].guideline, "section": docs[0].section}
@@ -141,7 +148,7 @@ class Explainer:
                     return {"answer": out.strip(), "source": src, "mode": "live", "label": None}
             except Exception as err:  # unavailable, timeout, bad response
                 reason = f"model error: {type(err).__name__}"
-        rec = self.eng.protocol.recorded.get(docs[0].step) if question is None or docs[0].step == step.id else None
+        rec = (proto or self.eng.protocol).recorded.get(docs[0].step) if question is None or docs[0].step == step.id else None
         if rec:
             return {"answer": rec, "source": src, "mode": "recorded", "label": RECORDED_LABEL, "_reason": reason}
         return self._refuse(reason)

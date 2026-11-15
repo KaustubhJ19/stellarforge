@@ -9,6 +9,7 @@
 """
 from __future__ import annotations
 
+from . import triage
 from .contracts import ContractError, validate
 from .content import visible_steps
 from .flow import DISCLAIMER
@@ -16,11 +17,17 @@ from .flow import DISCLAIMER
 KINDS = {"trigger", "step_shown", "step_completed", "record_access"}
 
 
+def _protocol(eng, p) -> dict:
+    steps = visible_steps(p, eng.profile["equipment"], 1)
+    return {"id": p.id, "title": p.title, "stub": p.stub, "steps": [s.public() for s in steps]}
+
+
 def bundle(eng) -> dict:
-    steps = visible_steps(eng.protocol, eng.profile["equipment"], 1)
     return {
-        "protocol": {"id": eng.protocol.id, "title": eng.protocol.title, "stub": eng.protocol.stub,
-                     "steps": [s.public() for s in steps]},
+        "protocol": _protocol(eng, eng.protocol),  # kept for tablets that do not route
+        "protocols": {pid: _protocol(eng, p) for pid, p in eng.protocols.items()},
+        "routes": eng.routes,  # the same rule table, so a tablet routes the same way offline
+        "intake_fields": triage.intake_fields(),
         "profile": {"id": eng.profile["id"], "crew": eng.crew, "delay_label": eng.profile.get("delay_label")},
         "records": {c: eng.records.get(c) for c in eng.crew if eng.records.get(c)},
         "names": {c: eng.name(c) for c in eng.crew},

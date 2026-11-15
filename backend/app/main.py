@@ -24,6 +24,7 @@ from .flow import AccessDenied, FlowEngine, FlowError
 from .ollama_boot import OllamaStatus, ensure_ollama
 from .runtime import REAL_RECORDS, build
 from .store import StoreError
+from .triage import IntakeError
 
 log = logging.getLogger("uvicorn.error")  # shows in the server output
 DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
@@ -42,6 +43,12 @@ class CrewAction(BaseModel):
 class Observer(CrewAction):
     choice: str
 
+class IntakeForm(CrewAction):
+    intake: dict
+
+class SwitchProtocol(CrewAction):
+    protocol: str
+
 class Explain(CrewAction):
     question: str | None = None
 
@@ -54,6 +61,8 @@ class Reply(BaseModel):
 def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI:
     eng = engine or build(
         # Real content by default; SF_PROTOCOL=stub-protocol SF_PROFILE=stub-mars SF_RECORDS=<stub file> runs the test doubles.
+        # Setting SF_PROTOCOL forces that one protocol and turns intent-first routing off.
+        routing="SF_PROTOCOL" not in os.environ,
         protocol=os.environ.get("SF_PROTOCOL", "microgravity-cpr"),
         profile=os.environ.get("SF_PROFILE", "mars_transit"),
         records_path=Path(os.environ.get("SF_RECORDS", REAL_RECORDS)),
@@ -92,6 +101,10 @@ def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI
 
     @app.exception_handler(ContractError)
     async def _contract(_: Request, exc: ContractError):
+        return JSONResponse({"error": str(exc)}, status_code=422)
+
+    @app.exception_handler(IntakeError)
+    async def _intake(_: Request, exc: IntakeError):
         return JSONResponse({"error": str(exc)}, status_code=422)
 
     @app.exception_handler(FlowError)
@@ -139,6 +152,16 @@ def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI
     @app.post("/api/observer")
     def observer(a: Observer):
         eng.observer_answer(a.crew, a.choice, a.emergency)
+        return eng.view(a.crew)
+
+    @app.post("/api/intake")
+    def intake(a: IntakeForm):
+        eng.submit_intake(a.crew, a.intake, a.emergency)
+        return eng.view(a.crew)
+
+    @app.post("/api/switch-protocol")
+    def switch_protocol(a: SwitchProtocol):
+        eng.switch_protocol(a.crew, a.protocol, a.emergency)
         return eng.view(a.crew)
 
     @app.post("/api/next")
@@ -218,7 +241,7 @@ def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI
         @app.post("/api/sim/reset")
         def sim_reset():
             """Demo/test only: fresh flow state with the same content and settings."""
-            fresh = build(protocol=eng.protocol.id, profile=eng.profile["id"],
+            fresh = build(protocol=eng.protocol.id, profile=eng.profile["id"], routing=eng.routing,
                           clock=MissionClock(speed=eng.clock.speed), explainer=eng.explainer.transport)
             eng.__dict__.update(fresh.__dict__)
             eng.ground.eng = eng

@@ -1,0 +1,46 @@
+{
+  "note": "Router table (docs/spec-intent-routing.md). First matching row wins. A row picks a protocol; it never contains clinical steps. Routing rules are team values, not clinical guidance.",
+  "pending_protocols": ["cabin-air"],
+  "rows": [
+    {
+      "id": "auto-trigger",
+      "when": {"trigger_kind": "auto"},
+      "protocol": "microgravity-cpr",
+      "reason": "The automatic arrest rule fired, so the questions are skipped."
+    },
+    {
+      "id": "unresponsive-not-breathing",
+      "when": {"responsive": "no", "breathing": ["none", "abnormal"]},
+      "protocol": "microgravity-cpr",
+      "reason": "Rescuer reports the patient does not respond and is not breathing normally."
+    },
+    {
+      "id": "arrest-rhythm",
+      "when": {"live_arrest": true},
+      "protocol": "microgravity-cpr",
+      "reason": "The live heart rhythm is an arrest rhythm."
+    },
+    {
+      "id": "chest-pain-responsive",
+      "when": {"main_problem": "chest_pain", "responsive": "yes"},
+      "protocol": "chest-pain",
+      "reason": "Rescuer reports chest pain in a patient who responds (crew-reported symptom)."
+    },
+    {
+      "id": "cabin-alert-reported",
+      "when": {"main_problem": "cabin_alert"},
+      "protocol": "cabin-air",
+      "reason": "Rescuer reports a cabin air problem."
+    },
+    {
+      "id": "cabin-alert-live",
+      "when": {"live_cabin_alert": true},
+      "protocol": "cabin-air",
+      "reason": "A cabin air alert is active."
+    }
+  ],
+  "fallback": {
+    "id": "no-match",
+    "reason": "No cited protocol matches what was reported. Ground should advise."
+  }
+}

@@ -11,7 +11,7 @@ import itertools
 import threading
 from dataclasses import dataclass, field
 
-from . import contracts
+from . import contracts, triage
 from .clock import MissionClock
 from .content import Protocol, visible_steps
 from .store import Store, StoreError
@@ -52,6 +52,10 @@ class Emergency:
     record_view: dict[str, dict] = field(default_factory=dict)  # crew -> record or error
     timeline: list[dict] = field(default_factory=list)
     actions: list[dict] = field(default_factory=list)
+    protocol_id: str | None = None  # which protocol the steps come from; None = not covered
+    route: dict | None = None  # {protocol_id, rule_id, reason} once the router (or an override) has run
+    intake: dict | None = None  # the confirmed Intake form
+    needs_intake: bool = False  # routing is on and the Trigger was not the automatic arrest rule
 
     @property
     def open(self) -> bool:
@@ -65,8 +69,11 @@ class Emergency:
 
 class FlowEngine:
     def __init__(self, store: Store, clock: MissionClock, protocol: Protocol, profile: dict,
-                 crew_records: dict[str, dict], questions: dict):
+                 crew_records: dict[str, dict], questions: dict,
+                 protocols: dict[str, Protocol] | None = None, routes: dict | None = None):
         self.store, self.clock, self.protocol, self.profile = store, clock, protocol, profile
+        self.protocols = protocols or {protocol.id: protocol}  # every protocol the router may pick
+        self.routes = routes  # None = routing off: every Trigger uses `protocol`
         self.crew = list(profile["crew"])
         self.records = crew_records
         self.questions = questions
@@ -79,8 +86,17 @@ class FlowEngine:
         self._ids = itertools.count(1)
         self._screens: dict[str, str] = {c: "idle" for c in self.crew}
         self._lock = threading.RLock()
-        for sid, reason in protocol.refused:  # unsafe content never reaches a screen
-            self.emit("step_refused", step=sid, reason=reason)
+        for p in self.protocols.values():
+            for sid, reason in p.refused:  # unsafe content never reaches a screen
+                self.emit("step_refused", step=sid, reason=reason)
+
+    @property
+    def routing(self) -> bool:
+        return self.routes is not None
+
+    def proto(self, e: "Emergency") -> Protocol | None:
+        """The protocol this emergency uses, or None when the router found nothing that covers it."""
+        return self.protocols.get(e.protocol_id) if e.protocol_id else None
 
     # ------------------------------------------------------------------ util
     def now(self) -> float:
@@ -138,10 +154,17 @@ class FlowEngine:
                 self._note(existing, "duplicate trigger ignored", kind=trig["kind"])
                 return existing
             e = Emergency(id=f"em-{next(self._ids)}", patient=trig["crew"], trigger=dict(trig),
-                          started_t=self.now(), confirm_deadline=self.now() + CONFIRM_TIMEOUT_S)
+                          started_t=self.now(), confirm_deadline=self.now() + CONFIRM_TIMEOUT_S,
+                          protocol_id=self.protocol.id)
             self.emergencies[e.id] = e
             self._note(e, "trigger", kind=trig["kind"], reason=trig["reason"])
             self.emit("trigger", emergency=e.id, kind=trig["kind"], crew=e.patient, reason=trig["reason"])
+            if self.routing:
+                e.needs_intake = trig["kind"] != "auto"
+                e.protocol_id = None  # no protocol until the router (or the arrest rule) has picked one
+                if not e.needs_intake:  # the arrest rule fired: skip the questions
+                    self._set_route(e, triage.route(self.routes, None, self._live(e.patient), set(self.protocols),
+                                                    trigger_kind="auto"))
             self._refresh()
             return e
 
@@ -233,6 +256,7 @@ class FlowEngine:
 
     def can_join_r2(self, e: Emergency, crew: str) -> bool:
         return (e.status == "active" and len(e.rescuers) == 1 and crew not in (e.patient, *e.rescuers)
+                and (e.route is not None or not e.needs_intake)  # Rescuer 2 joins after the route is known
                 and len(self.crew) > 2)  # two-person rover profile: no Rescuer 2
 
     def join_r2(self, crew: str, eid: str | None = None) -> str:
@@ -262,12 +286,70 @@ class FlowEngine:
             self._advance(e, crew)
             self._refresh()
 
+    # --------------------------------------------------------------- routing
+    def _live(self, patient: str) -> dict:
+        """Live facts the router may use. No cabin alert stream exists in the flow yet, so it is always False."""
+        rhythm = self.readings.get(patient, {}).get("cardiac_rhythm")
+        return {"arrest": bool(rhythm) and triage.is_arrest_rhythm(rhythm["value"]), "cabin_alert": False}
+
+    def _set_route(self, e: Emergency, route: dict) -> None:
+        e.route, e.protocol_id = route, route["protocol_id"]
+        self._note(e, "routed", protocol=route["protocol_id"], rule=route["rule_id"], reason=route["reason"])
+        self.emit("routed", emergency=e.id, protocol=route["protocol_id"], rule=route["rule_id"])
+        if self.ground:
+            self.ground.refresh(e)
+
+    def submit_intake(self, crew: str, intake: dict, eid: str | None = None) -> dict:
+        """Rescuer 1 confirms what is happening; the rule table picks the protocol (never a model)."""
+        with self._lock:
+            self._check_crew(crew)
+            e = self._get(eid, for_crew=crew)
+            if e.role(crew) != "R1" or self._current(e, crew) != "intake":
+                raise FlowError("intake is for Rescuer 1, once, before the record; use the override to change protocol")
+            clean = triage.validate_intake(intake)
+            e.intake = clean
+            self._note(e, "intake", by=crew, **clean)
+            self.emit("intake", emergency=e.id, crew=crew, **clean)
+            self._set_route(e, triage.route(self.routes, clean, self._live(e.patient), set(self.protocols),
+                                            trigger_kind=e.trigger["kind"]))
+            self._advance(e, crew)
+            self._refresh()
+            return e.route
+
+    def switch_protocol(self, crew: str, protocol_id: str, eid: str | None = None) -> dict:
+        """A rescuer overrides the router. Logged with who and from/to; the router can be wrong."""
+        with self._lock:
+            self._check_crew(crew)
+            e = self._get(eid, for_crew=crew)
+            if e.role(crew) is None:
+                raise FlowError("only a rescuer can switch protocol")
+            if protocol_id not in self.protocols:
+                raise FlowError(f"unknown protocol '{protocol_id}'")
+            if e.needs_intake and e.intake is None:
+                raise FlowError("answer the intake first; the override changes the protocol it chose")
+            before = e.protocol_id
+            e.route = {"protocol_id": protocol_id, "rule_id": "override", "reason": f"Switched by {crew}."}
+            e.protocol_id = protocol_id
+            for c, done in e.done.items():  # steps of the old protocol must not count as done in the new one
+                e.done[c] = [k for k in done if not k.startswith("step:")]
+            self._note(e, "protocol switched", by=crew, **{"from": before, "to": protocol_id})
+            self.emit("protocol_switched", emergency=e.id, crew=crew, to=protocol_id, **{"from": before})
+            if self.ground:  # after the note, so the report in flight lists the switch
+                self.ground.refresh(e)
+            self._refresh()
+            return e.route
+
     # ------------------------------------------------------------ sequence
     def steps_for(self, e: Emergency, crew: str):
-        return visible_steps(self.protocol, self.profile["equipment"], len(e.rescuers), e.role(crew))
+        p = self.proto(e)
+        if p is None:  # not covered: no steps, ground takes over
+            return []
+        return visible_steps(p, self.profile["equipment"], len(e.rescuers), e.role(crew))
 
     def sequence(self, e: Emergency, crew: str) -> list[str]:
         items = ["observer"] if (e.role(crew) == "R1" and e.path == "no_answer") else []
+        if e.needs_intake and e.role(crew) == "R1":
+            items.append("intake")
         items += ["record", "contributors"] + [f"step:{s.id}" for s in self.steps_for(e, crew)] + ["report"]
         return items
 
@@ -304,7 +386,7 @@ class FlowEngine:
         with self._lock:
             e = self._get(eid, for_crew=crew)
             cur = self._current(e, crew)
-            if e.role(crew) is None or cur in (None, "observer", "report"):
+            if e.role(crew) is None or cur in (None, "observer", "intake", "report"):
                 raise FlowError("nothing to continue")
             self._advance(e, crew)
             self._refresh()
@@ -313,7 +395,7 @@ class FlowEngine:
         with self._lock:
             e = self._get(eid, for_crew=crew)
             done = e.done.get(crew, [])
-            if e.role(crew) is None or not done or done[-1] == "observer":
+            if e.role(crew) is None or not done or done[-1] in ("observer", "intake"):
                 raise FlowError("nothing to go back to")
             undone = done.pop()
             self._note(e, "went back", item=undone, by=crew)
@@ -382,9 +464,13 @@ class FlowEngine:
     def _rescuer_view(self, e: Emergency, crew: str) -> dict:
         cur = self._current(e, crew)
         role = e.role(crew)
-        v = {"role": role, "can_back": bool(e.done.get(crew)) and e.done[crew][-1] != "observer"}
+        v = {"role": role, "can_back": bool(e.done.get(crew)) and e.done[crew][-1] not in ("observer", "intake")}
+        if self.routing:  # the tablet shows "Using X, because Y" and the override choices
+            v |= {"route": e.route, "protocols": [{"id": p.id, "title": p.title} for p in self.protocols.values()]}
         if cur == "observer":
             return v | {"screen": "observer", "question": self.questions["observer"]}
+        if cur == "intake":
+            return v | {"screen": "intake", "fields": triage.intake_fields()}
         if cur == "record":
             return v | {"screen": "record"} | e.record_view.get(crew, {"ok": False, "error": "not opened"})
         if cur == "contributors":
@@ -393,8 +479,9 @@ class FlowEngine:
             steps = self.steps_for(e, crew)
             ids = [s.id for s in steps]
             sid = cur[5:]
-            return v | {"screen": "step", "step": self.protocol.step(sid).public(),
-                        "index": ids.index(sid) + 1, "total": len(ids), "stub": self.protocol.stub}
+            p = self.proto(e)
+            return v | {"screen": "step", "step": p.step(sid).public(),
+                        "index": ids.index(sid) + 1, "total": len(ids), "stub": p.stub}
         return v | {"screen": "report", "report": self.ground.report_view(e) if self.ground else None}
 
     def name(self, crew: str) -> str:

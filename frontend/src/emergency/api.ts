@@ -12,7 +12,14 @@ export type Step = {
 };
 
 type Base = { emergency: string; patient: string; patient_name: string; disclaimer: string };
-type Rescuer = Base & { role: "R1" | "R2"; can_back: boolean };
+// Present only when the service routes by intent (docs/spec-intent-routing.md).
+export type Route = { protocol_id: string | null; rule_id: string; reason: string };
+type Rescuer = Base & {
+  role: "R1" | "R2";
+  can_back: boolean;
+  route?: Route | null;
+  protocols?: { id: string; title: string }[];
+};
 
 export type View = (
   | { screen: "idle" }
@@ -28,6 +35,7 @@ export type View = (
   | (Base & { screen: "alarm" | "join"; ring: boolean })
   | (Base & { screen: "join_r2"; ring: boolean; rescuer1: string })
   | (Rescuer & { screen: "observer"; question: Question })
+  | (Rescuer & { screen: "intake"; fields: Record<string, string[]> })
   | (Rescuer & { screen: "record"; ok: boolean; record?: CrewRecord; error?: string })
   | (Rescuer & { screen: "contributors"; causes: string[]; message: string | null })
   | (Rescuer & { screen: "step"; step: Step; index: number; total: number; stub: boolean })
@@ -100,6 +108,8 @@ export const api = {
   accept: (crew: string) => call<{ role: string }>("POST", "/api/accept", { crew }),
   joinR2: (crew: string) => call<{ role: string }>("POST", "/api/join-r2", { crew }),
   observer: (crew: string, choice: string) => call<View>("POST", "/api/observer", { crew, choice }),
+  intake: (crew: string, intake: Record<string, string>) => call<View>("POST", "/api/intake", { crew, intake }),
+  switchProtocol: (crew: string, protocol: string) => call<View>("POST", "/api/switch-protocol", { crew, protocol }),
   next: (crew: string) => call<View>("POST", "/api/next", { crew }),
   back: (crew: string) => call<View>("POST", "/api/back", { crew }),
   explain: (crew: string) => call<Explanation>("POST", "/api/explain", { crew }),

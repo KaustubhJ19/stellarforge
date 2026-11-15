@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api, type AccessEntry, type CrewRecord, type Explanation, type View } from "./api";
+import { api, type AccessEntry, type CrewRecord, type Explanation, type Route, type View } from "./api";
 import { EmergencyLayout } from "./EmergencyLayout";
 import { ReportPanel } from "./Report";
 import { useAlarmSound } from "./alarm";
@@ -14,9 +14,12 @@ export function Screen({ crew, view, offline, error, act }: Props) {
   }
   const err = error ? <p className="error" role="alert">{error}</p> : null;
   if (view.screen === "idle") return <Home crew={crew} offline={offline} act={act} error={err} t={view.t} />;
+  const route = "route" in view && view.route ? view.route : null; // only when the service routes by intent
+  const protocols = "protocols" in view ? view.protocols ?? [] : [];
   const L = (title: string, body: React.ReactNode) => (
     <EmergencyLayout title={title} patient={view.patient_name} offline={offline}>
       {err}
+      {route && view.screen !== "intake" && <RouteBanner crew={crew} route={route} protocols={protocols} act={act} />}
       {body}
     </EmergencyLayout>
   );
@@ -85,6 +88,8 @@ export function Screen({ crew, view, offline, error, act }: Props) {
           ))}
         </div>,
       );
+    case "intake":
+      return L("What is happening?", <IntakeForm crew={crew} fields={view.fields} act={act} />);
     case "record":
       return L(
         `Crew record — ${view.patient_name}`,
@@ -117,6 +122,67 @@ export function Screen({ crew, view, offline, error, act }: Props) {
     case "report":
       return L("Ground report", <ReportPanel view={view.report} />);
   }
+}
+
+// Question and answer labels are placeholders pending Spec 5. They route; they are not clinical guidance.
+const INTAKE_QUESTIONS: { key: string; text: string; labels: Record<string, string> }[] = [
+  { key: "responsive", text: "Does the patient respond?", labels: { yes: "Yes, responds", no: "No response" } },
+  { key: "breathing", text: "Is the patient breathing?", labels: { normal: "Normal", abnormal: "Abnormal", none: "Not breathing" } },
+  {
+    key: "main_problem", text: "What is the main problem?",
+    labels: {
+      chest_pain: "Chest pain", breathing_trouble: "Trouble breathing", cabin_alert: "Cabin air alert",
+      collapse: "Collapse", injury: "Injury", other: "Something else",
+    },
+  },
+];
+
+function IntakeForm({ crew, fields, act }: { crew: string; fields: Record<string, string[]>; act: Act }) {
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const asked = INTAKE_QUESTIONS.filter((q) => fields[q.key]);
+  const ready = asked.every((q) => answers[q.key]);
+  const submit = () => act(() => api.intake(crew, Object.fromEntries(asked.map((q) => [q.key, answers[q.key]]))));
+  return (
+    <div data-screen="intake">
+      {asked.map((q) => (
+        <fieldset key={q.key} className="question">
+          <legend>{q.text}</legend>
+          <div className="choices">
+            {fields[q.key].map((v) => (
+              <button
+                key={v}
+                className={answers[q.key] === v ? "big selected" : "big"}
+                aria-pressed={answers[q.key] === v}
+                onClick={() => setAnswers((a) => ({ ...a, [q.key]: v }))}
+              >
+                {q.labels[v] ?? v}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+      ))}
+      <button className="big primary" disabled={!ready} onClick={submit}>Confirm</button>
+    </div>
+  );
+}
+
+function RouteBanner({ crew, route, protocols, act }: {
+  crew: string; route: Route; protocols: { id: string; title: string }[]; act: Act;
+}) {
+  const title = protocols.find((p) => p.id === route.protocol_id)?.title ?? route.protocol_id;
+  return (
+    <div className="route" data-testid="route-banner">
+      <p className="lead">{route.protocol_id ? `Using: ${title}` : "Not covered by this tool. Contact ground."}</p>
+      <p className="note">{route.reason}</p>
+      <label>
+        Switch protocol{" "}
+        <select value={route.protocol_id ?? ""} onChange={(e) => act(() => api.switchProtocol(crew, e.target.value))}>
+          {route.protocol_id === null && <option value="" disabled>none</option>}
+          {protocols.map((p) => <option key={p.id} value={p.id}>{p.title}</option>)}
+        </select>
+      </label>
+    </div>
+  );
 }
 
 function StepScreen({ crew, view, act }: { crew: string; view: Extract<View, { screen: "step" }>; act: Act }) {
