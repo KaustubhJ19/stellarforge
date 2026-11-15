@@ -219,3 +219,13 @@ def test_main_protocol_with_no_approved_steps_routes_to_not_covered(content):
     route = eng.view("B")["route"]
     assert route["protocol_id"] is None and "Contact ground" in route["reason"]
     assert "microgravity-cpr" not in offline.bundle(eng)["protocols"]
+
+
+@pytest.mark.parametrize("profile", ["mars_transit", "station"])
+def test_every_real_protocol_step_has_its_equipment_on_board(profile):
+    on_board = set(json.loads((CONTENT / "profiles" / f"{profile}.json").read_text(encoding="utf-8"))["equipment"])
+    for f in (CONTENT / "protocols").glob("*.json"):
+        doc = json.loads(f.read_text(encoding="utf-8"))
+        if f.name.count(".") == 1 and "steps" in doc and not doc.get("stub"):
+            for s in doc["steps"]:
+                assert set(s["equipment"]) <= on_board, (profile, s["id"], set(s["equipment"]) - on_board)

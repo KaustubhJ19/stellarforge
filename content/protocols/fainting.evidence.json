@@ -1,0 +1,45 @@
+{
+  "note": "Spec 1 evidence pack drafted by Claude Code (Claude Opus 5.5). Every quote was checked by script as verbatim in the guideline PDF text (ignoring line breaks and ligatures). Dose amounts and deny-listed product names in the guideline were left out (Rule 4).",
+  "protocol": "fainting",
+  "conditions": [
+    "fainting"
+  ],
+  "why": "Fainting and orthostatic intolerance after EVA or on return to gravity can cause sudden loss of responsiveness. ERC 2021 'Management of presyncope' is first-aid guidance a non-doctor can follow (dropped from ERC 2025 as outside its revised scope, not as withdrawn advice).",
+  "sources": [
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "licence": "© 2025 European Resuscitation Council, published by Elsevier B.V.; open copy in the KU Leuven repository (Lirias). Quote recommendation text only",
+      "licence_checked": false,
+      "url": "https://lirias.kuleuven.be/retrieve/f38482b2-c212-4a30-88fe-f999cc5f5516"
+    },
+    {
+      "guideline": "Zideman DA, Singletary EM, Borra V, et al. European Resuscitation Council Guidelines 2021: First aid. Resuscitation. 2021;161:270-290. doi:10.1016/j.resuscitation.2021.02.013 (Earth reference, no space data)",
+      "licence": "© 2021 European Resuscitation Council, published by Elsevier B.V. All rights reserved; open copy in the KU Leuven repository (Lirias). Quote recommendation text only",
+      "licence_checked": false,
+      "url": "https://lirias.kuleuven.be/retrieve/497d2454-30cf-4c7f-8bf7-078181148ab9"
+    }
+  ],
+  "recommendations": [
+    {
+      "guideline": "Zideman DA, Singletary EM, Borra V, et al. European Resuscitation Council Guidelines 2021: First aid. Resuscitation. 2021;161:270-290. doi:10.1016/j.resuscitation.2021.02.013 (Earth reference, no space data)",
+      "section": "Management of presyncope",
+      "quotes": [
+        "Ensure the casualty is safe and will not fall or injure themselves if they lose consciousness.",
+        "Use simple physical counterpressure manoeuvres to abort presyncope of vasovagal or orthostatic origin.",
+        "Lower body physical counterpressure manoeuvres are more effective than upper body manoeuvres."
+      ]
+    },
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Recovery position",
+      "quotes": [
+        "Place adults and children with decreased level of responsiveness who do NOT meet the criteria for CPR into a lateral (side-lying) recovery position"
+      ]
+    }
+  ],
+  "microgravity": "Earth reference, no space data. 'Will not fall' and squatting assume gravity: in weightlessness there is no fall, and lower-body manoeuvres need a foot restraint. Most relevant on return to gravity (Moon, Mars, Earth), which this protocol does not cover.",
+  "pulse": {
+    "model": "check",
+    "scenario": null
+  }
+}

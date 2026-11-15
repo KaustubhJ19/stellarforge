@@ -2,8 +2,8 @@
   "id": "head-injury",
   "name": "Head injury",
   "protocol": "head-injury",
-  "state": "pending",
-  "guidance_candidate": "ERC first aid (candidate from Spec 1; verified when the evidence pack is built)",
+  "state": "existing",
+  "guidance_candidate": "ERC 2025 First Aid (verified: head-injury.evidence.json)",
   "prior_incidence": {
     "status": "pending",
     "value": null,
@@ -16,7 +16,7 @@
     "scenario": null
   },
   "labels": [
-    "pending: no approved protocol, routes to not covered",
+    "Earth reference, no space data",
     "not clinically reviewed"
   ]
 }

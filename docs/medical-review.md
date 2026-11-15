@@ -55,6 +55,12 @@ Each library protocol has a side-by-side review sheet (draft step next to the gu
 - [CPR in microgravity](review/microgravity-cpr.md)
 - [Chest pain](review/chest-pain.md)
 - [Sepsis / severe infection](review/sepsis.md) (Earth reference)
+- [Fainting / feeling faint](review/fainting.md) (Earth reference)
+- [Low blood sugar](review/low-blood-sugar.md) (draft, Earth reference)
+- [Severe bleeding](review/severe-bleeding.md) (draft, Earth reference)
+- [Head injury: concussion](review/head-injury.md) (Earth reference)
+- [Overheating: heat stroke](review/overheating.md) (Earth reference)
+- [Cabin air: low oxygen](review/cabin-air.md) (Earth reference)
 
 New collapse protocols (see [`docs/protocol-library.md`](protocol-library.md)) add a sheet here when their evidence pack and drafts are ready for review. Approval of a step (`tools/approve_steps.py`) is a team member's act; this clinician sheet is a separate, later check.
 

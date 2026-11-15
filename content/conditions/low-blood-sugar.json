@@ -3,7 +3,7 @@
   "name": "Low blood sugar",
   "protocol": "low-blood-sugar",
   "state": "pending",
-  "guidance_candidate": "ERC/AHA first aid (candidate from Spec 1; verified when the evidence pack is built)",
+  "guidance_candidate": "ERC 2025 First Aid (verified: low-blood-sugar.evidence.json)",
   "prior_incidence": {
     "status": "pending",
     "value": null,
@@ -16,7 +16,7 @@
     "scenario": null
   },
   "labels": [
-    "pending: no approved protocol, routes to not covered",
+    "draft on branch draft/first-aid-batch: awaiting human approval, routes to not covered",
     "not clinically reviewed"
   ]
 }

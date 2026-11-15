@@ -36,15 +36,15 @@ Claude stops at "ready for review". Claude never edits `content/approvers.json`,
 |---|---|---|---|---|---|
 | Cardiac arrest / arrhythmia | `microgravity-cpr` | Hinkelbein 2020 | yes | exists, awaiting approval | rows on main |
 | Chest pain | `chest-pain` | ESC 2023 (Earth reference) | check | exists, awaiting approval | `chest-pain-responsive` |
-| Fainting / orthostatic intolerance | `fainting` | ESC 2018 syncope; ERC first aid | check | pending | `collapse-responsive` |
-| Low blood sugar | `low-blood-sugar` | ERC/AHA first aid | check | pending | `*-reported` (team-agreed intake value) |
-| Cabin air: low O₂ / CO₂ build-up (merged) | `cabin-air` | ERC first aid; NASA-STD-3001 | yes | pending | `cabin-alert-*` |
-| Severe bleeding | `severe-bleeding` | ERC first aid | yes | pending | `*-reported` (team-agreed intake value) |
+| Fainting / orthostatic intolerance | `fainting` | ERC 2021 First Aid (presyncope) + ERC 2025 (recovery position), verified | check | approved by Kaustubh 2026-11-15 (Earth reference) | `collapse-responsive` |
+| Low blood sugar | `low-blood-sugar` | ERC 2025 First Aid, verified | check | **draft on `draft/first-aid-batch`, 0/4 approved** | `*-reported` (team-agreed intake value) |
+| Cabin air: low O₂ / CO₂ build-up (merged) | `cabin-air` | ERC 2025 First Aid (oxygen), verified; NASA-STD-3001 not fetched | yes | approved by Kaustubh 2026-11-15 (Earth reference) | `cabin-alert-*` |
+| Severe bleeding | `severe-bleeding` | ERC 2025 First Aid, verified | yes | **draft on `draft/first-aid-batch`, 2/4 approved (direct pressure and dressing not approved)** | `*-reported` (team-agreed intake value) |
 | Sepsis / severe infection | `sepsis` | Surviving Sepsis Campaign 2021 (verified, PMC8486643) | yes | approved by Kaustubh 2026-11-15 (Earth reference) | `*-reported` (team-agreed intake value) |
-| Overheating / fever | `overheating` | ERC first aid | check | pending | `*-reported` (team-agreed intake value) |
-| Decompression sickness after EVA | `decompression-sickness` | NASA EVA DCS references | no | pending | `*-reported` (team-agreed intake value) |
-| Seizure | `seizure` | ERC first aid | no | pending | `*-reported` (team-agreed intake value) |
-| Head injury | `head-injury` | ERC first aid | no | pending | `*-reported` (team-agreed intake value) |
+| Overheating / fever | `overheating` | ERC 2025 First Aid (heat stroke), verified | check | approved by Kaustubh 2026-11-15 (Earth reference) | `*-reported` (team-agreed intake value) |
+| Decompression sickness after EVA | `decompression-sickness` | **no source found** (not in ERC First Aid; NASA EVA DCS references not fetched) | no | pending | `*-reported` (team-agreed intake value) |
+| Seizure | `seizure` | **no source found** (ERC 2021/2025 First Aid list seizures only as a sign) | no | pending | `*-reported` (team-agreed intake value) |
+| Head injury | `head-injury` | ERC 2025 First Aid (concussion), verified | no | approved by Kaustubh 2026-11-15 (Earth reference) | `*-reported` (team-agreed intake value) |
 
 Condition records are in `content/conditions/<id>.json`. Not done yet for the 9 new conditions: evidence pack, draft steps, review sheet (workflow steps 1–3), signs with likelihood ratios (`signs: []`) and Pulse scenario ids (`null`). These need the guideline full texts; Claude does not quote from memory. Every prior incidence is currently `pending`, a third state beside the spec's "sourced" and "team value" that the linter allows only with no value. Fill one in only from a public IMM/IMPACT paper that prints the value, or label it `team value`.
 

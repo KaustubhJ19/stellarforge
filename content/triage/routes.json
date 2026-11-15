@@ -1,6 +1,6 @@
 {
   "note": "Router table (docs/spec-intent-routing.md). First matching row wins. A row picks a protocol; it never contains clinical steps. Routing rules are team values, not clinical guidance.",
-  "pending_protocols": ["cabin-air", "fainting", "low-blood-sugar", "severe-bleeding", "overheating", "decompression-sickness", "seizure", "head-injury"],
+  "pending_protocols": ["low-blood-sugar", "severe-bleeding", "decompression-sickness", "seizure"],
   "rows": [
     {
       "id": "auto-trigger",

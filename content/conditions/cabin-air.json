@@ -2,8 +2,8 @@
   "id": "cabin-air",
   "name": "Cabin air: low oxygen / CO2 build-up",
   "protocol": "cabin-air",
-  "state": "pending",
-  "guidance_candidate": "ERC first aid; NASA-STD-3001 CO2 limits (candidate from Spec 1; verified when the evidence pack is built)",
+  "state": "existing",
+  "guidance_candidate": "ERC 2025 First Aid (verified: cabin-air.evidence.json)",
   "prior_incidence": {
     "status": "pending",
     "value": null,
@@ -16,7 +16,7 @@
     "scenario": null
   },
   "labels": [
-    "pending: no approved protocol, routes to not covered",
+    "Earth reference, no space data",
     "not clinically reviewed"
   ],
   "note": "Low oxygen and CO2 build-up are merged here: one evidence pack, one protocol (Spec 1 story 19)."

@@ -1,0 +1,40 @@
+{
+  "note": "Spec 1 evidence pack drafted by Claude Code (Claude Opus 5.5). Every quote was checked by script as verbatim in the guideline PDF text (ignoring line breaks and ligatures). Dose amounts and deny-listed product names in the guideline were left out (Rule 4).",
+  "protocol": "severe-bleeding",
+  "conditions": [
+    "severe-bleeding"
+  ],
+  "why": "Life-threatening bleeding causes shock and collapse. ERC 2025 'Control of life-threatening bleeding' is first-aid guidance a non-doctor can follow.",
+  "sources": [
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "licence": "© 2025 European Resuscitation Council, published by Elsevier B.V.; open copy in the KU Leuven repository (Lirias). Quote recommendation text only",
+      "licence_checked": false,
+      "url": "https://lirias.kuleuven.be/retrieve/f38482b2-c212-4a30-88fe-f999cc5f5516"
+    }
+  ],
+  "recommendations": [
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Control of life-threatening bleeding",
+      "quotes": [
+        "Apply firm direct manual pressure to the bleeding injury",
+        "Apply a standard or haemostatic dressing directly into the bleeding injury and then apply firm direct manual pressure on top of the dressing.",
+        "Once bleeding is under control, apply a pressure dressing."
+      ]
+    },
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Control of life-threatening bleeding, tourniquet",
+      "quotes": [
+        "Apply a tourniquet as soon as possible for life-threatening extremity bleeding that is not controlled by direct manual pressure.",
+        "Write the time of application on the tourniquet."
+      ]
+    }
+  ],
+  "microgravity": "Earth reference, no space data. Blood does not pool in weightlessness and may float as droplets; containment is not covered by this guideline.",
+  "pulse": {
+    "model": "yes",
+    "scenario": null
+  }
+}

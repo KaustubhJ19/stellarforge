@@ -1,0 +1,45 @@
+{
+  "note": "Spec 1 evidence pack drafted by Claude Code (Claude Opus 5.5). Every quote was checked by script as verbatim in the guideline PDF text (ignoring line breaks and ligatures). Dose amounts and deny-listed product names in the guideline were left out (Rule 4).",
+  "protocol": "low-blood-sugar",
+  "conditions": [
+    "low-blood-sugar"
+  ],
+  "why": "Hypoglycaemia causes sudden impaired responsiveness or behaviour change and can progress to unresponsiveness. ERC 2025 Hypoglycaemia is first-aid guidance a non-doctor can follow.",
+  "sources": [
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "licence": "© 2025 European Resuscitation Council, published by Elsevier B.V.; open copy in the KU Leuven repository (Lirias). Quote recommendation text only",
+      "licence_checked": false,
+      "url": "https://lirias.kuleuven.be/retrieve/f38482b2-c212-4a30-88fe-f999cc5f5516"
+    }
+  ],
+  "recommendations": [
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Hypoglycaemia (low blood sugar value)",
+      "quotes": [
+        "Suspect hypoglycaemia in someone with diabetes or chronic malnutrition AND sudden impaired responsiveness or behavioural change.",
+        "by mouth if the person is awake and able to swallow."
+      ]
+    },
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Hypoglycaemia (low blood sugar value), unresponsive persons",
+      "quotes": [
+        "For unresponsive persons, do not give oral sugar due to the risk of aspiration, instead call your local emergency number (112)."
+      ]
+    },
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Hypoglycaemia (low blood sugar value), after recovery",
+      "quotes": [
+        "Following recovery from symptoms (5–10 min after sugar intake) encourage the person to eat a light snack."
+      ]
+    }
+  ],
+  "microgravity": "Earth reference, no space data. Swallowing and aspiration risk are not studied in weightlessness. Sugar amounts in the guideline are left to the flight surgeon (Rule 4).",
+  "pulse": {
+    "model": "check",
+    "scenario": null
+  }
+}
