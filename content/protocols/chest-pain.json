@@ -2,6 +2,9 @@
   "schema_version": "1.0.0",
   "id": "chest-pain",
   "title": "Chest pain, before any collapse (crew-reported symptom)",
+  "condition_ids": [
+    "chest-pain"
+  ],
   "steps": [
     {
       "id": "cp-1-ecg",
@@ -13,7 +16,11 @@
       "equipment": [
         "ECG recorder"
       ],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:25d20b18ab7074b22d05510242d9ff9c3473188f60a7aa72be6e0a0b26ddfd09"
     },
     {
       "id": "cp-2-defibrillator-ready",
@@ -26,7 +33,11 @@
         "automated external defibrillator (AED)",
         "self-adhesive defibrillation pads"
       ],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:20ef4c42d7bb26b2fe8cb833b79c1d8097b2b8d1657b618e9994feab7a48b452"
     },
     {
       "id": "cp-3-restrain",
@@ -38,7 +49,11 @@
       "equipment": [
         "Crew Medical Restraint System"
       ],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:175c78f9b92da2c82755c49b9c8db69134e9390c627039694eeee8b09f00097e"
     },
     {
       "id": "cp-4-mission-control",
@@ -50,7 +65,11 @@
       "equipment": [
         "communication link to Mission Control"
       ],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:74d08db9026b02c7a5fac8c7b4391d249676fffc187c9caa4554a5449ff347b3"
     },
     {
       "id": "cp-5-medication",
@@ -60,7 +79,11 @@
         "section": "Spec 5, Protocol content rules"
       },
       "equipment": [],
-      "rescuers": 1
+      "rescuers": 1,
+      "status": "approved",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:a7449b3ffd4e068c77fa7bf0a6bdf660808be2f575e02ca34d215995814347e8"
     }
   ]
 }

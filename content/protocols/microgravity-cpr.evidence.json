@@ -1,0 +1,124 @@
+{
+  "note": "Spec 1 evidence pack. Back-filled mechanically from the verbatim quotes already in microgravity-cpr.excerpts.json (written by the integration lead); no new quote text. licence_checked=false means a person still has to confirm the licence.",
+  "protocol": "microgravity-cpr",
+  "conditions": [
+    "cardiac-arrest"
+  ],
+  "why": "Cardiac arrest causes sudden loss of responsiveness; existing protocol on main (Spec 1 library table).",
+  "sources": [
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "licence": "CC BY 4.0 (BMC open access article)",
+      "licence_checked": false
+    },
+    {
+      "guideline": "team rule (Spec 5): medication stays with the flight surgeon; protocols never name a drug or dose",
+      "licence": "Team rule (StellarForge); no external licence",
+      "licence_checked": true
+    }
+  ],
+  "recommendations": [
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Defibrillation, Recommendation 14",
+      "quotes": [
+        "Even if survival is highly unlikely without defibrillation, CPR SHOULD start when a defibrillator is unavailable in the space vehicle, in patients who appear to be in cardiac arrest."
+      ]
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Results and recommendations, Recommendation 2 (one rescuer, no restraint, no equipment: rationale for Recommendation 1)",
+      "quotes": [
+        "For initial BLS at the site of emergency, the Evetts-Russomano method (ER) SHOULD be applied initially. If the rescuer cannot perform adequate chest compressions with the ER method, the rescuer should switch to the Reverse-Bear-Hug method (RBH).",
+        "This includes the recommendation of a chest compression technique for BLS that does not require patient or rescuer to be restrained or is dependent on the distance between two surfaces (such as the HS-method) and can therefore be initiated, immediately and without any equipment."
+      ]
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Results and recommendations, Recommendation 3",
+      "quotes": [
+        "As soon as the patient has been restrained on the Crew Medical Restraint System chest compressions SHOULD be applied using the Handstand-method (HS) if favored by the dimensions of the spacecraft and provider height."
+      ]
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Results and recommendations, Recommendation 4",
+      "quotes": [
+        "If the application of the HS method seems impossible either the restrained CPR method using the standard OR straddling position SHOULD be applied."
+      ]
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Results and recommendations, Recommendation 5",
+      "quotes": [
+        "An automated chest compression device COULD be used on a restrained patient (if available). Its installation, however, should not delay high quality chest compressions."
+      ]
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Defibrillation, Recommendations 10 and 11",
+      "quotes": [
+        "A defibrillator SHOULD only be used on a patient that is restrained to an electrically isolated and safe surface.",
+        "An automated external defibrillator (AED), with long duration batteries and long shelf-life self-adhesive pads, SHOULD be stored with the emergency equipment."
+      ]
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Defibrillation, Recommendation 15",
+      "quotes": [
+        "Although the survival rate is likely to be reduced in the absence of medical skills and/or equipment for on-going medical support in the event of ROSC in microgravity, defibrillation SHOULD take place when appropriate."
+      ]
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Abstract (Results)",
+      "quotes": [
+        "Airway management should only be performed if at least two rescuers are present and the patient has been restrained."
+      ]
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Airway management, Recommendations 6 and 9",
+      "quotes": [
+        "If no rescuer with extensive training in tracheal intubation is present, a second generation supraglottic airway device SHOULD be used for airway management.",
+        "A manual suction device SHOULD be included in the emergency kit and be readily available during CPR, especially during airway management."
+      ]
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Airway management, Recommendations 7, 8 and 9",
+      "quotes": [
+        "The tracheal intubation remains the gold standard for securing the airway if performed by a skilled provider and SHOULD be performed in that case.",
+        "When tracheal intubation is attempted patient and rescuer should be restrained using the Crew Medical Restraint System."
+      ]
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Intravenous access, Recommendations 16, 17 and 18",
+      "quotes": [
+        "Venous access SHOULD ONLY be performed if more than two rescuers are present during a cardiac arrest and high-quality CPR is performed.",
+        "When a peripheral venous access cannot be established in a patient in cardiac arrest in microgravity, the intraosseous tibial route SHOULD be used."
+      ]
+    },
+    {
+      "guideline": "team rule (Spec 5): medication stays with the flight surgeon; protocols never name a drug or dose",
+      "section": "Spec 5, Protocol content rules",
+      "quotes": [
+        "Medication steps read \"per flight surgeon / onboard medical checklist\"."
+      ],
+      "kind": "team rule"
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Termination of CPR, Recommendation 22",
+      "quotes": [
+        "The decision to terminate resuscitation SHOULD be made by the crewmember with the highest medical qualification after consultation with telemedicine support. Only if telemedicine support is unavailable or time delay prevents prompt feedback the decision has to be made by the crewmember with the highest medical qualification alone."
+      ]
+    }
+  ],
+  "microgravity": "Written for microgravity (spacecraft transit, station). No recommendation for partial gravity; see coverage.json.",
+  "pulse": {
+    "model": "yes",
+    "scenario": "replay/emergency-crew-B.json (chest-pain collapse to arrest, Pulse 4.3.1; estimate, not validated)"
+  }
+}

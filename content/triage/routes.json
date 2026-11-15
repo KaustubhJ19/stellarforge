@@ -1,6 +1,6 @@
 {
   "note": "Router table (docs/spec-intent-routing.md). First matching row wins. A row picks a protocol; it never contains clinical steps. Routing rules are team values, not clinical guidance.",
-  "pending_protocols": ["cabin-air"],
+  "pending_protocols": ["cabin-air", "fainting", "low-blood-sugar", "severe-bleeding", "sepsis", "overheating", "decompression-sickness", "seizure", "head-injury"],
   "rows": [
     {
       "id": "auto-trigger",
@@ -27,6 +27,12 @@
       "reason": "Rescuer reports chest pain in a patient who responds (crew-reported symptom)."
     },
     {
+      "id": "collapse-responsive",
+      "when": {"main_problem": "collapse", "responsive": "yes"},
+      "protocol": "fainting",
+      "reason": "Rescuer reports a collapse in a patient who now responds."
+    },
+    {
       "id": "cabin-alert-reported",
       "when": {"main_problem": "cabin_alert"},
       "protocol": "cabin-air",
@@ -39,6 +45,16 @@
       "reason": "A cabin air alert is active."
     }
   ],
+  "unrouted_conditions": {
+    "note": "Spec 1: conditions no current intake main_problem value can express. Each needs a new value, added only by team agreement (contract rule). Until then the intake reaches them only through 'not covered'.",
+    "low-blood-sugar": "proposed main_problem value: low_blood_sugar",
+    "severe-bleeding": "'injury' is shared with head-injury; proposed value: bleeding",
+    "head-injury": "'injury' is shared with severe-bleeding; proposed value: head_injury",
+    "sepsis": "proposed main_problem value: infection",
+    "overheating": "proposed main_problem value: overheating",
+    "decompression-sickness": "proposed main_problem value: after_eva",
+    "seizure": "proposed main_problem value: seizure"
+  },
   "fallback": {
     "id": "no-match",
     "reason": "No cited protocol matches what was reported. Ground should advise."

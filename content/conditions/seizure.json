@@ -1,0 +1,22 @@
+{
+  "id": "seizure",
+  "name": "Seizure",
+  "protocol": "seizure",
+  "state": "pending",
+  "guidance_candidate": "ERC first aid (candidate from Spec 1; verified when the evidence pack is built)",
+  "prior_incidence": {
+    "status": "pending",
+    "value": null,
+    "source": null,
+    "note": "To fill from a public IMM/IMPACT paper that prints the value, or label 'team value'."
+  },
+  "signs": [],
+  "pulse": {
+    "model": "no",
+    "scenario": null
+  },
+  "labels": [
+    "pending: no approved protocol, routes to not covered",
+    "not clinically reviewed"
+  ]
+}

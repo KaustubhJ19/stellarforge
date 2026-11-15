@@ -1,0 +1,22 @@
+{
+  "id": "sepsis",
+  "name": "Sepsis / severe infection",
+  "protocol": "sepsis",
+  "state": "pending",
+  "guidance_candidate": "Surviving Sepsis recognition + escalation (candidate from Spec 1; verified when the evidence pack is built)",
+  "prior_incidence": {
+    "status": "pending",
+    "value": null,
+    "source": null,
+    "note": "To fill from a public IMM/IMPACT paper that prints the value, or label 'team value'."
+  },
+  "signs": [],
+  "pulse": {
+    "model": "yes",
+    "scenario": null
+  },
+  "labels": [
+    "pending: no approved protocol, routes to not covered",
+    "not clinically reviewed"
+  ]
+}

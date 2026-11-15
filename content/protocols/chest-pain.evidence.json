@@ -1,0 +1,69 @@
+{
+  "note": "Spec 1 evidence pack. Back-filled mechanically from the verbatim quotes already in chest-pain.excerpts.json (written by the integration lead); no new quote text. licence_checked=false means a person still has to confirm the licence.",
+  "protocol": "chest-pain",
+  "conditions": [
+    "chest-pain"
+  ],
+  "why": "Chest pain in a responsive crewmember can precede collapse; existing protocol on main (Spec 1 library table).",
+  "sources": [
+    {
+      "guideline": "Byrne RA, Rossello X, et al. 2023 ESC Guidelines for the management of acute coronary syndromes. Eur Heart J. 2023;44(38):3720-3826. doi:10.1093/eurheartj/ehad191 (Earth reference, no space data)",
+      "licence": "European Society of Cardiology copyright; quote recommendation text only",
+      "licence_checked": false
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "licence": "CC BY 4.0 (BMC open access article)",
+      "licence_checked": false
+    },
+    {
+      "guideline": "team rule (Spec 5): medication stays with the flight surgeon; protocols never name a drug or dose",
+      "licence": "Team rule (StellarForge); no external licence",
+      "licence_checked": true
+    }
+  ],
+  "recommendations": [
+    {
+      "guideline": "Byrne RA, Rossello X, et al. 2023 ESC Guidelines for the management of acute coronary syndromes. Eur Heart J. 2023;44(38):3720-3826. doi:10.1093/eurheartj/ehad191 (Earth reference, no space data)",
+      "section": "3.2 Diagnostic tools, Electrocardiogram",
+      "quotes": [
+        "It is recommended that an ECG is obtained immediately upon FMC"
+      ]
+    },
+    {
+      "guideline": "Byrne RA, Rossello X, et al. 2023 ESC Guidelines for the management of acute coronary syndromes. Eur Heart J. 2023;44(38):3720-3826. doi:10.1093/eurheartj/ehad191 (Earth reference, no space data)",
+      "section": "4.1 Pre-hospital logistics of care",
+      "quotes": [
+        "It is recommended that all medical and paramedical personnel caring for ACS patients within the EMS setting have access to defibrillation equipment and are trained in basic cardiac life support."
+      ]
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Defibrillation, Recommendation 10 and its rationale",
+      "quotes": [
+        "A defibrillator SHOULD only be used on a patient that is restrained to an electrically isolated and safe surface.",
+        "we recommend the use of a defibrillator only on a patient that has been restrained on an electrical isolated surface such as the CMRS"
+      ]
+    },
+    {
+      "guideline": "Hinkelbein J, et al. Cardiopulmonary resuscitation (CPR) during spaceflight - a guideline for CPR in microgravity from the German Society of Aerospace Medicine (DGLRM) and the European Society of Aerospace Medicine Space Medicine Group (ESAM-SMG). Scand J Trauma Resusc Emerg Med. 2020;28:108. doi:10.1186/s13049-020-00793-y",
+      "section": "Telemedicine, rationale for Recommendation 21",
+      "quotes": [
+        "However, the crew will be obliged to inform Mission Control of an ongoing medical emergency."
+      ]
+    },
+    {
+      "guideline": "team rule (Spec 5): medication stays with the flight surgeon; protocols never name a drug or dose",
+      "section": "Spec 5, Protocol content rules",
+      "quotes": [
+        "Medication steps read \"per flight surgeon / onboard medical checklist\"."
+      ],
+      "kind": "team rule"
+    }
+  ],
+  "microgravity": "Earth reference, no space data (ESC 2023). Steps citing Hinkelbein 2020 are written for microgravity.",
+  "pulse": {
+    "model": "check",
+    "scenario": null
+  }
+}

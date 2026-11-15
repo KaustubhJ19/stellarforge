@@ -1,0 +1,4 @@
+{
+  "note": "Spec 1: the team members who may approve protocol steps. Only a person edits this list, and only names here count as approval. An AI never adds a name, approves a step, or runs tools/approve_steps.py.",
+  "approvers": ["Kaustubh"]
+}

@@ -377,8 +377,22 @@ def test_repo_has_a_card_for(indicator):
 
 
 def write_clean(tmp_path):
+    """Clean = cited, no drugs or doses, and (Spec 1) approved by a listed person with an evidence pack."""
+    import lint_content as lc
+
     (tmp_path / "protocols").mkdir()
-    (tmp_path / "protocols" / "p.json").write_text(json.dumps(GOOD))
+    name = "Fixture Approver (not a real person)"
+    doc = copy.deepcopy(GOOD)
+    s = doc["steps"][0]
+    s.update(status="approved", approved_by=name, approved_on="2026-11-15")
+    s["approved_hash"] = lc.step_hash(s)
+    (tmp_path / "approvers.json").write_text(json.dumps({"approvers": [name]}))
+    (tmp_path / "protocols" / "p.json").write_text(json.dumps(doc))
+    src = s["source"]
+    (tmp_path / "protocols" / "test-protocol.evidence.json").write_text(json.dumps({
+        "protocol": "test-protocol", "why": "Fixture", "microgravity": "Fixture", "pulse": {"model": "no"},
+        "sources": [{"guideline": src["guideline"], "licence": "Fixture licence"}],
+        "recommendations": [{"guideline": src["guideline"], "section": src["section"], "quotes": ["Fixture quote"]}]}))
     (tmp_path / "protocols" / "coverage.json").write_text(json.dumps(coverage()))
 
 
