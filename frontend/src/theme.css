@@ -205,7 +205,13 @@ input:focus-visible {
   color: var(--text-muted);
   font-size: var(--font-size-sm);
   border-top: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
 }
+.disclaimer button { min-height: var(--tap-min); padding: 0 20px; font-size: var(--font-size-sm); }
+.disclaimer button:first-of-type { margin-left: auto; }
 
 /* App frame */
 .app {
@@ -956,3 +962,13 @@ h2 {
   background: linear-gradient(90deg, color-mix(in srgb, var(--explain) 25%, transparent), var(--explain));
 }
 .why-forecast__drivers { margin: 8px 0; padding-left: 1.2em; }
+
+/* Accuracy and Credits pages */
+.form-dialog .about-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: var(--font-size-sm); }
+.about-table th, .about-table td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.about-table code { overflow-wrap: anywhere; }
+.about-list { padding-left: 20px; display: grid; gap: 10px; }
+.about-list--credits { list-style: none; padding: 0; }
+.about-list--credits li { padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; }
+.about-list--credits h3, .about-list--credits p { margin: 0 0 6px; }
+.form-dialog--wide { width: min(1000px, 100%); }

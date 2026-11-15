@@ -20,6 +20,8 @@ import { glowFrom } from "./body/glow";
 import { ZoomControls } from "./body/ZoomControls";
 import { buildBodyView } from "./body/buildView";
 import { FlaggedList, InsightBanner } from "./body/InsightControls";
+import { AccuracyPage } from "./about/AccuracyPage";
+import { CreditsPage } from "./about/CreditsPage";
 import { ForecastPanel } from "./forecast/ForecastPanel";
 import { WhyForecast } from "./forecast/WhyForecast";
 import { explainWeights } from "./forecast/drivers";
@@ -63,6 +65,7 @@ export function App({
 }) {
   // Readings logged on this screen join the replay, so every part of the app shows them.
   const [logged, setLogged] = useState<Reading[]>([]);
+  const [about, setAbout] = useState<"accuracy" | "credits" | null>(null);
   const [notes, setNotes] = useState<CrewNote[]>([]);
   const replay = useMemo<ReplayFile>(
     () =>
@@ -193,7 +196,13 @@ export function App({
           onWarningSign={() => onEmergency("emergency")}
         />
       )}
-      <footer className="disclaimer">Decision support, not diagnosis.</footer>
+      {about === "accuracy" && <AccuracyPage onClose={() => setAbout(null)} />}
+      {about === "credits" && <CreditsPage onClose={() => setAbout(null)} />}
+      <footer className="disclaimer">
+        Decision support, not diagnosis.
+        <button onClick={() => setAbout("accuracy")}>How accurate is this?</button>
+        <button onClick={() => setAbout("credits")}>Credits</button>
+      </footer>
     </div>
   );
 }

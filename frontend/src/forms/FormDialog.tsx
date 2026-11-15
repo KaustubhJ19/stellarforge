@@ -2,14 +2,14 @@ import { useRef, type ReactNode } from "react";
 import { useModal } from "../home/useModal";
 
 /** A modal form sized for gloved hands: large type, large fields and buttons. */
-export function FormDialog({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
+export function FormDialog({ title, onClose, wide = false, children }: { title: string; onClose: () => void; wide?: boolean; children: ReactNode }) {
   const dialog = useRef<HTMLDivElement>(null);
   const close = useRef<HTMLButtonElement>(null);
   useModal(dialog, close, onClose);
   return (
     <div className="card-backdrop" onClick={onClose}>
       <div
-        className="card form-dialog"
+        className={wide ? "card form-dialog form-dialog--wide" : "card form-dialog"}
         ref={dialog}
         role="dialog"
         aria-modal="true"

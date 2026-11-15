@@ -173,3 +173,23 @@ test("forecast panel and 'Why this forecast?' view are axe-clean with large targ
   );
   expect(small).toEqual([]);
 });
+
+for (const [button, dialogName] of [["How accurate is this?", "How accurate is this?"], ["Credits", "Credits"]] as const) {
+  test(`${dialogName} page is axe-clean, readable and every control is large`, async ({ page }) => {
+    await openApp(page);
+    await waitForBody(page);
+    await page.getByRole("button", { name: button }).click();
+    const dialog = page.getByRole("dialog", { name: dialogName });
+    await expect(dialog).toBeVisible();
+    const { AxeBuilder } = await import("@axe-core/playwright");
+    const axe = await new AxeBuilder({ page }).include('[role="dialog"]').withTags(["wcag2a", "wcag2aa", "wcag22aa"]).analyze();
+    expect(axe.violations.map((v) => v.id)).toEqual([]);
+    const small = await dialog.locator("button").evaluateAll((els) =>
+      els.map((el) => ({ text: el.textContent, h: el.getBoundingClientRect().height })).filter((e) => e.h < 56),
+    );
+    expect(small).toEqual([]);
+    await page.screenshot({ path: `test-results/about-${dialogName.split(" ")[0]}.png` });
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+  });
+}
