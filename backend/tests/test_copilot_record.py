@@ -177,3 +177,19 @@ def test_api_choice_and_gate():
         ok = c.post("/api/copilot-choice", json={"crew": "B", "choice": "none"})
         assert ok.status_code == 200 and ok.json()["choice"]["kind"] == "none"
         assert c.post("/api/next", json={"crew": "B"}).status_code == 200
+
+
+def test_a_life_threat_rule_never_waits_for_a_choice(reng):
+    reng.trigger(trig("A", kind="auto", reason="arrest"))
+    reng.clock.advance(16)
+    reng.tick()
+    reng.accept("B")
+    if reng.view("B")["screen"] == "observer":
+        reng.observer_answer("B", "no")
+    assert reng.view("B")["l0"]["life_threat"] is True
+    for _ in range(4):  # walk to the first step; the choice is never demanded
+        if reng.view("B")["screen"] not in ("record", "contributors"):
+            break
+        reng.next("B")
+    assert reng.view("B")["choice"] is None
+    assert reng.view("B")["screen"] not in ("record", "contributors")

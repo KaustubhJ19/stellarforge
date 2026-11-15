@@ -468,7 +468,7 @@ class FlowEngine:
             cur = self._current(e, crew)
             if e.role(crew) is None or cur in (None, "observer", "intake", "report"):
                 raise FlowError("nothing to continue")
-            if cur == "contributors" and e.copilot and e.choice is None:
+            if cur == "contributors" and e.copilot and e.choice is None and not e.copilot.l0["life_threat"]:  # rules never wait
                 raise FlowError("choose a protocol option (or act on your own) before the steps")
             self._advance(e, crew)
             self._refresh()

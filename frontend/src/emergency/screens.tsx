@@ -126,7 +126,7 @@ export function Screen({ crew, view, offline, error, act }: Props) {
             <ChoicePanel crew={crew} route={route} protocols={protocols} suggestion={view.suggestion}
               choice={view.choice} act={act} />
           )}
-          <Nav crew={crew} act={act} canBack={view.can_back} blocked={!!view.briefing && !view.choice} />
+          <Nav crew={crew} act={act} canBack={view.can_back} blocked={!!view.briefing && !view.choice && !view.l0?.life_threat} />
         </>,
       );
     case "step":
