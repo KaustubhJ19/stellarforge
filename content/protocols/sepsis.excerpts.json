@@ -1,0 +1,31 @@
+{
+  "protocol": "sepsis",
+  "note": "Verbatim recommendation text from Surviving Sepsis Campaign 2021 (PMC8486643) for each step.",
+  "excerpts": [
+    {
+      "step": "sepsis-1-emergency",
+      "section": "SSC 2021 (doi:10.1007/s00134-021-06506-y), Recommendation 4",
+      "text": "Sepsis and septic shock are medical emergencies, and we recommend that treatment and resuscitation begin immediately"
+    },
+    {
+      "step": "sepsis-2-assess",
+      "section": "SSC 2021 (doi:10.1007/s00134-021-06506-y), Recommendation 13",
+      "text": "For adults with possible sepsis without shock, we recommend rapid assessment of the likelihood of infectious versus non-infectious causes of acute illness"
+    },
+    {
+      "step": "sepsis-2-assess",
+      "section": "SSC 2021 (doi:10.1007/s00134-021-06506-y), Recommendation 13, Remarks",
+      "text": "Rapid assessment includes history and clinical examination, tests for both infectious and non-infectious causes of acute illness and immediate treatment for acute conditions that can mimic sepsis."
+    },
+    {
+      "step": "sepsis-3-medication",
+      "section": "SSC 2021 (doi:10.1007/s00134-021-06506-y), Recommendation 12",
+      "text": "For adults with possible septic shock or a high likelihood for sepsis, we recommend administering antimicrobials immediately, ideally within 1 h of recognition"
+    },
+    {
+      "step": "sepsis-4-reassess",
+      "section": "SSC 2021 (doi:10.1007/s00134-021-06506-y), Recommendation 11",
+      "text": "For adults with suspected sepsis or septic shock but unconfirmed infection, we recommend continuously re-evaluating and searching for alternative diagnoses and discontinuing empiric antimicrobials if an alternative cause of illness is demonstrated or strongly suspected"
+    }
+  ]
+}

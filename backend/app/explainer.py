@@ -71,7 +71,7 @@ class Explainer:
         self.timeout = timeout
         self.deny = content_mod.lint_content.load_deny_list() if deny is None else deny
         self.docs_by_protocol = {pid: self._docs_of(p) for pid, p in eng.protocols.items()}
-        self.docs = self.docs_by_protocol[eng.protocol.id]  # the default protocol's corpus
+        self.docs = self._docs_of(eng.protocol)  # the default protocol's corpus (only approved steps)
 
     @staticmethod
     def _docs_of(p) -> tuple[Doc, ...]:
@@ -84,7 +84,8 @@ class Explainer:
     # -------------------------------------------------------------- retrieval
     def retrieve(self, query: str, step_id: str | None = None, protocol_id: str | None = None) -> list[Doc]:
         """Closed corpus: only the given protocol's steps and excerpts (default protocol if none)."""
-        corpus = self.docs_by_protocol[protocol_id] if protocol_id else self.docs
+        # A protocol that is not loadable (no approved steps) has no corpus: "Not covered, ask ground."
+        corpus = self.docs_by_protocol.get(protocol_id, ()) if protocol_id else self.docs
         if step_id is not None:  # "Why this step?": exact lookup on the current step
             return [d for d in corpus if d.step == step_id]
         q = words(query)

@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0.0",
+  "id": "overheating",
+  "title": "Overheating: heat stroke (Earth reference, no space data)",
+  "condition_ids": [
+    "overheating"
+  ],
+  "steps": [
+    {
+      "id": "heat-1-suspect",
+      "text": "Suspect heat stroke in a hot environment if the crewmember has a raised core temperature, confusion, agitation, disorientation, seizures or does not respond.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Heat stroke"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:1c0fbc096502f9dc6b5e327bf6e8b3080a73add335feb7a0438d4fb41be7f089"
+    },
+    {
+      "id": "heat-2-passive-cooling",
+      "text": "Move them away from the heat source and start passive cooling: remove extra clothing and move them to a cooler place.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Heat stroke, passive cooling"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:294532214b23563d79df25c91d02d9e400acef3c4d2781b72114d281cc577aea"
+    },
+    {
+      "id": "heat-3-active-cooling",
+      "text": "If their core temperature is above 40 °C, start active cooling at once with any method you have.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Heat stroke, active cooling"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:081c8931340923aa3374127e2227e407897b72ab5629e8b7d21e13188d8a6b1e"
+    },
+    {
+      "id": "heat-4-keep-cooling",
+      "text": "If you cannot measure core temperature, keep cooling for 15 minutes or until the neurological symptoms resolve, whichever comes first.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Heat stroke, duration"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:9683f2e69d474e48bc32a74632e3d59acaa7f7b561aabc5df47a9297a7d72dce"
+    }
+  ]
+}

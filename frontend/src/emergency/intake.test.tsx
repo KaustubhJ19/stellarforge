@@ -30,6 +30,17 @@ afterEach(() => vi.unstubAllGlobals());
 describe("intake screen", () => {
   const intake: View = { ...resc, screen: "intake", fields, route: null };
 
+  it("labels every main problem the service offers, including the team-agreed library values", () => {
+    const all = ["chest_pain", "breathing_trouble", "cabin_alert", "collapse", "bleeding", "head_injury", "injury",
+      "low_blood_sugar", "seizure", "overheating", "infection", "after_eva", "other"];
+    setup({ ...intake, fields: { ...fields, main_problem: all } });
+    for (const name of ["Severe bleeding", "Head injury", "Low blood sugar", "Seizure", "Overheating or fever",
+      "Severe infection", "Problem after a spacewalk (EVA)"]) {
+      expect(screen.getByRole("button", { name })).toBeInTheDocument();
+    }
+    for (const raw of all) expect(screen.queryByRole("button", { name: raw })).toBeNull();
+  });
+
   it("confirm stays disabled until every question is answered", async () => {
     setup(intake);
     const confirm = screen.getByRole("button", { name: /Confirm/ });

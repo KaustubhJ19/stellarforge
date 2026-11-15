@@ -31,7 +31,30 @@
           "equipment": {
             "type": "array"
           },
-          "rescuers": {}
+          "rescuers": {},
+          "status": {
+            "description": "Spec 1 (add-only): 'draft' or 'approved'. Only approved steps are rendered; the linter and the engine enforce it.",
+            "enum": [
+              "draft",
+              "approved"
+            ]
+          },
+          "drafted_by": {
+            "description": "Spec 1 (add-only): the tool and model that drafted the step text, when AI drafted it.",
+            "type": "string"
+          },
+          "approved_by": {
+            "description": "Spec 1 (add-only): the team member who approved the step; must be on content/approvers.json. Never an AI.",
+            "type": "string"
+          },
+          "approved_on": {
+            "description": "Spec 1 (add-only): approval date, YYYY-MM-DD.",
+            "type": "string"
+          },
+          "approved_hash": {
+            "description": "Spec 1 (add-only): sha256 of the step's text, source, equipment and rescuers at approval. Any later edit makes it stale, so the step is back to draft.",
+            "type": "string"
+          }
         },
         "required": [
           "id",
@@ -40,6 +63,13 @@
           "equipment",
           "rescuers"
         ]
+      }
+    },
+    "condition_ids": {
+      "description": "Spec 1 (add-only): condition records this protocol serves (content/conditions/<id>.json).",
+      "type": "array",
+      "items": {
+        "type": "string"
       }
     }
   },

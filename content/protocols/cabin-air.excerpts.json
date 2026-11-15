@@ -1,0 +1,31 @@
+{
+  "protocol": "cabin-air",
+  "note": "Verbatim recommendation text for each step (ERC First Aid).",
+  "excerpts": [
+    {
+      "step": "air-1-check",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, ABCDE (Table 3), B-Breathing",
+      "text": "Are there any signs of hypoxia (bluish discoloration of lips, nails or skin)?"
+    },
+    {
+      "step": "air-1-check",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, ABCDE (Table 3), B-Breathing",
+      "text": "Assess oxygen saturation level with a pulse oximetry."
+    },
+    {
+      "step": "air-2-oxygen",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Use of a pulse oximetry and use of oxygen",
+      "text": "Give oxygen to a person with difficulty breathing and looking cyanosed (blue tinged) but only if you are trained in its use."
+    },
+    {
+      "step": "air-2-oxygen",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Use of a pulse oximetry and use of oxygen",
+      "text": "Give oxygen via a simple facemask or non-rebreathing mask and then titrate flow rate to maintain an oxygen saturation of 94–98 %."
+    },
+    {
+      "step": "air-3-severe-hypoxaemia",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Use of a pulse oximetry and use of oxygen, life-threatening hypoxaemia",
+      "text": "In the presence of life-threatening hypoxaemia (oxygen saturation <88 %) give oxygen with a higher flow to everyone"
+    }
+  ]
+}

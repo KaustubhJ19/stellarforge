@@ -4,7 +4,7 @@ Source of truth: `04-emergency-flow.md` (Spec 4) and tickets in `.scratch/emerge
 
 | Rule | Where it bites | Tickets | Edge cases |
 |---|---|---|---|
-| 1 No AI clinical steps | content/protocols, fixtures, prompts, UI copy | 02, 09, 11, 15 | Don't "fix" Spec 5 wording; send failures back to the integration lead. Stub protocol = 3 fake steps, fake sources. |
+| 1 AI drafts, humans approve, AI never overrides | content/protocols, content/approvers.json, linter, step engine, fixtures, prompts, UI copy | 02, 09, 11, 15; Spec 1 (protocol library) | Drafts only from a quoted section in the evidence pack (`<id>.evidence.json`). Build linter and engine both drop any step not `approved` by a name on `content/approvers.json`, with `approved_on` and a matching `approved_hash` (edit = back to draft). Claude stops at "ready for review": never edits `approvers.json`, never runs `tools/approve_steps.py`, never edits an approved step. Stub protocols skip approval but every step must start with "STUB"; stubs are never routed. |
 | 2 Every step/threshold sourced | protocol JSON, linter, step engine | 02, 09, 15 | Source missing `guideline` or `section` counts as missing. Engine refuses unsourced steps at runtime too. |
 | 3 AI never edits steps | explainer, console | 11, 13 | Test: step text byte-identical after an explainer call or a ground reply. |
 | 4 No drugs or doses | linter, explainer output filter, report | 02, 09, 11, 12 | Dose = number + unit (mg, mcg, µg, g, mL, IU, units, mg/kg). Don't flag CPR numbers like "30 compressions" — tune with real content. Drug word list is a data file, extendable. |

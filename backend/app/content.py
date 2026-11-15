@@ -58,11 +58,18 @@ class Protocol:
 def load_protocol(pid: str, root: Path = CONTENT, deny: list[str] | None = None) -> Protocol:
     deny = lint_content.load_deny_list() if deny is None else deny
     raw = _read(root / "protocols" / f"{pid}.json")
+    # Spec 1: second guard. Only approved, unchanged steps by a listed approver are served; a stub
+    # (test double) skips approval but may only carry visibly fake "STUB" text.
+    stub = bool(raw.get("stub"))
+    approvers = lint_content.load_approvers(root / "approvers.json")
     steps, refused = [], []
     for s in raw.get("steps", []):
-        issues = lint_content.lint_data({"steps": [s]}, pid, deny)
+        issues = [i.reason for i in lint_content.lint_data({"steps": [s]}, pid, deny)]
+        gate = lint_content.stub_problem(s) if stub else lint_content.approval_problem(s, approvers)
+        if gate:
+            issues.append(gate)
         if issues:
-            refused.append((s.get("id", "?"), "; ".join(i.reason for i in issues)))
+            refused.append((s.get("id", "?") if isinstance(s, dict) else "?", "; ".join(issues)))
             continue
         steps.append(Step(s["id"], s["text"], s["source"]["guideline"], s["source"]["section"],
                           tuple(s.get("equipment", [])), int(s.get("rescuers", 1))))
@@ -85,7 +92,7 @@ def load_protocol(pid: str, root: Path = CONTENT, deny: list[str] | None = None)
             if role not in ("R1", "R2"):
                 raise ValueError(f"{roles_path.name}: step {sid}: role must be R1 or R2")
             roles[sid] = role
-    return Protocol(raw["id"], raw["title"], bool(raw.get("stub")), tuple(steps), tuple(refused),
+    return Protocol(raw["id"], raw["title"], stub, tuple(steps), tuple(refused),
                     MappingProxyType(excerpts), MappingProxyType(recorded), MappingProxyType(roles))
 
 

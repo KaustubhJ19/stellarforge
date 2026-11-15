@@ -139,7 +139,9 @@ const INTAKE_QUESTIONS: { key: string; text: string; labels: Record<string, stri
     key: "main_problem", text: "What is the main problem?",
     labels: {
       chest_pain: "Chest pain", breathing_trouble: "Trouble breathing", cabin_alert: "Cabin air alert",
-      collapse: "Collapse", injury: "Injury", other: "Something else",
+      collapse: "Collapse", bleeding: "Severe bleeding", head_injury: "Head injury", injury: "Other injury",
+      low_blood_sugar: "Low blood sugar", seizure: "Seizure", overheating: "Overheating or fever",
+      infection: "Severe infection", after_eva: "Problem after a spacewalk (EVA)", other: "Something else",
     },
   },
 ];

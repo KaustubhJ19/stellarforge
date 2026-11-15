@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0.0",
+  "id": "low-blood-sugar",
+  "title": "Low blood sugar (Earth reference, no space data)",
+  "condition_ids": [
+    "low-blood-sugar"
+  ],
+  "steps": [
+    {
+      "id": "lbs-1-suspect",
+      "text": "Suspect low blood sugar in a crewmember with diabetes or chronic malnutrition who suddenly responds less or behaves differently.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Hypoglycaemia (low blood sugar value)"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:69297ba72dd9998dd0350fe30f031beeb0a02b7f916fe8f9072834e411628312"
+    },
+    {
+      "id": "lbs-2-sugar-by-mouth",
+      "text": "Give sugar by mouth only if the crewmember is awake and able to swallow. Amount: per flight surgeon / onboard medical checklist.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Hypoglycaemia (low blood sugar value)"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:c5e33ad1aa4dd096a732f854a66df1abe277d61624f7044e84a61f61bbb80c10"
+    },
+    {
+      "id": "lbs-3-unresponsive",
+      "text": "If they do not respond, give nothing by mouth because of the risk of aspiration, and contact ground.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Hypoglycaemia (low blood sugar value), unresponsive persons"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:718f33001b6d8fbaf5402b71fc8885ea2c38f61faaa86945ad394418d61a24fe"
+    },
+    {
+      "id": "lbs-4-snack",
+      "text": "Once they have recovered, encourage them to eat a light snack.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Hypoglycaemia (low blood sugar value), after recovery"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:00c38f792d959951150fc4bfab3a2fbcfe9661a570a3a6109e0720fffd55dd9c"
+    }
+  ]
+}

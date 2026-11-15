@@ -72,7 +72,7 @@ class FlowEngine:
                  crew_records: dict[str, dict], questions: dict,
                  protocols: dict[str, Protocol] | None = None, routes: dict | None = None):
         self.store, self.clock, self.protocol, self.profile = store, clock, protocol, profile
-        self.protocols = protocols or {protocol.id: protocol}  # every protocol the router may pick
+        self.protocols = {protocol.id: protocol} if protocols is None else protocols  # every protocol the router may pick
         self.routes = routes  # None = routing off: every Trigger uses `protocol`
         self.crew = list(profile["crew"])
         self.records = crew_records

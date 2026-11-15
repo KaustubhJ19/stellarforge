@@ -19,6 +19,9 @@ sys.path.insert(0, str(ROOT / "contracts"))
 
 from validate import ContractError, validate  # noqa: E402
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import lint_content as lc  # noqa: E402  (shared approval rules, also used by the engine)
+
 # Sourced groups: ISS crew-kit drugs (NASA papers) plus a team-value emergency group.
 # shortcut: not a full formulary; the "per flight surgeon" rule below catches unnamed drugs.
 _BLOCKLIST = json.loads((Path(__file__).resolve().parent / "drug_blocklist.json").read_text(encoding="utf-8"))
@@ -226,6 +229,111 @@ def lint_credits(doc, manifest):
     return problems
 
 
+# ---- Spec 1: AI drafts, humans approve, AI never overrides -----------------------------------
+APPROVERS_FILE = "approvers.json"
+EVIDENCE_SUFFIX = ".evidence.json"
+PACK_PARTS = ("why", "sources", "recommendations", "microgravity", "pulse")
+PULSE_MODEL = {"yes", "no", "check"}
+
+
+def _cite(src):
+    return (src.get("guideline"), src.get("section")) if isinstance(src, dict) else (None, None)
+
+
+def lint_approval(doc, approvers, pack):
+    """Every step approved by a listed person, on a date, unchanged since, citing a section in its evidence pack."""
+    problems = []
+    cited = {(r.get("guideline"), r.get("section")) for r in (pack or {}).get("recommendations", []) if isinstance(r, dict)}
+    for i, step in enumerate(doc.get("steps", [])):
+        sid = step.get("id", i) if isinstance(step, dict) else i
+        why = lc.approval_problem(step, approvers)
+        if why:
+            problems.append(f"steps/{sid}: {why}")
+            continue
+        if pack is None:
+            problems.append(f"steps/{sid}: approved step but the protocol has no evidence pack")
+        elif _cite(step.get("source")) not in cited:
+            problems.append(f"steps/{sid}: cites {_cite(step.get('source'))[1]!r}, which is not in its evidence pack")
+    return problems
+
+
+def lint_stub_protocol(doc):
+    """A stub skips approval, so it may only carry visibly fake text."""
+    return [f"steps/{s.get('id', i) if isinstance(s, dict) else i}: {why}"
+            for i, s in enumerate(doc.get("steps", [])) if (why := lc.stub_problem(s))]
+
+
+def _pulse_problems(pulse):
+    ok = isinstance(pulse, dict) and pulse.get("model") in PULSE_MODEL
+    return [] if ok else [f"pulse: model must be one of {sorted(PULSE_MODEL)}"]
+
+
+def lint_pack(doc):
+    """Evidence pack: why the condition is in the library, licensed sources, verbatim quotes per section."""
+    if not isinstance(doc, dict):
+        return ["evidence pack must be an object"]
+    problems = [f"evidence pack needs {k!r}" for k in ("protocol",) + PACK_PARTS if k not in doc]
+    if problems:
+        return problems
+    for k in ("why", "microgravity"):
+        if not _filled(doc[k]):
+            problems.append(f"evidence pack needs a non-empty {k!r}")
+    for i, src in enumerate(doc["sources"] or [None]):
+        if not (isinstance(src, dict) and _filled(src.get("guideline"))):
+            problems.append(f"sources/{i}: needs a guideline")
+        elif not _filled(src.get("licence")):
+            problems.append(f"sources/{i}: needs a licence")
+    guidelines = {s.get("guideline") for s in doc["sources"] if isinstance(s, dict)}
+    for i, rec in enumerate(doc["recommendations"] or [None]):
+        if not (isinstance(rec, dict) and _filled(rec.get("guideline")) and _filled(rec.get("section"))):
+            problems.append(f"recommendations/{i}: needs a guideline and a section")
+            continue
+        if rec["guideline"] not in guidelines:
+            problems.append(f"recommendations/{i}: guideline is not listed in sources")
+        quotes = rec.get("quotes")
+        if rec.get("kind") != "team rule" and not (isinstance(quotes, list) and quotes and all(map(_filled, quotes))):
+            problems.append(f"recommendations/{i}: needs at least one verbatim quote")
+    problems += _pulse_problems(doc["pulse"])
+    return problems
+
+
+CONDITION_FIELDS = ("id", "name", "protocol", "state", "prior_incidence", "signs", "pulse", "labels")
+CONDITION_STATES = {"existing", "pending"}
+PRIOR_STATUS = {"sourced", "team value", "pending"}
+
+
+def lint_condition(doc, protocol_ids):
+    """Condition record: prior (sourced, team value or pending), signs with sources, Pulse, protocol."""
+    if not isinstance(doc, dict):
+        return ["condition record must be an object"]
+    problems = [f"condition needs {k!r}" for k in CONDITION_FIELDS if k not in doc]
+    if problems:
+        return problems
+    if not _filled(doc["name"]):
+        problems.append("condition needs a name")
+    if doc["state"] not in CONDITION_STATES:
+        problems.append(f"state must be one of {sorted(CONDITION_STATES)}")
+    elif doc["state"] == "existing" and doc["protocol"] not in protocol_ids:
+        problems.append(f"existing condition names protocol {doc['protocol']!r}, which is not on disk")
+    prior = doc["prior_incidence"]
+    status = prior.get("status") if isinstance(prior, dict) else None
+    if status not in PRIOR_STATUS:
+        problems.append(f"prior_incidence: status must be one of {sorted(PRIOR_STATUS)}")
+    elif status == "pending" and prior.get("value") is not None:
+        problems.append("prior_incidence: pending prior must not carry a value")
+    elif status != "pending" and not isinstance(prior.get("value"), (int, float)):
+        problems.append("prior_incidence: needs a numeric value")
+    elif status == "sourced" and not _filled(prior.get("source")):
+        problems.append("prior_incidence: sourced prior needs a source")
+    for i, sign in enumerate(doc["signs"] if isinstance(doc["signs"], list) else [None]):
+        if not (isinstance(sign, dict) and _filled(sign.get("sign")) and _filled(sign.get("source"))):
+            problems.append(f"signs/{i}: each sign needs text and a source")
+    problems += _pulse_problems(doc["pulse"])
+    if not (isinstance(doc["labels"], list) and all(map(_filled, doc["labels"]))):
+        problems.append("labels must be a list of non-empty strings")
+    return problems
+
+
 def _load(path):
     try:
         return json.loads(path.read_text(encoding="utf-8")), []
@@ -243,15 +351,27 @@ def lint_dir(content_dir):
     failures = {}
     folder = Path(content_dir) / "protocols"
     ids = set()
-    # <id>.roles/.excerpts/.recorded.json are Spec 4 companion files, not protocols.
+    approvers = lc.load_approvers(Path(content_dir) / APPROVERS_FILE)
+    # <id>.roles/.excerpts/.recorded/.evidence.json are companion files, not protocols.
     for path in sorted(p for p in folder.glob("*.json") if p.name != COVERAGE_FILE and p.name.count(".") == 1):
         doc, problems = _load(path)
         if _stub(doc):
+            problems = lint_stub_protocol(doc)  # a stub skips approval, so it must stay visibly fake
+            if problems:
+                failures[path] = problems
             continue
         if doc is not None:
             problems = lint_protocol(doc)
             if isinstance(doc, dict) and "id" in doc:
                 ids.add(doc["id"])
+                pack_path = folder / f"{doc['id']}{EVIDENCE_SUFFIX}"
+                pack = _load(pack_path)[0] if pack_path.exists() else None
+                problems += lint_approval(doc, approvers, pack if isinstance(pack, dict) else None)
+        if problems:
+            failures[path] = problems
+    for path in sorted(folder.glob(f"*{EVIDENCE_SUFFIX}")):
+        doc, problems = _load(path)
+        problems = problems or lint_pack(doc)
         if problems:
             failures[path] = problems
     cov_path = folder / COVERAGE_FILE
@@ -262,6 +382,11 @@ def lint_dir(content_dir):
         problems = problems or lint_coverage(cov, ids)
         if problems:
             failures[cov_path] = problems
+    for path in sorted((Path(content_dir) / "conditions").glob("*.json")):
+        doc, problems = _load(path)
+        problems = problems or lint_condition(doc, ids)
+        if problems:
+            failures[path] = problems
     for path in sorted((Path(content_dir) / "profiles").glob("*.json")):
         doc, problems = _load(path)
         if _stub(doc):

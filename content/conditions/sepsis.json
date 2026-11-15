@@ -1,0 +1,22 @@
+{
+  "id": "sepsis",
+  "name": "Sepsis / severe infection",
+  "protocol": "sepsis",
+  "state": "existing",
+  "guidance_candidate": "Surviving Sepsis Campaign 2021 (verified: evidence pack sepsis.evidence.json)",
+  "prior_incidence": {
+    "status": "pending",
+    "value": null,
+    "source": null,
+    "note": "To fill from a public IMM/IMPACT paper that prints the value, or label 'team value'."
+  },
+  "signs": [],
+  "pulse": {
+    "model": "yes",
+    "scenario": null
+  },
+  "labels": [
+    "Earth reference, no space data",
+    "not clinically reviewed"
+  ]
+}

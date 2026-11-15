@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "id": "head-injury",
+  "title": "Head injury: concussion (Earth reference, no space data)",
+  "condition_ids": [
+    "head-injury"
+  ],
+  "steps": [
+    {
+      "id": "head-1-suspect",
+      "text": "Suspect concussion if the crewmember has trouble thinking or remembering, physical symptoms (headache, change in vision, dizziness, nausea or vomiting, seizures, sensitivity to light or noise), emotional changes, or changes in behaviour (more sleepy, less active, less responsive, confused).",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Concussion"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:f0a6c8cbadcb6a5594e71e4d907fb5b4e3bc379fe12f246a472a7b4113f9ce9f"
+    },
+    {
+      "id": "head-2-stop-activity",
+      "text": "Stop all their physical activity.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Concussion, activity"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:f7fab0e7c5290e5718f702c61b815eed9c35cef477bcab5f3d3522a7d3ebdc47"
+    },
+    {
+      "id": "head-3-flight-surgeon",
+      "text": "Have the flight surgeon assess them and advise.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Concussion, referral"
+      },
+      "equipment": [
+        "communication link to Mission Control"
+      ],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:444110dedd184d13d46bad2d482a5c90bd019c0a6b3d3bda4a1118ff376e4d40"
+    }
+  ]
+}
