@@ -95,3 +95,29 @@ test.describe("recorded replays from Spec 3", () => {
     expect(problems).toEqual([]);
   });
 });
+
+test.describe("real female crew member (crew D, PMData p10)", () => {
+  for (const [label, replay] of [
+    ["Spec 1's replay", "/replay/shared/crew-D.json"],
+    ["Spec 3's recording", "/replay/shared/recorded/crew-D.json"],
+  ] as const) {
+    test(`${label} opens the female body and ends on day 121`, async ({ page }) => {
+      const models: string[] = [];
+      page.on("request", (r) => r.url().includes("/models/") && models.push(r.url().split("/models/")[1]));
+      const problems = await openApp(page, `/?replay=${replay}`);
+      await expect(page.locator('.body-host[data-model="female"][data-loaded="true"]')).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByText(/Female organs\. Muscles, skeleton and vessels are approximate/)).toBeVisible();
+      expect(models).toEqual(["body-female.glb"]);
+      // Crew D's data runs from day 6 to day 120 (mission clock days, shown 1-based).
+      await expect(page.getByRole("region", { name: "Mission" })).toContainText("Day 121");
+      expect(problems).toEqual([]);
+    });
+  }
+
+  test("Spec 3's recording of crew D carries real Alerts and a forecast", async ({ page }) => {
+    const problems = await openApp(page, "/?replay=/replay/shared/recorded/crew-D.json");
+    await waitForBody(page);
+    await expect(page.getByRole("region", { name: "Readiness forecast" })).toContainText("of 10");
+    expect(problems).toEqual([]);
+  });
+});

@@ -43,8 +43,9 @@ and the browser tests copy them to `public/replay/shared/` (git-ignored), e.g.
 What the real data needed: rounding long decimals, text values (`cardiac_rhythm`) shown in
 words and kept out of charts, `degC` read as °C, `soreness` on the thigh muscles, day ticks on
 long charts, and cabin data that stops early (RR-1 covers 42 days): the CO₂ banner shows only for
-a Reading from the last hour and the dose says "as of …" when older than 36 h. All four real crew
-are male, so the female body shows only with the sample.
+a Reading from the last hour and the dose says "as of …" when older than 36 h. Crew D is female
+(PMData p10, mission days 6–120, made female at our request), so `crew-D.json` and its recording
+open the female body; crews A–C are male.
 
 `replay/recorded/` holds the same replays after Spec 3's recording script
 (`tools/record_replays.py`) ran detection over them: they add Alerts, `reading_state` events and
