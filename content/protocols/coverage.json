@@ -311,5 +311,91 @@
         ]
       }
     }
+  },
+  "severe-bleeding": {
+    "source": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+    "environments": {
+      "spacecraft-transit": {
+        "covered": true,
+        "basis": "ERC 2025 First Aid; Earth reference, no space data"
+      },
+      "station": {
+        "covered": true,
+        "basis": "ERC 2025 First Aid; Earth reference, no space data"
+      },
+      "moon-base": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "ERC First Aid guidelines are terrestrial; they give no recommendation for reduced gravity.",
+            "section": "ERC First Aid, scope"
+          }
+        ]
+      },
+      "mars-base": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "ERC First Aid guidelines are terrestrial; they give no recommendation for reduced gravity.",
+            "section": "ERC First Aid, scope"
+          }
+        ]
+      },
+      "rover": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "ERC First Aid guidelines are terrestrial; they give no recommendation for reduced gravity.",
+            "section": "ERC First Aid, scope"
+          }
+        ]
+      }
+    }
+  },
+  "low-blood-sugar": {
+    "source": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+    "environments": {
+      "spacecraft-transit": {
+        "covered": true,
+        "basis": "ERC 2025 First Aid; Earth reference, no space data"
+      },
+      "station": {
+        "covered": true,
+        "basis": "ERC 2025 First Aid; Earth reference, no space data"
+      },
+      "moon-base": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "ERC First Aid guidelines are terrestrial; they give no recommendation for reduced gravity.",
+            "section": "ERC First Aid, scope"
+          }
+        ]
+      },
+      "mars-base": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "ERC First Aid guidelines are terrestrial; they give no recommendation for reduced gravity.",
+            "section": "ERC First Aid, scope"
+          }
+        ]
+      },
+      "rover": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "ERC First Aid guidelines are terrestrial; they give no recommendation for reduced gravity.",
+            "section": "ERC First Aid, scope"
+          }
+        ]
+      }
+    }
   }
 }

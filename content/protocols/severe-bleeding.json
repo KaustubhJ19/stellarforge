@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0.0",
+  "id": "severe-bleeding",
+  "title": "Severe bleeding (Earth reference, no space data)",
+  "condition_ids": [
+    "severe-bleeding"
+  ],
+  "steps": [
+    {
+      "id": "bleed-1-direct-pressure",
+      "text": "Press firmly and directly on the bleeding wound with your hand.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Control of life-threatening bleeding"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:d2844a62aaab6661974784235c995ece4e5e55530c3b1ed755cec21f7c4f8d8b"
+    },
+    {
+      "id": "bleed-2-dressing",
+      "text": "Put a standard or haemostatic dressing directly into the wound, then press firmly on top of the dressing.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Control of life-threatening bleeding"
+      },
+      "equipment": [
+        "standard or haemostatic wound dressing"
+      ],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:76563d6eb59470901b9aa8eeab01500a6906fda85f64322c709590499a115f96"
+    },
+    {
+      "id": "bleed-3-pressure-dressing",
+      "text": "Once the bleeding is under control, apply a pressure dressing.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Control of life-threatening bleeding"
+      },
+      "equipment": [
+        "pressure dressing"
+      ],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:a1e1218d7058541ba7c564e50a97a72ae57ed949c37a7c534c4286bc24dd7cc4"
+    },
+    {
+      "id": "bleed-4-tourniquet",
+      "text": "If life-threatening bleeding from an arm or leg is not controlled by direct pressure, apply a tourniquet as soon as possible and write the time on it.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Control of life-threatening bleeding, tourniquet"
+      },
+      "equipment": [
+        "tourniquet"
+      ],
+      "rescuers": 1,
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:1ae71cd0124687d89d2f4d24d036cb50b65c9b660c85e26e890977e6b3b4e41e"
+    }
+  ]
+}

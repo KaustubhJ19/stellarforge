@@ -2,7 +2,7 @@
   "id": "severe-bleeding",
   "name": "Severe bleeding",
   "protocol": "severe-bleeding",
-  "state": "pending",
+  "state": "existing",
   "guidance_candidate": "ERC 2025 First Aid (verified: severe-bleeding.evidence.json)",
   "prior_incidence": {
     "status": "pending",
@@ -16,7 +16,7 @@
     "scenario": null
   },
   "labels": [
-    "draft on branch draft/first-aid-batch: awaiting human approval, routes to not covered",
+    "Earth reference, no space data",
     "not clinically reviewed"
   ]
 }
