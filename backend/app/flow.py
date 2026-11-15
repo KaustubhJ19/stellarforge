@@ -12,6 +12,7 @@ import threading
 from dataclasses import dataclass, field
 
 from copilot.hot_summary import PushedHotSummaries
+from copilot import record
 from copilot.session import CopilotSession, build_session
 
 from . import contracts, triage
@@ -60,6 +61,8 @@ class Emergency:
     intake: dict | None = None  # the confirmed Intake form
     needs_intake: bool = False  # routing is on and the Trigger was not the automatic arrest rule
     copilot: CopilotSession | None = None  # Spec 3 L0 session; None when routing is off
+    choice: dict | None = None  # the rescuer's copilot choice {kind, protocol_id, by}; required before the steps
+    copilot_last: dict | None = None  # newest event of this emergency's hash chain (decision record)
 
     @property
     def open(self) -> bool:
@@ -311,8 +314,60 @@ class FlowEngine:
         """Rebuild the L0 copilot session (briefing + rule verdict) from the facts known now."""
         route = route or triage.route(self.routes, e.intake, self._live(e.patient), set(self.protocols),
                                       trigger_kind=e.trigger["kind"])
-        e.copilot = build_session(emergency=e.id, crew=e.patient, t=round(self.now(), 3), routes=self.routes,
-                                  route=route, history=self.hot_summaries.latest(e.patient))
+        e.copilot = c = build_session(emergency=e.id, crew=e.patient, t=round(self.now(), 3), routes=self.routes,
+                                      route=route, history=self.hot_summaries.latest(e.patient))
+        self.copilot_event(e, "assessment", trigger=e.trigger, l0=c.l0, history_sha256=c.history_digest,
+                           versions=c.versions, briefing=c.briefing)
+
+    def copilot_event(self, e: Emergency, name: str, /, **data) -> dict:
+        """Append `copilot_<name>` to the emergency timeline and store, chained to the previous copilot event."""
+        with self._lock:
+            ev = self.emit(f"{record.PREFIX}{name}", emergency=e.id, prev=record.prev_hash(e.copilot_last), **data)
+            e.copilot_last = ev
+            return ev
+
+    def verify_copilot(self, eid: str) -> record.ChainResult:
+        """Re-read the stored events of one emergency and check the chain, including its newest event."""
+        e = self.emergencies[eid]
+        return record.verify(record.chain_of(self.store.events(), eid),
+                             head=record.digest(e.copilot_last) if e.copilot_last else None)
+
+    CHOICES = ("router", "suggestion", "other", "none")
+
+    def copilot_choice(self, crew: str, kind: str, protocol: str | None = None, eid: str | None = None) -> dict:
+        """The rescuer's required decision: keep the router default, take the copilot suggestion, pick another
+        protocol, or act alone. Suggestion and other go through the existing override."""
+        with self._lock:
+            self._check_crew(crew)
+            e = self._get(eid, for_crew=crew)
+            if e.role(crew) is None:
+                raise FlowError("only a rescuer can choose")
+            if e.copilot is None:
+                raise FlowError("no copilot session for this emergency")
+            if kind not in self.CHOICES:
+                raise FlowError(f"unknown choice '{kind}'")
+            if kind == "suggestion":
+                protocol = e.copilot.suggested_protocol
+                if not protocol:
+                    raise FlowError("the copilot has no suggestion")
+            if kind in ("suggestion", "other"):
+                if not protocol:
+                    raise FlowError("name the protocol to switch to")
+                self.switch_protocol(crew, protocol, e.id)  # logs the switch and the choice
+            else:
+                self._guard_intake(e)
+                self._record_choice(e, crew, kind)
+            self._refresh()
+            return e.choice
+
+    def _guard_intake(self, e: Emergency) -> None:
+        if e.needs_intake and e.intake is None:
+            raise FlowError("answer the intake first; the choice is about the protocol it chose")
+
+    def _record_choice(self, e: Emergency, crew: str, kind: str) -> None:
+        e.choice = {"kind": kind, "protocol_id": e.protocol_id, "by": crew}
+        self._note(e, "copilot choice", **e.choice)
+        self.copilot_event(e, "choice", assessment_id=e.copilot.assessment_id, **e.choice)
 
     def _set_route(self, e: Emergency, route: dict) -> None:
         e.route, e.protocol_id = route, route["protocol_id"]
@@ -348,8 +403,7 @@ class FlowEngine:
                 raise FlowError("only a rescuer can switch protocol")
             if protocol_id not in self.protocols:
                 raise FlowError(f"unknown protocol '{protocol_id}'")
-            if e.needs_intake and e.intake is None:
-                raise FlowError("answer the intake first; the override changes the protocol it chose")
+            self._guard_intake(e)
             before = e.protocol_id
             e.route = {"protocol_id": protocol_id, "rule_id": "override", "reason": f"Switched by {crew}."}
             e.protocol_id = protocol_id
@@ -359,6 +413,8 @@ class FlowEngine:
             self.emit("protocol_switched", emergency=e.id, crew=crew, to=protocol_id, **{"from": before})
             if self.ground:  # after the note, so the report in flight lists the switch
                 self.ground.refresh(e)
+            if e.copilot:  # the override is also the rescuer's copilot choice
+                self._record_choice(e, crew, "suggestion" if protocol_id == e.copilot.suggested_protocol else "other")
             self._refresh()
             return e.route
 
@@ -411,6 +467,8 @@ class FlowEngine:
             cur = self._current(e, crew)
             if e.role(crew) is None or cur in (None, "observer", "intake", "report"):
                 raise FlowError("nothing to continue")
+            if cur == "contributors" and e.copilot and e.choice is None:
+                raise FlowError("choose a protocol option (or act on your own) before the steps")
             self._advance(e, crew)
             self._refresh()
 
@@ -491,7 +549,8 @@ class FlowEngine:
         if self.routing:  # the tablet shows "Using X, because Y" and the override choices
             v |= {"route": e.route, "protocols": [{"id": p.id, "title": p.title} for p in self.protocols.values()]}
             if e.copilot:  # Spec 3 briefing beside the intake screen and the banner; context, not instruction
-                v |= {"briefing": e.copilot.briefing, "l0": e.copilot.l0}
+                v |= {"briefing": e.copilot.briefing, "l0": e.copilot.l0, "choice": e.choice,
+                      "suggestion": self._suggestion(e)}
         if cur == "observer":
             return v | {"screen": "observer", "question": self.questions["observer"]}
         if cur == "intake":
@@ -508,6 +567,10 @@ class FlowEngine:
             return v | {"screen": "step", "step": p.step(sid).public(),
                         "index": ids.index(sid) + 1, "total": len(ids), "stub": p.stub}
         return v | {"screen": "report", "report": self.ground.report_view(e) if self.ground else None}
+
+    def _suggestion(self, e: Emergency) -> dict | None:
+        pid = e.copilot.suggested_protocol if e.copilot else None
+        return {"protocol_id": pid, "title": self.protocols[pid].title} if pid in self.protocols else None
 
     def name(self, crew: str) -> str:
         """Spec 1 CrewRecord has no display name: show the crew id."""

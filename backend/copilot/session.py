@@ -9,9 +9,10 @@ Later tickets build on this:
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from .hot_summary import HotSummary, NoHistory
+from .record import digest
 
 SCHEMA_VERSION = "1.0.0"
 CONTEXT_LABEL = "context; the protocol above comes first"
@@ -28,6 +29,8 @@ class CopilotSession:
     l0: dict
     history_digest: str | None  # HotSummary.digest(), None when there is no history
     briefing: dict
+    versions: dict = field(default_factory=dict)  # schema, model and content versions for the decision record
+    suggested_protocol: str | None = None  # L2 sets it; L0 has no suggestion beyond the router's own pick
 
 
 def l0_verdict(routes: dict, route: dict) -> dict:
@@ -63,5 +66,6 @@ def build_session(*, emergency: str, crew: str, t: float, routes: dict, route: d
     assessment_id = f"assess-{emergency}"
     briefing = {"schema_version": SCHEMA_VERSION, "assessment_id": assessment_id, "crew": crew, "t": t,
                 "text": text, "source": "template", "context_label": CONTEXT_LABEL, "evidence": evidence}
-    digest = history.digest() if isinstance(history, HotSummary) else None
-    return CopilotSession(assessment_id, emergency, crew, t, l0, digest, briefing)
+    history_digest = history.digest() if isinstance(history, HotSummary) else None
+    versions = {"schema_version": SCHEMA_VERSION, "model": "none (L0 rules only)", "routes_sha256": digest(routes)}
+    return CopilotSession(assessment_id, emergency, crew, t, l0, history_digest, briefing, versions)
