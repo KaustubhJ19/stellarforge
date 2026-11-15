@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "crew": "A",
+  "indicator": "resting_heart_rate",
+  "value": 62,
+  "unit": "bpm",
+  "t": 3600,
+  "source": "sensor",
+  "confidence": 0.9,
+  "state": "released"
+}

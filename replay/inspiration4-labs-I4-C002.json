@@ -1,0 +1,497 @@
+{
+ "schema_version": "1.0.0",
+ "crew": "I4-C002",
+ "profile": "mars_transit",
+ "events": [
+  {
+   "t": 25200,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "white_blood_cell_count",
+    "value": 6.5,
+    "unit": "Thousand/uL",
+    "t": 25200,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 25200,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "red_blood_cell_count",
+    "value": 4.36,
+    "unit": "Million/uL",
+    "t": 25200,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 25200,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hemoglobin",
+    "value": 13.2,
+    "unit": "g/dL",
+    "t": 25200,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 25200,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hematocrit",
+    "value": 40.8,
+    "unit": "%",
+    "t": 25200,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 25200,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "platelet_count",
+    "value": 241,
+    "unit": "Thousand/uL",
+    "t": 25200,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 4172400,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "white_blood_cell_count",
+    "value": 5.4,
+    "unit": "Thousand/uL",
+    "t": 4172400,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 4172400,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "red_blood_cell_count",
+    "value": 3.93,
+    "unit": "Million/uL",
+    "t": 4172400,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 4172400,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hemoglobin",
+    "value": 12.8,
+    "unit": "g/dL",
+    "t": 4172400,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 4172400,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hematocrit",
+    "value": 37.8,
+    "unit": "%",
+    "t": 4172400,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 4172400,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "platelet_count",
+    "value": 229,
+    "unit": "Thousand/uL",
+    "t": 4172400,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 7714800,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "white_blood_cell_count",
+    "value": 7.2,
+    "unit": "Thousand/uL",
+    "t": 7714800,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 7714800,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "red_blood_cell_count",
+    "value": 3.72,
+    "unit": "Million/uL",
+    "t": 7714800,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 7714800,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hemoglobin",
+    "value": 11.5,
+    "unit": "g/dL",
+    "t": 7714800,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 7714800,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hematocrit",
+    "value": 35.9,
+    "unit": "%",
+    "t": 7714800,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 7714800,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "platelet_count",
+    "value": 241,
+    "unit": "Thousand/uL",
+    "t": 7714800,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 8319600,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "white_blood_cell_count",
+    "value": 5.5,
+    "unit": "Thousand/uL",
+    "t": 8319600,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 8319600,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "red_blood_cell_count",
+    "value": 4.02,
+    "unit": "Million/uL",
+    "t": 8319600,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 8319600,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hemoglobin",
+    "value": 12.1,
+    "unit": "g/dL",
+    "t": 8319600,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 8319600,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hematocrit",
+    "value": 36.4,
+    "unit": "%",
+    "t": 8319600,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 8319600,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "platelet_count",
+    "value": 252,
+    "unit": "Thousand/uL",
+    "t": 8319600,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 12121200,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "white_blood_cell_count",
+    "value": 6.4,
+    "unit": "Thousand/uL",
+    "t": 12121200,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 12121200,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "red_blood_cell_count",
+    "value": 4.02,
+    "unit": "Million/uL",
+    "t": 12121200,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 12121200,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hemoglobin",
+    "value": 12.2,
+    "unit": "g/dL",
+    "t": 12121200,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 12121200,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hematocrit",
+    "value": 37.1,
+    "unit": "%",
+    "t": 12121200,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 12121200,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "platelet_count",
+    "value": 252,
+    "unit": "Thousand/uL",
+    "t": 12121200,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 15318000,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "white_blood_cell_count",
+    "value": 5.3,
+    "unit": "Thousand/uL",
+    "t": 15318000,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 15318000,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "red_blood_cell_count",
+    "value": 3.84,
+    "unit": "Million/uL",
+    "t": 15318000,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 15318000,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hemoglobin",
+    "value": 11.5,
+    "unit": "g/dL",
+    "t": 15318000,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 15318000,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hematocrit",
+    "value": 34.7,
+    "unit": "%",
+    "t": 15318000,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 15318000,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "platelet_count",
+    "value": 245,
+    "unit": "Thousand/uL",
+    "t": 15318000,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 24994800,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "white_blood_cell_count",
+    "value": 6.4,
+    "unit": "Thousand/uL",
+    "t": 24994800,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 24994800,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "red_blood_cell_count",
+    "value": 4.11,
+    "unit": "Million/uL",
+    "t": 24994800,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 24994800,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hemoglobin",
+    "value": 12.7,
+    "unit": "g/dL",
+    "t": 24994800,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 24994800,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "hematocrit",
+    "value": 38.3,
+    "unit": "%",
+    "t": 24994800,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 24994800,
+   "type": "reading",
+   "payload": {
+    "crew": "I4-C002",
+    "indicator": "platelet_count",
+    "value": 243,
+    "unit": "Thousand/uL",
+    "t": 24994800,
+    "source": "lab",
+    "confidence": 1,
+    "state": "released"
+   }
+  }
+ ]
+}
