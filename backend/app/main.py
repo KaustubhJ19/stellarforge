@@ -192,26 +192,28 @@ def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI
         return {"crew": eng.crew, "names": {c: eng.name(c) for c in eng.crew},
                 "profile": eng.profile["id"], "protocol": eng.protocol.id, "stub": eng.protocol.stub, "t": eng.now()}
 
-    @app.post("/api/sim/clock/advance")
-    def sim_advance(body: dict):
-        eng.clock.advance(float(body.get("seconds", 0)))
-        eng.tick()
-        return {"t": eng.now()}
+    # Demo/test helpers: they reset or move a live emergency, so they exist only when SF_SIM=1.
+    if os.environ.get("SF_SIM") == "1":
+        @app.post("/api/sim/clock/advance")
+        def sim_advance(body: dict):
+            eng.clock.advance(float(body.get("seconds", 0)))
+            eng.tick()
+            return {"t": eng.now()}
 
-    @app.post("/api/sim/reset")
-    def sim_reset():
-        """Demo/test only: fresh flow state with the same content and settings."""
-        fresh = build(protocol=eng.protocol.id, profile=eng.profile["id"],
-                      clock=MissionClock(speed=eng.clock.speed), explainer=eng.explainer.transport)
-        eng.__dict__.update(fresh.__dict__)
-        eng.ground.eng = eng
-        eng.explainer.eng = eng
-        return {"ok": True}
+        @app.post("/api/sim/reset")
+        def sim_reset():
+            """Demo/test only: fresh flow state with the same content and settings."""
+            fresh = build(protocol=eng.protocol.id, profile=eng.profile["id"],
+                          clock=MissionClock(speed=eng.clock.speed), explainer=eng.explainer.transport)
+            eng.__dict__.update(fresh.__dict__)
+            eng.ground.eng = eng
+            eng.explainer.eng = eng
+            return {"ok": True}
 
-    @app.post("/api/sim/replay")
-    def sim_replay(body: dict):
-        replay_mod.run(eng, replay_mod.load(Path(__file__).resolve().parents[2] / "replay" / Path(body["file"]).name))
-        return {"t": eng.now()}
+        @app.post("/api/sim/replay")
+        def sim_replay(body: dict):
+            replay_mod.run(eng, replay_mod.load(Path(__file__).resolve().parents[2] / "replay" / Path(body["file"]).name))
+            return {"t": eng.now()}
 
     @app.get("/api/offline-bundle")
     def offline_bundle():
@@ -230,8 +232,9 @@ def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI
 
         @app.get("/{path:path}")
         def spa(path: str):
-            f = DIST / path
-            return FileResponse(f if path and f.is_file() else DIST / "index.html")
+            f = (DIST / path).resolve()
+            inside = f.is_relative_to(DIST.resolve())  # never serve a file outside dist
+            return FileResponse(f if path and inside and f.is_file() else DIST / "index.html")
 
     return app
 

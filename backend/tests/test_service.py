@@ -486,3 +486,25 @@ def test_server_listens_on_localhost_only(tmp_path, real):
     finally:
         httpd.server_close()
         svc.close()
+
+
+# ---- detection must never stop the feed ---------------------------------------
+
+class BrokenDetection:
+    def on_message(self, message):
+        raise RuntimeError("detection bug")
+
+    def on_label(self, label):
+        raise RuntimeError("detection bug")
+
+
+def test_a_detection_error_does_not_stop_the_reading_reaching_windows(tmp_path, real):
+    svc = make(tmp_path, real, detection=BrokenDetection())
+    window = Window(svc, "patient")
+    svc.post_reading(example("Reading", crew="A", t=10))  # must not raise
+    assert [m["type"] for m in window.got] == ["reading"]
+
+
+def test_a_detection_error_on_a_label_is_not_fatal(tmp_path, real):
+    svc = make(tmp_path, real, detection=BrokenDetection())
+    svc.post_label({"crew": "A", "t": 1, "kind": "ground_reply"})  # must not raise
