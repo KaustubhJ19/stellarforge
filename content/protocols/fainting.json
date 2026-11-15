@@ -15,8 +15,11 @@
       },
       "equipment": [],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:cf67849e9d85505cbe833f3171c55d94b71c738d1b1e8c65cfa2a3b06a31c011"
     },
     {
       "id": "faint-2-counterpressure",
@@ -27,8 +30,11 @@
       },
       "equipment": [],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:aabba96812606c134fc98f12fddfe49962ee39859a3461ddec47a2611716c769"
     },
     {
       "id": "faint-3-recovery-position",
@@ -39,8 +45,11 @@
       },
       "equipment": [],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:8b0adaced38892ce07761b1866e2ef78d190fa60b83d420b3527de5a12b4bd3f"
     }
   ]
 }

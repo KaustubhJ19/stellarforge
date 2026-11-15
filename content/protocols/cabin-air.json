@@ -17,8 +17,11 @@
         "pulse oximeter"
       ],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:bfae0ccb1954beaacbb9000c1bd7c792c829f5ab1e1efc9373896ef3106fdee2"
     },
     {
       "id": "air-2-oxygen",
@@ -32,8 +35,11 @@
         "pulse oximeter"
       ],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:d5f3f8bea214d293aafab0157e7f263bdcb34ccf1ea0dc06b6e0de9bc1beaf69"
     },
     {
       "id": "air-3-severe-hypoxaemia",
@@ -47,8 +53,11 @@
         "pulse oximeter"
       ],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:b560112c2d2cab2cb2dcdce2a336c4c03ce4454e0fa64d45d6927a45084dd807"
     }
   ]
 }

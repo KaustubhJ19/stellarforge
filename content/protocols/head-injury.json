@@ -15,8 +15,11 @@
       },
       "equipment": [],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:f0a6c8cbadcb6a5594e71e4d907fb5b4e3bc379fe12f246a472a7b4113f9ce9f"
     },
     {
       "id": "head-2-stop-activity",
@@ -27,8 +30,11 @@
       },
       "equipment": [],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:f7fab0e7c5290e5718f702c61b815eed9c35cef477bcab5f3d3522a7d3ebdc47"
     },
     {
       "id": "head-3-flight-surgeon",
@@ -41,8 +47,11 @@
         "communication link to Mission Control"
       ],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:444110dedd184d13d46bad2d482a5c90bd019c0a6b3d3bda4a1118ff376e4d40"
     }
   ]
 }

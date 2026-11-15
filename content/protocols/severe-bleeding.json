@@ -43,8 +43,11 @@
         "pressure dressing"
       ],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:a1e1218d7058541ba7c564e50a97a72ae57ed949c37a7c534c4286bc24dd7cc4"
     },
     {
       "id": "bleed-4-tourniquet",
@@ -57,8 +60,11 @@
         "tourniquet"
       ],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:1ae71cd0124687d89d2f4d24d036cb50b65c9b660c85e26e890977e6b3b4e41e"
     }
   ]
 }

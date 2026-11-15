@@ -15,8 +15,11 @@
       },
       "equipment": [],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:1c0fbc096502f9dc6b5e327bf6e8b3080a73add335feb7a0438d4fb41be7f089"
     },
     {
       "id": "heat-2-passive-cooling",
@@ -27,8 +30,11 @@
       },
       "equipment": [],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:294532214b23563d79df25c91d02d9e400acef3c4d2781b72114d281cc577aea"
     },
     {
       "id": "heat-3-active-cooling",
@@ -39,8 +45,11 @@
       },
       "equipment": [],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:081c8931340923aa3374127e2227e407897b72ab5629e8b7d21e13188d8a6b1e"
     },
     {
       "id": "heat-4-keep-cooling",
@@ -51,8 +60,11 @@
       },
       "equipment": [],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:9683f2e69d474e48bc32a74632e3d59acaa7f7b561aabc5df47a9297a7d72dce"
     }
   ]
 }
