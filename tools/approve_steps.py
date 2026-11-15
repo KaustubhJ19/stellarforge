@@ -44,10 +44,10 @@ def approve(doc: dict, step_ids, name: str, approvers: set[str], today: str) -> 
 
 
 def _quotes(pack, source):
-    for rec in (pack or {}).get("recommendations", []):
-        if (rec.get("guideline"), rec.get("section")) == (source.get("guideline"), source.get("section")):
-            return rec.get("quotes") or [f"({rec.get('kind', 'no quote')})"]
-    return ["(section NOT in the evidence pack: the linter will reject this step)"]
+    rec = lc.pack_entry(pack, source)
+    if rec is None:
+        return ["(section NOT in the evidence pack: the linter will reject this step)"]
+    return rec.get("quotes") or [f"({rec.get('kind', 'no quote')})"]
 
 
 def main(argv=None) -> int:
@@ -61,8 +61,11 @@ def main(argv=None) -> int:
         return 2
     path = args.content / "protocols" / f"{args.protocol}.json"
     doc = json.loads(path.read_text(encoding="utf-8"))
-    pack_path = args.content / "protocols" / f"{args.protocol}.evidence.json"
-    pack = json.loads(pack_path.read_text(encoding="utf-8")) if pack_path.exists() else None
+    pack = lc.load_pack(args.content, args.protocol)
+    unknown = sorted(set(args.step) - {st.get("id") for st in doc.get("steps", [])})
+    if unknown:
+        print(f"approve_steps: no step {unknown[0]!r} in {path.name}. Nothing approved.", file=sys.stderr)
+        return 1
     approvers = lc.load_approvers(args.content / "approvers.json")
     name = input("Your name, exactly as on content/approvers.json: ").strip()
     if name not in approvers:

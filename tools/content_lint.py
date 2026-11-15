@@ -252,8 +252,8 @@ def lint_approval(doc, approvers, pack):
             continue
         if pack is None:
             problems.append(f"steps/{sid}: approved step but the protocol has no evidence pack")
-        elif _cite(step["source"]) not in cited:
-            problems.append(f"steps/{sid}: cites {step['source'].get('section')!r}, which is not in its evidence pack")
+        elif _cite(step.get("source")) not in cited:
+            problems.append(f"steps/{sid}: cites {_cite(step.get('source'))[1]!r}, which is not in its evidence pack")
     return problems
 
 

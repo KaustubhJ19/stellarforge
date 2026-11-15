@@ -284,3 +284,21 @@ def test_second_linter_also_fails_a_draft_and_passes_an_approved_step(tmp_path):
 def test_second_linter_fails_a_stub_with_real_looking_text(tmp_path):
     write(tmp_path, "protocols/fx.json", dict(PROTOCOL, stub=True, steps=[dict(STEP, text="Press on the chest")]))
     assert any("STUB" in i.reason for i in lc.lint_tree(tmp_path, lc.load_deny_list()))
+
+
+# ---- Ponytail review follow-ups ------------------------------------------------------------------------
+
+def test_approved_step_without_a_source_is_reported_not_a_crash(tree):
+    s = {k: v for k, v in STEP.items() if k != "source"}
+    failures = tree(protocol=dict(PROTOCOL, steps=[approved(s)]))
+    assert any("evidence pack" in p or "contract" in p for p in failures["fx.json"])
+
+
+def test_approve_tool_rejects_an_unknown_step_id_before_asking_anything(monkeypatch, capsys, tmp_path):
+    write(tmp_path, "approvers.json", {"approvers": [APPROVER]})
+    write(tmp_path, "protocols/fx.json", PROTOCOL)
+    monkeypatch.setattr(sys.stdin, "isatty", lambda: True)
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
+    monkeypatch.setattr("builtins.input", lambda *_: pytest.fail("must not prompt"))
+    assert approve_steps.main(["fx", "--step", "fx-typo", "--content", str(tmp_path)]) == 1
+    assert "fx-typo" in capsys.readouterr().err

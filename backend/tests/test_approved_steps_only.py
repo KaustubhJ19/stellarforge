@@ -201,3 +201,21 @@ def test_unresponsive_not_breathing_still_goes_to_cpr_whatever_the_main_problem(
     intake = {"responsive": "no", "breathing": "none", "main_problem": value, "source": "tap"}
     r = triage.route(REAL_ROUTES, intake, {}, available={"microgravity-cpr", "chest-pain"})
     assert r["protocol_id"] == "microgravity-cpr"
+
+
+# ---- Ponytail review: the main protocol obeys the same "no approved steps = not covered" rule ---------
+
+def test_main_protocol_with_no_approved_steps_routes_to_not_covered(content):
+    (content / "approvers.json").write_text(json.dumps({"approvers": []}), encoding="utf-8")
+    eng = build(protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS, explainer=None,
+                routing=True, content_root=content)
+    eng.trigger(trig("A"))
+    eng.clock.advance(16)
+    eng.tick()
+    eng.accept("B")
+    if eng.view("B")["screen"] == "observer":
+        eng.observer_answer("B", "no")
+    eng.submit_intake("B", {"responsive": "no", "breathing": "none", "main_problem": "collapse"})
+    route = eng.view("B")["route"]
+    assert route["protocol_id"] is None and "Contact ground" in route["reason"]
+    assert "microgravity-cpr" not in offline.bundle(eng)["protocols"]

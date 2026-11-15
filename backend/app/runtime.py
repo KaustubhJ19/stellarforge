@@ -35,12 +35,12 @@ def build(protocol: str = DEFAULT_PROTOCOL, profile: str = DEFAULT_PROFILE, db: 
     protocols, routes = {main.id: main}, None
     if routing:  # intent-first: load every protocol the route table can pick that has approved content
         routes = triage.load_routes(content_root / "triage" / "routes.json")
-        for pid in sorted({r["protocol"] for r in routes["rows"]} - {main.id}):
-            if (content_root / "protocols" / f"{pid}.json").exists():
-                p = load_protocol(pid, content_root)
-                # Spec 1: no approved steps (or a test stub) = not loadable, so the row says "not covered".
-                if p.steps and not p.stub:
-                    protocols[pid] = p
+        loaded = {main.id: main} | {pid: load_protocol(pid, content_root)
+                                    for pid in sorted({r["protocol"] for r in routes["rows"]} - {main.id})
+                                    if (content_root / "protocols" / f"{pid}.json").exists()}
+        # Spec 1: no approved steps (or a test stub) = not loadable, so the row says "not covered".
+        # The main protocol obeys the same rule: an empty CPR must not be routed to.
+        protocols = {pid: p for pid, p in loaded.items() if p.steps and not p.stub}
     eng = FlowEngine(Store(db), clock or MissionClock(), main, load_profile(profile, content_root),
                      load_records(records_path), questions, protocols=protocols, routes=routes)
     from .explainer import Explainer, ollama_transport

@@ -23,7 +23,6 @@ def _cell(text: str) -> str:
 
 
 def render(doc: dict, pack: dict | None, approvers: set[str]) -> str:
-    recs = {(r.get("guideline"), r.get("section")): r for r in (pack or {}).get("recommendations", [])}
     lines = [
         f"# Review sheet: {doc['title']}",
         "",
@@ -44,7 +43,7 @@ def render(doc: dict, pack: dict | None, approvers: set[str]) -> str:
             status = "awaiting review (no status)"
         else:
             status = f"awaiting review: {problem}"
-        rec = recs.get((s["source"].get("guideline"), s["source"].get("section")))
+        rec = lc.pack_entry(pack, s.get("source"))
         quote = " / ".join(rec.get("quotes") or [rec.get("kind", "")]) if rec else "**not in evidence pack**"
         lines.append(f"| `{s['id']}` | {_cell(status)} | {_cell(s['text'])} | {_cell(s['source']['section'])} "
                      f"| {_cell(quote)} | ☐ |")
@@ -58,8 +57,7 @@ def main(argv) -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     for pid in argv[1:]:
         doc = json.loads((content / "protocols" / f"{pid}.json").read_text(encoding="utf-8"))
-        pack_path = content / "protocols" / f"{pid}.evidence.json"
-        pack = json.loads(pack_path.read_text(encoding="utf-8")) if pack_path.exists() else None
+        pack = lc.load_pack(content, pid)
         out = OUT / f"{pid}.md"
         out.write_text(render(doc, pack, approvers), encoding="utf-8")
         print(f"wrote {out.relative_to(ROOT)}")

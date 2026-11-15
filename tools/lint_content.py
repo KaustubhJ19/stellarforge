@@ -72,7 +72,10 @@ def find_drug_or_dose(text: str, deny: list[str]) -> str | None:
 DEFAULT_APPROVERS = ROOT / "content" / "approvers.json"
 APPROVED, DRAFT = "approved", "draft"
 STUB_PREFIX = "STUB"
-_HASHED = ("text", "source", "equipment", "rescuers")  # everything a rescuer sees or the engine filters on
+# Everything in the step itself that a rescuer sees or the engine filters on. Companion files
+# (<id>.roles.json R1/R2 split, .excerpts, .recorded answers) are team-value or source files outside
+# step approval; the R1/R2 split is a team value (rules-detail.md), not guideline content.
+_HASHED = ("text", "source", "equipment", "rescuers")
 _DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
@@ -82,6 +85,21 @@ def load_approvers(path: Path = DEFAULT_APPROVERS) -> set[str]:
         return set()
     names = json.loads(path.read_text(encoding="utf-8")).get("approvers", [])
     return {n.strip() for n in names if isinstance(n, str) and n.strip()}
+
+
+def load_pack(content: Path, pid: str) -> dict | None:
+    """The protocol's evidence pack (content/protocols/<id>.evidence.json), or None."""
+    path = Path(content) / "protocols" / f"{pid}.evidence.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
+
+
+def pack_entry(pack: dict | None, source) -> dict | None:
+    """The pack recommendation a step's source cites, or None."""
+    if not isinstance(source, dict):
+        return None
+    key = (source.get("guideline"), source.get("section"))
+    return next((r for r in (pack or {}).get("recommendations", [])
+                 if isinstance(r, dict) and (r.get("guideline"), r.get("section")) == key), None)
 
 
 def step_hash(step: dict) -> str:
