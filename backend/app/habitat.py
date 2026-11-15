@@ -114,6 +114,16 @@ class Habitat:
         r = httpx.post(f"{self.url}/ground_reply", json=report, timeout=self.timeout)
         r.raise_for_status()
 
+    def hot_summary(self, crew: str, requester: str, emergency: bool) -> dict:
+        """Spec 2 full HotSummary, free text included; another person's only in emergency mode (the service logs it)."""
+        try:
+            r = httpx.get(f"{self.url}/hot_summary/{crew}", params={"requester": requester, "emergency": int(emergency)},
+                          timeout=self.timeout)
+            r.raise_for_status()
+        except httpx.HTTPError as e:
+            raise ConnectionError(f"hot summary not available: {e}") from None
+        return r.json()
+
     def record(self, crew: str, requester: str, emergency: bool) -> dict:
         try:
             r = httpx.get(f"{self.url}/crew/{crew}", params={"requester": requester, "emergency": int(emergency)},

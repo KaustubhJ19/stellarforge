@@ -5,7 +5,14 @@ import hashlib
 import json
 import threading
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
+
+# Spec 2 doses are absorbed dose (mGy); the copilot reads dose equivalent (mSv). Cited team value.
+DOSE_CONVERSION = Path(__file__).resolve().parents[2] / "content" / "copilot" / "dose-conversion.json"
+_Q = json.loads(DOSE_CONVERSION.read_text(encoding="utf-8"))
+# Spec 2 context keys holding a crew form (with its free text); they move to form_answers.
+PRIVATE_FORMS = {"last_post_eva": "post_eva", "last_meal": "meal", "last_note": "note"}
 
 INDICATOR_FIELDS = ("z_anchor", "z_adaptive", "cusum", "slope_1h", "slope_24h", "slope_72h", "slope_7d")
 CONTEXT_FIELDS = ("sleep_debt_3d_h", "dose_mission_msv", "dose_7d_msv", "co2_above_limit_h_24h",
@@ -62,22 +69,27 @@ def _cusum(c):
 def from_spec2(d: dict) -> dict:
     """Map the snapshot the habitat service pushes (backend/features.py, Spec 2) to the copilot's shape.
     Spec 2's own keys stay in `context` beside the mapped ones, so nothing is lost. Units: slopes stay per day;
-    radiation stays mGy under its own key and the copilot's mSv fields are None (no mGy -> mSv factor agreed);
-    the push carries no free text (privacy option A), so `form_answers` is empty."""
+    dose_*_msv = mGy x the cited ISS mean quality factor (content/copilot/dose-conversion.json), mGy kept too.
+    form_answers: the post-EVA, meal and note answers, present only in the full summary fetched in an emergency
+    (GET /hot_summary/<crew>?emergency=1, logged); the public push has none (privacy option A)."""
     indicators = {}
     for name, ind in d["indicators"].items():
         slopes = ind.get("slope_per_day") or {}
         indicators[name] = {"z_anchor": ind.get("z_anchor"), "z_adaptive": ind.get("z_adaptive"),
                             "cusum": _cusum(ind.get("cusum")), "value": ind.get("value"), "unit": ind.get("unit"),
                             **{f"slope_{w}": slopes.get(w) for w in ("1h", "24h", "72h", "7d")}}
-    c = d["context"]
+    c = {k: v for k, v in d["context"].items() if k not in PRIVATE_FORMS}
+    forms = {name: d["context"][k].get("answers", {}) for k, name in PRIVATE_FORMS.items()
+             if isinstance(d["context"].get(k), dict)}
     sleep = c.get("sleep_debt_3d_min")
+    msv = lambda mgy: round(mgy * _Q["value"], 6) if isinstance(mgy, (int, float)) else None
     context = {**c, "sleep_debt_3d_h": sleep / 60 if sleep is not None else None,
-               "dose_mission_msv": None, "dose_7d_msv": None,
+               "dose_mission_msv": msv(c.get("dose_mission_mGy")), "dose_7d_msv": msv(c.get("dose_7d_mGy")),
+               "dose_msv_label": f"{_Q['label']}; Q = {_Q['value']} ({_Q['source'].split('.')[0]} 2017)",
                "glucose_trend": c.get("glucose_trend_per_day"), "temperature_trend": c.get("temperature_trend_per_day"),
                "last_meal_logged_t": c.get("last_meal_t"), "mission_day": d.get("mission_day")}
     return {"crew": d["crew"], "t": d["t"], "label": d["label"], "indicators": indicators, "context": context,
-            "form_answers": {}, "open_alerts": d.get("open_alerts", [])}
+            "form_answers": forms, "open_alerts": d.get("open_alerts", [])}
 
 
 @dataclass(frozen=True)

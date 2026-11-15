@@ -503,6 +503,10 @@ class FlowEngine:
             self.store.log_access(self.now(), actor, subject, e.id, True, f"emergency access as {e.role(actor)}")
             if self.habitat:  # Spec 1 service is the record source and logs the opening as well
                 record = self.habitat.record(subject, actor, emergency=True)
+                try:  # same logged emergency opening: the copilot also gets the post-EVA, meal and note answers
+                    self.hot_summaries.update(self.habitat.hot_summary(subject, actor, emergency=True))
+                except (OSError, ValueError) as err:  # best effort: the record and the steps never wait on it
+                    self.emit("hot_summary_unavailable", emergency=e.id, subject=subject, error=str(err))
             self.emit("record_opened", emergency=e.id, actor=actor, subject=subject)
             self._note(e, "record opened", by=actor)
             return record

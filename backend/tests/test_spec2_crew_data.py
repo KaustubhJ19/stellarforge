@@ -5,6 +5,7 @@ service.hot_summary(crew) and the store. No internal running sums are inspected.
 """
 import json
 import math
+from pathlib import Path
 
 import pytest
 from spec2_helpers import DAY, form, location, of_type, play, reading, record, replay
@@ -183,6 +184,57 @@ def test_the_copilot_reads_the_real_pushed_hot_summary(tmp_path, eng):
     assert hr["slope_72h"] == pushed["indicators"]["resting_heart_rate"]["slope_per_day"]["72h"]
     ctx, src = snap.context, pushed["context"]
     assert ctx["sleep_debt_3d_h"] == src["sleep_debt_3d_min"] / 60 and ctx["mission_day"] == pushed["mission_day"]
-    assert ctx["dose_7d_msv"] is None and ctx["dose_7d_mGy"] == src["dose_7d_mGy"]  # no mGy -> mSv factor agreed
+    q = json.loads((Path(__file__).resolve().parents[2] / "content/copilot/dose-conversion.json").read_text())
+    assert q["source"] and ctx["dose_7d_mGy"] == src["dose_7d_mGy"]
+    assert ctx["dose_7d_msv"] == pytest.approx(src["dose_7d_mGy"] * q["value"]) and "Berger" in ctx["dose_msv_label"]
+    assert snap.form_answers == {}  # the public push carries no free text
     assert ctx["hours_since_eva"] == src["hours_since_eva"] is not None
     assert not any(p in json.dumps(snap.to_dict()) for p in PRIVATE)  # still no free text
+
+
+@pytest.fixture
+def reng():  # routing on, crew A-D, as the copilot runs
+    from app.runtime import REAL_RECORDS, build
+    return build(protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS, explainer=None,
+                 routing=True)
+
+
+def test_an_emergency_record_opening_gives_the_copilot_the_form_answers(tmp_path, reng):
+    eng = reng
+    """The rescuer's logged emergency opening also fetches the full summary (GET /hot_summary ... emergency=1)."""
+    from test_copilot_record import routed
+
+    svc, _ = play(tmp_path, [text_replay()])
+    calls = []
+
+    class FakeHabitat:  # stands in for app.habitat.Habitat: answers from the real habitat service
+        def record(self, crew, requester, emergency):
+            return eng.records.get(crew)
+
+        def hot_summary(self, crew, requester, emergency):
+            calls.append((crew, requester, emergency))
+            return svc.hot_summary("A", requester="A")  # the service's full summary for crew A (owner view)
+
+    eng.habitat = FakeHabitat()
+    routed(eng)  # patient A, rescuer B: the intake leads to the record screen, which opens the record
+    assert calls == [("A", "B", True)]
+    forms = eng.hot_summaries.latest("A").form_answers
+    assert forms["post_eva"]["symptoms"] == "cold hands" and forms["note"]["text"] == "slight headache"
+    assert "last_note" not in eng.hot_summaries.latest("A").context  # free text only under form_answers
+
+
+def test_a_failed_summary_fetch_never_blocks_the_record(reng):
+    eng = reng
+    from test_copilot_record import routed
+
+    class DownHabitat:
+        def record(self, crew, requester, emergency):
+            return eng.records.get(crew)
+
+        def hot_summary(self, crew, requester, emergency):
+            raise ConnectionError("hot summary not available: down")
+
+    eng.habitat = DownHabitat()
+    e = routed(eng)
+    assert eng.view("B")["screen"] == "record" and eng.view("B")["ok"] is True
+    assert any(ev["type"] == "hot_summary_unavailable" for ev in eng.store.events()) and e is not None
