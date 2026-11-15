@@ -6,7 +6,15 @@ import { loadMission, missionFrom, withCabin, type MissionResult } from "./repla
 import marsDay3 from "./fixtures/mars-day3.replay.json";
 import crewRecords from "./fixtures/crew-records.json";
 import cabinDay3 from "./fixtures/iss-cabin-day3.json";
+import type { EmergencyRequest } from "./home/ActionButtons";
 import "./theme.css";
+
+/** Hand over to Spec 4's emergency flow: this person's tablet, and for Emergency open the flow straight away. */
+function openEmergencyFlow(crewId: string, request: EmergencyRequest) {
+  const query = new URLSearchParams({ crew: crewId });
+  if (request === "emergency") query.set("start", "emergency");
+  window.location.assign(`/emergency.html?${query}`);
+}
 
 /** Last line of defence: say what broke instead of showing a blank page. */
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
@@ -53,7 +61,7 @@ function Root() {
 
   if (error) return <p className="load-message">Could not load replay file: {error}</p>;
   if (!mission) return <p className="load-message">Loading replay…</p>;
-  return <App replay={mission.replay} crew={mission.crew} />;
+  return <App replay={mission.replay} crew={mission.crew} onEmergency={(request) => openEmergencyFlow(mission.crew.id, request)} />;
 }
 
 createRoot(document.getElementById("root")!).render(

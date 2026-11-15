@@ -139,15 +139,12 @@ test.describe("crew forms for gloved hands", () => {
       if (!name?.endsWith("fatigue")) await group.getByRole("radio", { name: "No" }).check();
     }
     await warning.getByRole("radiogroup", { name: "Numbness" }).getByRole("radio", { name: "Yes" }).check();
-    // Standalone, the hook shows Spec 4's placeholder; on the tablet it starts their flow.
-    const messages: string[] = [];
-    page.once("dialog", (notice) => {
-      messages.push(notice.message());
-      void notice.dismiss();
-    });
+    // Stand-in for the emergency page: this suite runs with no service.
+    await page.route("**/emergency.html*", (route) =>
+      route.fulfill({ contentType: "text/html", body: "<title>emergency</title>" }),
+    );
     await dialog.getByRole("button", { name: "Save" }).click();
-    expect(messages).toEqual([expect.stringContaining("emergency flow opens here")]);
-    await expect(page.getByRole("region", { name: "Physical health" }).getByRole("group", { name: "Numbness" })).toContainText("Yes");
+    await page.waitForURL("**/emergency.html?crew=*&start=emergency");
   });
 
   test("a stand test logged in the browser shows on the home screen with the comparison", async ({ page }) => {

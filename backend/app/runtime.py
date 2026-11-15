@@ -11,13 +11,15 @@ from .store import Store
 
 DEFAULT_PROTOCOL = "stub-protocol"
 DEFAULT_PROFILE = "stub-mars"
-DEFAULT_RECORDS = REPO / "replay" / "stub-crew-records.json"
+DEFAULT_RECORDS = REPO / "replay" / "stub-crew-records.json"  # the test double; the service defaults to REAL_RECORDS
+REAL_RECORDS = REPO / "replay" / "crew-records.json"
 
 
 def load_records(path=DEFAULT_RECORDS) -> dict[str, dict]:
     from . import contracts
     data = json.loads(path.read_text(encoding="utf-8"))
-    return {r["id"]: contracts.validate("crew_record", r) for r in data["records"]}
+    records = data["records"] if isinstance(data, dict) else data  # Spec 1 writes a bare list, the stub wraps it
+    return {r["id"]: contracts.validate("crew_record", r) for r in records}
 
 
 def build(protocol: str = DEFAULT_PROTOCOL, profile: str = DEFAULT_PROFILE, db: str = ":memory:",

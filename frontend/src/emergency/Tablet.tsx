@@ -7,13 +7,15 @@ import { OfflineFlow, startOffline, type OfflineSession } from "./OfflineFlow";
 const POLL_MS = 500;
 const BUNDLE_MS = 30_000;
 
-export default function Tablet({ crew }: { crew: string }) {
+/** autoStart: the health app handed over an Emergency press, so open the flow once instead of asking again. */
+export default function Tablet({ crew, autoStart = false }: { crew: string; autoStart?: boolean }) {
   const [view, setView] = useState<View | null>(null);
   const [offline, setOffline] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [session, setSession] = useState<OfflineSession | null>(null);
   const [bundle, setBundle] = useState<Bundle | null>(() => loadBundle());
   const alive = useRef(true);
+  const started = useRef(false);
   const lastBundle = useRef(0);
 
   const refresh = useCallback(async () => {
@@ -60,6 +62,13 @@ export default function Tablet({ crew }: { crew: string }) {
     },
     [refresh],
   );
+
+  useEffect(() => {
+    if (!autoStart || started.current || !view || view.screen !== "idle") return;
+    started.current = true;
+    window.history.replaceState(null, "", `${window.location.pathname}?crew=${encodeURIComponent(crew)}`); // a reload must not trigger again
+    void act(() => api.trigger(crew, view.t));
+  }, [autoStart, view, crew, act]);
 
   if (session && bundle) {
     return <OfflineFlow crew={crew} bundle={bundle} session={session} onEnd={() => setSession(null)} />;

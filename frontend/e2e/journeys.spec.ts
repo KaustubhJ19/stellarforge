@@ -116,19 +116,20 @@ test.describe("home screen in a real browser, no service", () => {
     await expect(page.locator(".trend__tooltip")).toContainText("Watch");
   });
 
-  test("Emergency and Help reach the emergency-flow hook", async ({ page }) => {
+  test("Emergency and Help open the emergency flow on this person's tablet", async ({ page }) => {
     await openApp(page);
-    const messages: string[] = [];
-    page.on("dialog", (d) => {
-      messages.push(d.message());
-      void d.dismiss();
+    const requested: string[] = [];
+    // Stand-in for the emergency page: this suite runs with no service.
+    await page.route("**/emergency.html*", (route) => {
+      requested.push(new URL(route.request().url()).search);
+      return route.fulfill({ contentType: "text/html", body: "<title>emergency</title>" });
     });
     await page.getByRole("button", { name: "Emergency" }).click();
+    await page.waitForURL("**/emergency.html?crew=*&start=emergency");
+    await page.goBack();
     await page.getByRole("button", { name: "Help a crewmate" }).click();
-    expect(messages).toEqual([
-      expect.stringContaining("emergency flow"),
-      expect.stringContaining("help a crewmate flow"),
-    ]);
+    await page.waitForURL(/emergency\.html\?crew=[A-Z]$/);
+    expect(requested).toHaveLength(2);
   });
 
   test("a measurement card opens, traps focus and closes with Escape", async ({ page }) => {
