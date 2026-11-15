@@ -15,8 +15,11 @@
       },
       "equipment": [],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:828572d49235e5bcef6911da46a252509653e43b9ee3ff6cd792a34b3ce7d5e7"
     },
     {
       "id": "sepsis-2-assess",
@@ -27,8 +30,11 @@
       },
       "equipment": [],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:96ad72aa75f583c65de40808c9581c0e218d23812d6d8357e9d8fb7e25148174"
     },
     {
       "id": "sepsis-3-medication",
@@ -39,8 +45,11 @@
       },
       "equipment": [],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:a7449b3ffd4e068c77fa7bf0a6bdf660808be2f575e02ca34d215995814347e8"
     },
     {
       "id": "sepsis-4-reassess",
@@ -51,8 +60,11 @@
       },
       "equipment": [],
       "rescuers": 1,
-      "status": "draft",
-      "drafted_by": "Claude Code (Claude Opus 5.5)"
+      "status": "approved",
+      "drafted_by": "Claude Code (Claude Opus 5.5)",
+      "approved_by": "Kaustubh",
+      "approved_on": "2026-11-15",
+      "approved_hash": "sha256:1c9c0ce6e9835b254da4dc66c58c67d1a05eb3e12e47d4f9d5fd0bbd7f29d435"
     }
   ]
 }

@@ -2,7 +2,7 @@
   "id": "sepsis",
   "name": "Sepsis / severe infection",
   "protocol": "sepsis",
-  "state": "pending",
+  "state": "existing",
   "guidance_candidate": "Surviving Sepsis Campaign 2021 (verified: evidence pack sepsis.evidence.json)",
   "prior_incidence": {
     "status": "pending",
@@ -17,7 +17,6 @@
   },
   "labels": [
     "Earth reference, no space data",
-    "draft: awaiting human approval, routes to not covered",
     "not clinically reviewed"
   ]
 }

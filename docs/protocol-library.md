@@ -40,7 +40,7 @@ Claude stops at "ready for review". Claude never edits `content/approvers.json`,
 | Low blood sugar | `low-blood-sugar` | ERC/AHA first aid | check | pending | `*-reported` (team-agreed intake value) |
 | Cabin air: low O₂ / CO₂ build-up (merged) | `cabin-air` | ERC first aid; NASA-STD-3001 | yes | pending | `cabin-alert-*` |
 | Severe bleeding | `severe-bleeding` | ERC first aid | yes | pending | `*-reported` (team-agreed intake value) |
-| Sepsis / severe infection | `sepsis` | Surviving Sepsis Campaign 2021 (verified, PMC8486643) | yes | **draft, awaiting approval** (branch `draft/sepsis`) | `*-reported` (team-agreed intake value) |
+| Sepsis / severe infection | `sepsis` | Surviving Sepsis Campaign 2021 (verified, PMC8486643) | yes | approved by Kaustubh 2026-11-15 (Earth reference) | `*-reported` (team-agreed intake value) |
 | Overheating / fever | `overheating` | ERC first aid | check | pending | `*-reported` (team-agreed intake value) |
 | Decompression sickness after EVA | `decompression-sickness` | NASA EVA DCS references | no | pending | `*-reported` (team-agreed intake value) |
 | Seizure | `seizure` | ERC first aid | no | pending | `*-reported` (team-agreed intake value) |
