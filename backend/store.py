@@ -1,6 +1,6 @@
 """SQLite store (Spec 1 task 1.9).
 
-Stores: Reading, Alert, Label, Event store, Ground report, Access log;
+Stores: Reading, Alert, Label, Event store, Ground report, Access log, and (Spec 2) crew forms and locations;
 indexed by crew, indicator, time. Each row keeps the full document as JSON.
 Reading, Alert, Event store (Readings) and Ground report are checked against
 the shared contracts. Label and Access log have no contract in Spec 1, so
@@ -23,6 +23,8 @@ KINDS = {
     "event": ("Reading", "t", True),
     "ground_report": ("GroundReport", "sent_t", False),
     "access_log": (None, "t", False),
+    "form": (None, "t", False),  # Spec 2: provisional CrewForm, checked by the service (backend/crew_data.py)
+    "location": (None, "t", False),  # Spec 2: provisional CrewLocation, checked by the service
 }
 
 

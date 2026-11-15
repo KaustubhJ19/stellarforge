@@ -26,8 +26,26 @@ Every document carries a `schema_version` field. The schemas enforce only what t
 | Shape | Schema | Replay event type | Owner |
 |---|---|---|---|
 | Forecast | `provisional/forecast.schema.json` | `forecast` | Spec 3 (Forecast B, P1) |
+| CrewForm | `provisional/crew-form.schema.json` | `form` | Spec 2 (post-EVA form, meal, crew note) |
+| CrewLocation | `provisional/crew-location.schema.json` | `location` | Spec 2 (crew-location timeline for per-person exposure) |
 
 Other replay event types in use: `crew_report` (emergency replay: chest pain is crew-reported).
+Glucose is an ordinary Reading (indicator `glucose`), not a new shape.
+
+Messages the habitat service pushes for Spec 2 (not stored contracts): `plan` (an action plan opened for an Alert),
+`plan_result` (reversed / not reversed at the follow-up), and a `hot_summary` object beside the `payload` of every
+`alert` and `trigger` message (the HotSummary, `backend/features.py`). The envelope is not a contract, so the
+seven contracts are unchanged.
+
+## Proposed Alert additions (Spec 2, pending team agreement, add-only)
+The frozen Alert schema allows extra properties, so these already validate; they are listed here so the team can
+agree them before they are written into `alert.schema.json`. No field is removed or changed.
+
+| Field | When | Shape |
+|---|---|---|
+| `pattern` | joint-pattern drift alert | `"joint"` |
+| `indicators` | with `pattern` | list of the indicators involved, largest share first (`indicator` is the first) |
+| `escalation` | urgency `ESCALATE_TO_GROUND` because home-side actions failed | `{"reason", "plans_tried": [{"plan_id", "action", "opened_t", "follow_up_due_t", "result"}], "next_plan"}` |
 
 ## Where replays live
 - `replay/`: shared replay files, tracked in git, with a `.source.json` record each (see `replay/README.md`).

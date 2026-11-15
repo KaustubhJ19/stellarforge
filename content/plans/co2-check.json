@@ -1,0 +1,27 @@
+{
+ "schema_version": "1.0.0",
+ "id": "co2-check",
+ "title": "STUB plan: CO2 check (awaiting team authoring)",
+ "stub": true,
+ "kind": "action-plan",
+ "addresses": [
+  "co2_above"
+ ],
+ "approval": {
+  "status": "draft: STUB awaiting team authoring and approval (Spec 1 workflow: evidence pack -> draft -> team approval)",
+  "approved_by": null,
+  "approved_on": null
+ },
+ "steps": [
+  {
+   "id": "co2-check-stub-1",
+   "text": "STUB step 1. Placeholder; the real step comes from the Spec 1 authoring workflow.",
+   "source": {
+    "guideline": "STUB-GUIDELINE (not a real source)",
+    "section": "STUB-S1"
+   },
+   "equipment": [],
+   "rescuers": 1
+  }
+ ]
+}

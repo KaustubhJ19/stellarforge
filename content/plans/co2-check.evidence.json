@@ -1,0 +1,18 @@
+{
+ "plan": "co2-check",
+ "note": "Evidence pack skeleton (Spec 1 workflow, step 1). Candidate sources picked by the AI lead; NOT checked. The team pastes verbatim excerpts, then drafts steps from them, then approves. No step text is written by AI.",
+ "candidates": [
+  {
+   "source": "NASA-STD-3001 Vol 2, V2 6004 (carbon dioxide: average one-hour ppCO2 limit)",
+   "label": "NASA-STD-3001 (space standard)",
+   "status": "candidate, not checked",
+   "excerpt": null
+  },
+  {
+   "source": "Law J et al. Relationship between carbon dioxide levels and reported headaches on the International Space Station. J Occup Environ Med 2014;56(5):477-483. doi:10.1097/JOM.0000000000000158",
+   "label": "astronaut study",
+   "status": "candidate, not checked",
+   "excerpt": null
+  }
+ ]
+}

@@ -5,6 +5,8 @@ Rules so far (ticket 02):
   (b) no drug name or dose anywhere in protocol content
   (e) ticket 10: every manifest item (replay/*.source.json) is in content/credits.json, and every
       Credits entry has name, link and licence, with restrictive licences stated plainly
+  (f) Spec 2: action plans in content/plans/ (kind "action-plan") get rules (a) and (b) like protocols, and a
+      non-stub plan needs a team approval (approval.approved_by and approval.approved_on)
 
 Command line:
     python tools/content_lint.py [content_dir]   # default: content/ ; exit 0 clean, 1 problems
@@ -341,6 +343,15 @@ def _load(path):
         return None, [f"invalid JSON: {exc}"]
 
 
+def lint_plan(doc):
+    """Spec 2 action plan: the protocol rules plus a recorded team approval (Spec 1 workflow)."""
+    problems = lint_protocol(doc)
+    approval = doc.get("approval") if isinstance(doc, dict) else None
+    if not (isinstance(approval, dict) and _filled(approval.get("approved_by")) and _filled(approval.get("approved_on"))):
+        problems.append("approval: an action plan needs approved_by and approved_on (team approval)")
+    return problems
+
+
 def _stub(doc):
     """Spec 4's non-clinical test doubles declare "stub": true; they are not Spec 5 content."""
     return isinstance(doc, dict) and doc.get("stub") is True
@@ -385,6 +396,14 @@ def lint_dir(content_dir):
     for path in sorted((Path(content_dir) / "conditions").glob("*.json")):
         doc, problems = _load(path)
         problems = problems or lint_condition(doc, ids)
+        if problems:
+            failures[path] = problems
+    # Spec 2 action plans; <id>.evidence.json and daily-loop.json / warm-start.json are not plans.
+    for path in sorted((Path(content_dir) / "plans").glob("*.json")):
+        doc, problems = _load(path)
+        if path.name.count(".") != 1 or not (isinstance(doc, dict) and doc.get("kind") == "action-plan") or _stub(doc):
+            continue
+        problems = problems or lint_plan(doc)
         if problems:
             failures[path] = problems
     for path in sorted((Path(content_dir) / "profiles").glob("*.json")):

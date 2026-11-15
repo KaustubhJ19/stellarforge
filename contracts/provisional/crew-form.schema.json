@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "crew-form.schema.json",
+  "title": "CrewForm",
+  "x-status": "PROVISIONAL: CrewForm is not one of Spec 1's seven contracts. Spec 2 (crew data foundation): the post-EVA form, meals and short crew notes as stored, replayable records in the habitat service. Glucose is a Reading (indicator glucose), not a form. Replay event type: form. Needs team agreement before it is frozen (add-only).",
+  "type": "object",
+  "required": ["crew", "form", "t", "answers"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "crew": {"type": "string"},
+    "form": {"enum": ["post_eva", "meal", "note"]},
+    "t": {"type": "number", "description": "Mission clock seconds the form was filled in"},
+    "answers": {
+      "type": "object",
+      "description": "Free answers. post_eva may carry eva_end_t (Mission clock seconds); meal: description, kcal; note: text."
+    }
+  }
+}

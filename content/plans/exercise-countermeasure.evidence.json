@@ -1,0 +1,12 @@
+{
+ "plan": "exercise-countermeasure",
+ "note": "Evidence pack skeleton (Spec 1 workflow, step 1). Candidate sources picked by the AI lead; NOT checked. The team pastes verbatim excerpts, then drafts steps from them, then approves. No step text is written by AI.",
+ "candidates": [
+  {
+   "source": "Loehr JA et al. Physical Training for Long-Duration Spaceflight. Aerosp Med Hum Perform 2015;86(12 Suppl):A14-A23. doi:10.3357/AMHP.EC03.2015",
+   "label": "astronaut study",
+   "status": "candidate, not checked",
+   "excerpt": null
+  }
+ ]
+}

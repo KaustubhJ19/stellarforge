@@ -1,0 +1,12 @@
+{
+ "plan": "crew-check-in",
+ "note": "Evidence pack skeleton (Spec 1 workflow, step 1). Candidate sources picked by the AI lead; NOT checked. The team pastes verbatim excerpts, then drafts steps from them, then approves. No step text is written by AI.",
+ "candidates": [
+  {
+   "source": "NASA Human Research Program. Evidence Report: Risk of Adverse Cognitive or Behavioral Conditions and Psychiatric Disorders (Slack KJ et al., 2016)",
+   "label": "NASA evidence report",
+   "status": "candidate, not checked",
+   "excerpt": null
+  }
+ ]
+}
