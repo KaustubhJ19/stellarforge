@@ -5,7 +5,9 @@ Run:  backend/.venv/Scripts/python -m uvicorn app.main:app --app-dir backend --p
 from __future__ import annotations
 
 import asyncio
+import logging
 import os
+import threading
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -19,9 +21,11 @@ from . import replay as replay_mod
 from .clock import MissionClock
 from .contracts import ContractError
 from .flow import AccessDenied, FlowEngine, FlowError
+from .ollama_boot import OllamaStatus, ensure_ollama
 from .runtime import REAL_RECORDS, build
 from .store import StoreError
 
+log = logging.getLogger("uvicorn.error")  # shows in the server output
 DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 
 
@@ -66,13 +70,22 @@ def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI
                     eng.tick()
                     await asyncio.sleep(0.25)
             task = asyncio.create_task(loop())
-        if getattr(eng, "explainer", None):
-            eng.explainer.warm_up()
+        booted: dict[str, OllamaStatus] = {}
+        transport = getattr(getattr(eng, "explainer", None), "transport", None)
+        if hasattr(transport, "url"):  # a real Ollama transport (tests use plain functions)
+            def boot_model():
+                booted["ollama"] = ensure_ollama(transport.url)  # start Ollama if it is not running
+                log.info("Ollama: %s %s", booted["ollama"].status, booted["ollama"].detail)
+                eng.explainer.warm_up()
+            threading.Thread(target=boot_model, daemon=True).start()
         if eng.habitat:
             eng.habitat.start()
         yield
         if task:
             task.cancel()
+        started = booted.get("ollama")
+        if started and started.status == "started" and started.proc:
+            started.proc.terminate()  # we started it, so we stop it
 
     app = FastAPI(title="StellarForge emergency flow", lifespan=lifespan)
     app.state.engine = eng
