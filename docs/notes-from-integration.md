@@ -39,6 +39,8 @@ return <App replay={mission.replay} crew={mission.crew} cards={cards as CardCont
 
 If the Vite dev server refuses a file outside `frontend/`, add `server: { fs: { allow: [".."] } }` to `vite.config.ts`, or copy the file into `frontend/src/` at build time.
 
+**Needed before the final video:** the cards are not wired yet (`main.tsx` passes no `cards`), so measurement cards show no How / Why / If abnormal. There is also no Accuracy or Credits page in the app; the video shows the repo pages instead.
+
 **Mission profile:** read `content/profiles/mars_transit.json`; your `groundDelayMin` is `comm_delay.value`.
 
 ## For the emergency-flow lead (Spec 4)

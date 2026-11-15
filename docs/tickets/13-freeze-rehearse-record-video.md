@@ -8,5 +8,7 @@
 
 - [ ] Freeze called at H24; after that only bug fixes; P0 shipped and P1 cut to the pitch if behind
 - [ ] Script rehearsed twice
-- [ ] Failure plan ready: service down → replay files; explainer slow → recorded answer; webcam fails → recorded clip; total failure → backup recording
+- [x] Failure plan ready: service down → replay files; explainer slow → recorded answer; webcam fails → recorded clip; total failure → backup recording (docs/video-script.md; webcam is not in the app, so that row says skip it)
 - [ ] Final video recorded at the length the Submission Guide sets (default about 3 min)
+
+**Progress (2026-11-15):** script and failure plan in docs/video-script.md. Left for the team: call the freeze, rehearse twice, record the final take with voice-over. Before the final take, Spec 2 should wire content/cards-frontend.json, or the cards show empty.
