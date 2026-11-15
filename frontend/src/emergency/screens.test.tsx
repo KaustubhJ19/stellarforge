@@ -47,6 +47,19 @@ describe("ticket 03: manual trigger and verdict", () => {
     expect(JSON.parse(post[1].body as string)).toMatchObject({ kind: "manual", crew: "eng", t: 42, reason: "Help a crewmate" });
   });
 
+  it("record screen: access granted but no record on file is said plainly, not shown as an error", () => {
+    const view = { ...base, role: "R1", can_back: false, screen: "record", ok: true, record: null, t: 5 } as unknown as View;
+    render(<Screen crew="eng" view={view} offline={false} error={null} act={async () => {}} />);
+    expect(screen.getByText(/No record on file for STUB Commander/)).toBeInTheDocument();
+    expect(screen.queryByText(/Record not opened/)).toBeNull();
+  });
+
+  it("record screen: a refused record shows its reason", () => {
+    const view = { ...base, role: "R1", can_back: false, screen: "record", ok: false, error: "log write failed", t: 5 } as unknown as View;
+    render(<Screen crew="eng" view={view} offline={false} error={null} act={async () => {}} />);
+    expect(screen.getByRole("alert")).toHaveTextContent("Record not opened: log write failed");
+  });
+
   it("verdict screen shows plain-words urgency, questions and the disclaimer", () => {
     render(<Screen crew="cmdr" view={verdict} offline={false} error={null} act={async () => {}} />);
     expect(screen.getByTestId("urgency")).toHaveTextContent("Urgency not assessed (manual start)");

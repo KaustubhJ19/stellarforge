@@ -101,8 +101,13 @@ export function Screen({ crew, view, offline, error, act }: Props) {
               <p className="note">Opened in emergency mode. This access is logged.</p>
               <RecordDetails record={view.record} />
             </div>
+          ) : view.ok ? (
+            <div className="record">
+              <p className="note">Opened in emergency mode. This access is logged.</p>
+              <p>No record on file for {view.patient_name}.</p>
+            </div>
           ) : (
-            <p className="error" role="alert">Record not opened: {view.error}</p>
+            <p className="error" role="alert">Record not opened: {view.error || "no reason given"}</p>
           )}
           <Nav crew={crew} act={act} canBack={view.can_back} />
         </>,
@@ -296,6 +301,9 @@ function AccessLog({ crew }: { crew: string }) {
   );
 }
 
+/** One decimal, no trailing zero: 52.925659 -> 52.9, 1 -> 1. */
+const shortNumber = (n: number) => String(Math.round(n * 10) / 10);
+
 export function RecordDetails({ record }: { record: CrewRecord }) {
   return (
     <>
@@ -303,7 +311,7 @@ export function RecordDetails({ record }: { record: CrewRecord }) {
       <h2>Personal normal (Anchor)</h2>
       <ul>
         {Object.entries(record.anchor ?? {}).map(([k, a]) => (
-          <li key={k}>{k}: {a.mean} ± {a.sd}</li>
+          <li key={k}>{k}: {shortNumber(a.mean)} ± {shortNumber(a.sd)}</li>
         ))}
       </ul>
     </>
