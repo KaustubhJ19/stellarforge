@@ -21,6 +21,7 @@ import argparse
 import copy
 import hashlib
 import json
+import logging
 import queue
 import sys
 import threading
@@ -109,9 +110,18 @@ class HabitatService:
     def _push_and_detect(self, message):
         """Push an incoming event, then the Alerts, Triggers and Reading states detection makes from it."""
         self._push(message)
-        if self.detection is not None:
-            for out in self.detection.on_message(message):
-                self._push(out)
+        for out in self._detected(self.detection and self.detection.on_message, message):
+            self._push(out)
+
+    def _detected(self, hook, arg):
+        """What a detection hook makes from arg. A detection bug must never stop the feed: log it, make nothing."""
+        if hook is None:
+            return []
+        try:
+            return list(hook(arg))
+        except Exception:  # noqa: BLE001
+            logging.getLogger(__name__).exception("detection failed; continuing without its output")
+            return []
 
     # ---- state -----------------------------------------------------------------
     def _save_state(self, commit=True):
@@ -173,9 +183,8 @@ class HabitatService:
     def post_label(self, doc):
         with self._lock:
             self.store.add("label", doc)
-            if self.detection is not None:
-                for out in self.detection.on_label(doc):
-                    self._push(out)
+            for out in self._detected(self.detection and self.detection.on_label, doc):
+                self._push(out)
 
     def post_ground_reply(self, report):
         """Store a ground report that carries a reply, and store the reply as a Label."""
