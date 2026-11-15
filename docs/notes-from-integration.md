@@ -74,7 +74,11 @@ To switch: set `SF_PROTOCOL=microgravity-cpr` (or change `DEFAULT_PROTOCOL` / `D
 **Still open:**
 - **Spec 4:** `backend/app/runtime.py` still defaults to `stub-protocol` / `stub-mars`. Switch the defaults to `microgravity-cpr` / `mars_transit` (or set `SF_PROTOCOL` and the profile) for the demo.
 - **Spec 2 and Spec 4:** `test_no_external_urls_in_runtime_code` fails on `frontend/src/references.ts` (link to `https://nlsp.nasa.gov`). Agree whether reference links may appear in the frontend, or move them to content.
-- **Not run:** the browser end-to-end (Playwright) tests on the merged branch.
+- **Browser tests (Playwright):** all 37 pass as committed, on the stub content.
+  - With the real content and crew ids, the real steps, citations, the auto Trigger and the offline steps all render.
+  - The emergency e2e specs still assert the stub's texts, crew ids (`cmdr`/`eng`/`sci`) and 3-step length, so they need updating for the real content (Spec 4).
+  - The glove check fails on real UI: a home "Head" zoom button is 56 px, below the 64 px team value (Spec 2 and Spec 4 to agree).
+  - `frontend/playwright.config.ts` hard-codes a Windows Python path (`../backend/.venv/Scripts/python.exe`), so it won't start on macOS or Linux.
 
 ## For everyone
 
