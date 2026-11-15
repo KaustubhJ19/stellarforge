@@ -42,3 +42,8 @@ playwright-report/
 
 # Demo recordings (tools/demo)
 out/
+
+# Coverage
+.coverage
+htmlcov/
+coverage/

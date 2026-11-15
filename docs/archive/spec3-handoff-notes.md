@@ -1,4 +1,6 @@
-# Notes from detection (Spec 3) to the team
+# Notes from detection (Spec 3) to the team (archived hand-off)
+
+> Historical. The service hook below is applied in `backend/service.py` and its patch file was removed.
 
 From the AI / detection lead, 2026-11-15. Branch `spec-3-detection-baseline` (includes the data lead's Spec 1 branch, merged).
 
