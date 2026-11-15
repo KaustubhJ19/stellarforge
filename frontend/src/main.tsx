@@ -61,7 +61,7 @@ function Root() {
 
   if (error) return <p className="load-message">Could not load replay file: {error}</p>;
   if (!mission) return <p className="load-message">Loading replay…</p>;
-  return <App replay={mission.replay} crew={mission.crew} onEmergency={(request) => openEmergencyFlow(mission.crew.id, request)} />;
+  return <App replay={mission.replay} crew={mission.crew} watchEmergency onEmergency={(request) => openEmergencyFlow(mission.crew.id, request)} />;
 }
 
 createRoot(document.getElementById("root")!).render(

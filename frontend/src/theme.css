@@ -1114,6 +1114,23 @@ input[type="range"]:disabled { opacity: 0.4; cursor: not-allowed; }
 .tasks__progress::-webkit-progress-value { background: var(--status-green); transition: width 300ms ease; }
 .tasks__progress::-moz-progress-bar { background: var(--status-green); }
 
+/* "Crew B needs help" pop-up: red top edge, one big Respond, a small Dismiss */
+.alert-pop { width: min(460px, 100%); border-top-color: var(--emergency); }
+.alert-pop h2 { margin: 0; font-size: var(--font-size-lg); }
+.alert-pop p { margin: 0; color: var(--text-muted); }
+.alert-pop__respond {
+  display: grid;
+  place-items: center;
+  min-height: 64px;
+  border-radius: var(--radius);
+  background: var(--emergency);
+  color: var(--emergency-text);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  text-decoration: none;
+}
+.alert-pop__respond:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
 /* Dropdown folds: long lists stay one click away */
 .fold { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); }
 .fold > summary {
