@@ -41,6 +41,6 @@
   ],
   "fallback": {
     "id": "no-match",
-    "reason": "This situation is not covered by the tool. Contact ground."
+    "reason": "No cited protocol matches what was reported. Ground should advise."
   }
 }

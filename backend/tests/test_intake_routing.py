@@ -159,6 +159,14 @@ def test_report_in_flight_to_ground_carries_the_route_but_not_after_it_arrives(r
     assert "override" in reng.ground.build(e)["summary"]  # the crew copy stays live
 
 
+def test_report_in_flight_lists_the_override_in_its_timeline(reng):
+    e = alarmed(reng)
+    reng.submit_intake("B", CHEST)
+    reng.switch_protocol("B", "microgravity-cpr")
+    events = [t["event"] for t in reng.ground.state[e.id]["snapshot"]["timeline"]]
+    assert "protocol switched" in events
+
+
 def test_override_before_the_intake_is_refused(reng):
     alarmed(reng)
     with pytest.raises(FlowError):

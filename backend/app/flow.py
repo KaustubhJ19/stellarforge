@@ -332,10 +332,10 @@ class FlowEngine:
             e.protocol_id = protocol_id
             for c, done in e.done.items():  # steps of the old protocol must not count as done in the new one
                 e.done[c] = [k for k in done if not k.startswith("step:")]
-            if self.ground:
-                self.ground.refresh(e)
             self._note(e, "protocol switched", by=crew, **{"from": before, "to": protocol_id})
             self.emit("protocol_switched", emergency=e.id, crew=crew, to=protocol_id, **{"from": before})
+            if self.ground:  # after the note, so the report in flight lists the switch
+                self.ground.refresh(e)
             self._refresh()
             return e.route
 
