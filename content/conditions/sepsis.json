@@ -3,7 +3,7 @@
   "name": "Sepsis / severe infection",
   "protocol": "sepsis",
   "state": "pending",
-  "guidance_candidate": "Surviving Sepsis recognition + escalation (candidate from Spec 1; verified when the evidence pack is built)",
+  "guidance_candidate": "Surviving Sepsis Campaign 2021 (verified: evidence pack sepsis.evidence.json)",
   "prior_incidence": {
     "status": "pending",
     "value": null,
@@ -16,7 +16,8 @@
     "scenario": null
   },
   "labels": [
-    "pending: no approved protocol, routes to not covered",
+    "Earth reference, no space data",
+    "draft: awaiting human approval, routes to not covered",
     "not clinically reviewed"
   ]
 }

@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0.0",
+  "id": "sepsis",
+  "title": "Sepsis / severe infection (Earth reference, no space data)",
+  "condition_ids": [
+    "sepsis"
+  ],
+  "steps": [
+    {
+      "id": "sepsis-1-emergency",
+      "text": "Treat suspected sepsis as a medical emergency: start treatment and resuscitation immediately.",
+      "source": {
+        "guideline": "Evans L, Rhodes A, Alhazzani W, et al. Surviving sepsis campaign: international guidelines for management of sepsis and septic shock 2021. Intensive Care Med. 2021;47(11):1181-1247. doi:10.1007/s00134-021-06506-y (Earth reference, no space data)",
+        "section": "Initial resuscitation, Recommendation 4"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "draft",
+      "drafted_by": "Claude Code (Claude Opus 5.5)"
+    },
+    {
+      "id": "sepsis-2-assess",
+      "text": "Quickly assess whether infection or another cause is more likely behind the illness: take the history, examine the patient, and immediately treat any condition that can look like sepsis.",
+      "source": {
+        "guideline": "Evans L, Rhodes A, Alhazzani W, et al. Surviving sepsis campaign: international guidelines for management of sepsis and septic shock 2021. Intensive Care Med. 2021;47(11):1181-1247. doi:10.1007/s00134-021-06506-y (Earth reference, no space data)",
+        "section": "Time to antibiotics, Recommendation 13"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "draft",
+      "drafted_by": "Claude Code (Claude Opus 5.5)"
+    },
+    {
+      "id": "sepsis-3-medication",
+      "text": "Medication: per flight surgeon / onboard medical checklist.",
+      "source": {
+        "guideline": "team rule (Spec 5): medication stays with the flight surgeon; protocols never name a drug or dose",
+        "section": "Spec 5, Protocol content rules"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "draft",
+      "drafted_by": "Claude Code (Claude Opus 5.5)"
+    },
+    {
+      "id": "sepsis-4-reassess",
+      "text": "Keep re-checking the patient and keep looking for other causes of the illness.",
+      "source": {
+        "guideline": "Evans L, Rhodes A, Alhazzani W, et al. Surviving sepsis campaign: international guidelines for management of sepsis and septic shock 2021. Intensive Care Med. 2021;47(11):1181-1247. doi:10.1007/s00134-021-06506-y (Earth reference, no space data)",
+        "section": "Diagnosis of infection, Recommendation 11"
+      },
+      "equipment": [],
+      "rescuers": 1,
+      "status": "draft",
+      "drafted_by": "Claude Code (Claude Opus 5.5)"
+    }
+  ]
+}

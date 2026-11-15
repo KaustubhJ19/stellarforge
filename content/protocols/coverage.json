@@ -96,5 +96,48 @@
         ]
       }
     }
+  },
+  "sepsis": {
+    "source": "Evans L, Rhodes A, Alhazzani W, et al. Surviving sepsis campaign: international guidelines for management of sepsis and septic shock 2021. Intensive Care Med. 2021;47(11):1181-1247. doi:10.1007/s00134-021-06506-y (Earth reference, no space data)",
+    "environments": {
+      "spacecraft-transit": {
+        "covered": true,
+        "basis": "SSC 2021 Recommendations 4, 11 and 13; Earth reference, no space data"
+      },
+      "station": {
+        "covered": true,
+        "basis": "SSC 2021 Recommendations 4, 11 and 13; Earth reference, no space data"
+      },
+      "moon-base": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "Surviving Sepsis Campaign 2021 is terrestrial hospital guidance; it gives no recommendation for reduced gravity.",
+            "section": "SSC 2021, Introduction"
+          }
+        ]
+      },
+      "mars-base": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "Surviving Sepsis Campaign 2021 is terrestrial hospital guidance; it gives no recommendation for reduced gravity.",
+            "section": "SSC 2021, Introduction"
+          }
+        ]
+      },
+      "rover": {
+        "covered": false,
+        "label": "not covered by published guidance",
+        "notes": [
+          {
+            "text": "Surviving Sepsis Campaign 2021 is terrestrial hospital guidance; it gives no recommendation for reduced gravity.",
+            "section": "SSC 2021, Introduction"
+          }
+        ]
+      }
+    }
   }
 }

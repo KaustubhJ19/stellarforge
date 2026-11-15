@@ -1,0 +1,58 @@
+{
+  "note": "Spec 1 evidence pack, drafted by Claude Code (Claude Opus 5.5). Quotes are exact substrings of the PMC full text (PMC8486643), checked by script; grade labels after each recommendation are omitted. Recommendation 5 (fluid volume) is excluded: it is a dose (Rule 4).",
+  "protocol": "sepsis",
+  "conditions": [
+    "sepsis"
+  ],
+  "why": "Severe infection can progress to septic shock and loss of responsiveness; NASA IMM lists infections among in-flight conditions. Meets the selection rule only partly: most SSC 2021 recommendations are for hospitals and ICUs; four are usable by a non-doctor rescuer (recognise, assess, hand medication to the flight surgeon, re-assess).",
+  "sources": [
+    {
+      "guideline": "Evans L, Rhodes A, Alhazzani W, et al. Surviving sepsis campaign: international guidelines for management of sepsis and septic shock 2021. Intensive Care Med. 2021;47(11):1181-1247. doi:10.1007/s00134-021-06506-y (Earth reference, no space data)",
+      "licence": "© Springer-Verlag GmbH Germany, part of Springer Nature 2021. PMC copy released under the PMC COVID-19 permission 'for the duration of the WHO declaration' (ended); quote recommendation text only",
+      "licence_checked": false,
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8486643/"
+    },
+    {
+      "guideline": "team rule (Spec 5): medication stays with the flight surgeon; protocols never name a drug or dose",
+      "licence": "Team rule (StellarForge); no external licence",
+      "licence_checked": true
+    }
+  ],
+  "recommendations": [
+    {
+      "guideline": "Evans L, Rhodes A, Alhazzani W, et al. Surviving sepsis campaign: international guidelines for management of sepsis and septic shock 2021. Intensive Care Med. 2021;47(11):1181-1247. doi:10.1007/s00134-021-06506-y (Earth reference, no space data)",
+      "section": "Initial resuscitation, Recommendation 4",
+      "quotes": [
+        "Sepsis and septic shock are medical emergencies, and we recommend that treatment and resuscitation begin immediately"
+      ]
+    },
+    {
+      "guideline": "Evans L, Rhodes A, Alhazzani W, et al. Surviving sepsis campaign: international guidelines for management of sepsis and septic shock 2021. Intensive Care Med. 2021;47(11):1181-1247. doi:10.1007/s00134-021-06506-y (Earth reference, no space data)",
+      "section": "Time to antibiotics, Recommendation 13",
+      "quotes": [
+        "For adults with possible sepsis without shock, we recommend rapid assessment of the likelihood of infectious versus non-infectious causes of acute illness",
+        "Rapid assessment includes history and clinical examination, tests for both infectious and non-infectious causes of acute illness and immediate treatment for acute conditions that can mimic sepsis."
+      ]
+    },
+    {
+      "guideline": "Evans L, Rhodes A, Alhazzani W, et al. Surviving sepsis campaign: international guidelines for management of sepsis and septic shock 2021. Intensive Care Med. 2021;47(11):1181-1247. doi:10.1007/s00134-021-06506-y (Earth reference, no space data)",
+      "section": "Diagnosis of infection, Recommendation 11",
+      "quotes": [
+        "For adults with suspected sepsis or septic shock but unconfirmed infection, we recommend continuously re-evaluating and searching for alternative diagnoses and discontinuing empiric antimicrobials if an alternative cause of illness is demonstrated or strongly suspected"
+      ]
+    },
+    {
+      "guideline": "team rule (Spec 5): medication stays with the flight surgeon; protocols never name a drug or dose",
+      "section": "Spec 5, Protocol content rules",
+      "kind": "team rule",
+      "quotes": [
+        "For adults with possible septic shock or a high likelihood for sepsis, we recommend administering antimicrobials immediately, ideally within 1 h of recognition"
+      ]
+    }
+  ],
+  "microgravity": "Earth reference, no space data. SSC 2021 is hospital guidance. ICU admission within 6 h (Recommendation 10) is impossible in flight; escalation goes to ground / the flight surgeon, which this guideline does not cover.",
+  "pulse": {
+    "model": "yes",
+    "scenario": null
+  }
+}
