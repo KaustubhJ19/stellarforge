@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "briefing.schema.json",
+  "title": "Briefing",
+  "x-status": "PROVISIONAL: not one of Spec 1's seven contracts. Spec 3 (Collapse copilot): the briefing shown beside intake, instant template or checked LLM rewrite. Every probability carries a source label. Needs team agreement before it is frozen.",
+  "type": "object",
+  "required": ["assessment_id", "crew", "t", "text", "source", "context_label"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "assessment_id": {"type": "string"},
+    "crew": {"type": "string"},
+    "t": {"type": "number", "description": "Mission clock seconds"},
+    "text": {"type": "string", "minLength": 1, "description": "What the rescuer sees"},
+    "template_text": {"type": "string", "description": "The instant template, kept when the LLM rewrite is shown"},
+    "source": {"enum": ["template", "llm"]},
+    "context_label": {"type": "string", "minLength": 1, "description": "e.g. \"context; the protocol above comes first\""},
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["text", "label"],
+        "properties": {
+          "text": {"type": "string", "minLength": 1},
+          "probability": {"type": "number", "minimum": 0, "maximum": 1},
+          "label": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

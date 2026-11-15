@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "id": "assess-1",
+  "crew": "A",
+  "t": 7200,
+  "conditions": [
+    {
+      "condition": "example_condition_a",
+      "rank": 1,
+      "posterior": 0.42,
+      "prior": 0.1,
+      "label": "trained on simulation (Pulse), estimate, not validated",
+      "evidence": [
+        {"text": "Example evidence line", "likelihood_ratio": 2.5, "label": "team value"}
+      ],
+      "protocol_id": "example-protocol"
+    },
+    {
+      "condition": "example_condition_b",
+      "rank": 2,
+      "posterior": 0.2,
+      "label": "NASA base rate",
+      "evidence": [],
+      "protocol_id": null
+    }
+  ]
+}
