@@ -81,7 +81,12 @@ class Habitat:
     def handle(self, msg: dict) -> None:
         kind, payload = msg.get("type"), msg.get("payload") or {}
         try:
-            if kind in ("reading", "reading_state"):
+            if kind in ("alert", "trigger") and "hot_summary" in payload:  # Spec 2 snapshot rides on the push
+                payload = dict(payload)
+                self.eng.hot_summaries.update(payload.pop("hot_summary"))
+            if kind == "hot_summary":
+                self.eng.hot_summaries.update(payload)
+            elif kind in ("reading", "reading_state"):
                 self.eng.ingest_reading(payload)
             elif kind == "alert":
                 self.eng.ingest_alert(payload)
