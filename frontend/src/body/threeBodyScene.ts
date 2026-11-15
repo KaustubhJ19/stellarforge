@@ -1,0 +1,315 @@
+import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import type { Status } from "../contracts";
+import type { BodyModel, BodyScene, BodySceneFactory, BodyView, Focus, LayerId } from "./view";
+import { STRUCTURES, structuresIn, type RegionId, type StructureId } from "./structures";
+
+const BASE = import.meta.env.BASE_URL;
+const modelUrl = (model: BodyModel) => `${BASE}models/body-${model}.glb`;
+/** Higher-detail structures for one region, fetched the first time it is zoomed into. */
+const regionDetailUrl = (model: BodyModel, region: RegionId) => `${BASE}models/body-${model}.${region}.glb`;
+const FLY_SECONDS = 0.6;
+/** Glowing structures stay visible even when their layer is faded. */
+const GLOW_MIN_OPACITY = 0.85;
+
+function cssColor(name: string, fallback: string): THREE.Color {
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return new THREE.Color(v || fallback);
+}
+
+interface Part {
+  mesh: THREE.Mesh;
+  material: THREE.MeshStandardMaterial;
+  kind: "structure" | "outline";
+  layer: LayerId;
+}
+
+/** Real WebGL body drawn with Three.js from the Spike B GLB. */
+export const threeBodyScene: BodySceneFactory = (host, events) => {
+  if (typeof WebGL2RenderingContext === "undefined") {
+    throw new Error("this browser has no WebGL");
+  }
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  host.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x223344, 1.6));
+  const key = new THREE.DirectionalLight(0xffffff, 1.4);
+  key.position.set(1, 2, 3);
+  scene.add(key);
+
+  const camera = new THREE.PerspectiveCamera(30, 1, 0.01, 50);
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.enablePan = false;
+
+  const status: Record<Status, THREE.Color> = {
+    green: cssColor("--status-green", "#29c0b1"),
+    amber: cssColor("--status-amber", "#ffcc33"),
+    red: cssColor("--status-red", "#ff5a5a"),
+  };
+  // "Why this forecast?": one neutral hue, deliberately unlike any Status colour.
+  const explainColor = cssColor("--explain", "#b48cff");
+  // Read theme colours once; apply() runs on every scrub step.
+  const layerColors = new Map<LayerId, THREE.Color>();
+  const layerColor = (layer: LayerId) => {
+    if (!layerColors.has(layer)) layerColors.set(layer, cssColor(`--layer-${layer}`, "#cccccc"));
+    return layerColors.get(layer)!;
+  };
+
+  const parts = new Map<string, Part>();
+  let heart: THREE.Mesh | null = null;
+  let lungs: THREE.Mesh | null = null;
+  let view: BodyView | null = null;
+  let body: THREE.Object3D | null = null;
+  let loadedModel: BodyModel | null = null;
+  let framedFocus = "";
+  const detailRequested = new Set<RegionId>();
+  let fly: { from: [THREE.Vector3, THREE.Vector3]; to: [THREE.Vector3, THREE.Vector3]; t: number } | null = null;
+  let disposed = false;
+
+  const draco = new DRACOLoader().setDecoderPath(`${BASE}draco/`);
+  const loader = new GLTFLoader().setDRACOLoader(draco);
+
+  /** Load (or switch to) a body model; the view says which one. */
+  function loadModel(model: BodyModel) {
+    loadedModel = model;
+    clearBody();
+    host.dataset.loaded = "false";
+    loader
+      .loadAsync(modelUrl(model))
+      .then((gltf) => {
+        if (disposed || loadedModel !== model) return;
+        gltf.scene.traverse((o) => {
+          if (!(o instanceof THREE.Mesh)) return;
+          // GLTFLoader strips dots from node names, so the structure id travels in glTF extras.
+          const { kind, layer, id } = o.userData as { kind: Part["kind"]; layer: LayerId; id: string };
+          const material = new THREE.MeshStandardMaterial({
+            color: layerColor(layer),
+            roughness: 0.65,
+            metalness: 0,
+            transparent: true,
+          });
+          o.material = material;
+          parts.set(id, { mesh: o, material, kind, layer });
+        });
+        heart = parts.get("heart")?.mesh ?? null;
+        lungs = parts.get("lungs")?.mesh ?? null;
+        if (heart) centreOnItself(heart);
+        if (lungs) centreOnItself(lungs);
+        scene.add(gltf.scene);
+        body = gltf.scene;
+        const box = new THREE.Box3().setFromObject(body);
+        controls.maxDistance = box.getSize(new THREE.Vector3()).y * 4;
+        controls.minDistance = 0.05;
+        jumpTo(box);
+        if (view) apply(view);
+        host.dataset.loaded = "true";
+        host.dataset.model = model;
+        events.onLoaded();
+      })
+      .catch((e: Error) => {
+        if (disposed || loadedModel !== model) return;
+        host.dataset.error = e.message;
+        events.onError(e.message);
+      });
+  }
+
+  function clearBody() {
+    if (body) scene.remove(body);
+    for (const p of parts.values()) {
+      p.mesh.geometry.dispose();
+      p.material.dispose();
+    }
+    parts.clear();
+    body = heart = lungs = null;
+    framedFocus = "";
+    detailRequested.clear();
+  }
+
+  function centreOnItself(mesh: THREE.Mesh) {
+    mesh.geometry.computeBoundingBox();
+    const c = mesh.geometry.boundingBox!.getCenter(new THREE.Vector3());
+    mesh.geometry.translate(-c.x, -c.y, -c.z);
+    mesh.position.add(c);
+  }
+
+  /** Camera target and position that fit `box`, looking from the current direction. */
+  function shotOf(box: THREE.Box3, margin: number): [THREE.Vector3, THREE.Vector3] {
+    const size = box.getSize(new THREE.Vector3());
+    const centre = box.getCenter(new THREE.Vector3());
+    const halfFov = THREE.MathUtils.degToRad(camera.fov / 2);
+    const fitHeight = size.y / 2 / Math.tan(halfFov);
+    const fitWidth = size.x / 2 / (Math.tan(halfFov) * camera.aspect);
+    const distance = Math.max(fitHeight, fitWidth, 0.12) * margin + size.z / 2;
+    const dir = camera.position.clone().sub(controls.target);
+    if (dir.lengthSq() < 1e-9) dir.set(0, 0, 1);
+    return [centre, centre.clone().add(dir.normalize().multiplyScalar(distance))];
+  }
+
+  function jumpTo(box: THREE.Box3) {
+    camera.position.set(0, 0, 1);
+    controls.target.set(0, 0, 0);
+    const [target, position] = shotOf(box, 1.12);
+    controls.target.copy(target);
+    camera.position.copy(position);
+    controls.update();
+  }
+
+  function flyTo(box: THREE.Box3, margin = 1.12) {
+    fly = { from: [controls.target.clone(), camera.position.clone()], to: shotOf(box, margin), t: 0 };
+  }
+
+  function boxOf(ids: StructureId[]): THREE.Box3 {
+    const box = new THREE.Box3();
+    for (const id of ids) {
+      const p = parts.get(id);
+      if (p) box.expandByObject(p.mesh);
+    }
+    return box;
+  }
+
+  function regionOf(focus: Focus): RegionId | null {
+    if (focus.level === "region") return focus.region;
+    if (focus.level === "structure") return STRUCTURES[focus.structure].region;
+    return null;
+  }
+
+  function loadDetail(region: RegionId) {
+    if (detailRequested.has(region)) return;
+    detailRequested.add(region);
+    loader
+      .loadAsync(regionDetailUrl(loadedModel!, region))
+      .then((gltf) => {
+        if (disposed || !body) return;
+        gltf.scene.traverse((o) => {
+          const p = o instanceof THREE.Mesh ? parts.get(o.userData.id) : undefined;
+          if (!p) return;
+          const detail = (o as THREE.Mesh).geometry;
+          // Keep the coarse mesh's local origin (the heart is centred on itself to pulse).
+          detail.translate(-p.mesh.position.x, -p.mesh.position.y, -p.mesh.position.z);
+          p.mesh.geometry.dispose();
+          p.mesh.geometry = detail;
+        });
+        host.dataset.detail = [...detailRequested].join(" ");
+      })
+      .catch(() => detailRequested.delete(region));
+  }
+
+  function applyFocus(focus: Focus) {
+    const key = JSON.stringify(focus);
+    if (!body || key === framedFocus) return;
+    framedFocus = key;
+    const region = regionOf(focus);
+    if (region) loadDetail(region);
+    if (focus.level === "body") flyTo(new THREE.Box3().setFromObject(body));
+    else if (focus.level === "region") flyTo(boxOf(structuresIn(focus.region)));
+    else flyTo(boxOf([focus.structure]), 1.8);
+  }
+
+  function apply(next: BodyView) {
+    view = next;
+    if (next.model !== loadedModel) loadModel(next.model);
+    applyFocus(next.focus);
+    for (const [name, p] of parts) {
+      const layer = next.layers[p.layer];
+      const s = p.kind === "structure" ? next.structures[name] : undefined;
+      const glow = s?.status ?? null;
+      let opacity = s?.opacity ?? layer.opacity;
+      if (glow) opacity = Math.max(opacity, GLOW_MIN_OPACITY);
+      p.mesh.visible = layer.visible && opacity > 0.01;
+      p.material.opacity = opacity;
+      p.material.depthWrite = opacity > 0.9;
+      p.mesh.renderOrder = glow ? 2 : p.kind === "structure" ? 1 : 0;
+      const weight = s?.explain ?? null;
+      if (weight !== null) {
+        // Heat-map: from the layer's own colour towards the explain hue, by weight.
+        p.material.color.copy(layerColor(p.layer)).lerp(explainColor, 0.35 + 0.65 * weight);
+        p.material.emissive.copy(explainColor);
+        p.material.emissiveIntensity = 0.15 + 0.5 * weight;
+        p.mesh.renderOrder = 2;
+      } else if (glow) {
+        p.material.color.copy(status[glow]);
+        p.material.emissive.copy(status[glow]);
+        p.material.emissiveIntensity = 0.55;
+      } else if (next.wholeBody) {
+        // Whole-body Indicators: a soft tint across everything that is not glowing itself.
+        p.material.color.copy(layerColor(p.layer)).lerp(status[next.wholeBody], 0.45);
+        p.material.emissive.copy(status[next.wholeBody]);
+        p.material.emissiveIntensity = 0.15;
+      } else {
+        p.material.color.copy(layerColor(p.layer));
+        p.material.emissive.setRGB(0, 0, 0);
+      }
+    }
+  }
+
+  const ro = new ResizeObserver(() => {
+    const { clientWidth: w, clientHeight: h } = host;
+    if (!w || !h) return;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  });
+  ro.observe(host);
+
+  // Honour the system "reduce motion" setting, and follow it if it changes.
+  const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
+  let reduceMotion = motionQuery.matches;
+  controls.enableDamping = !reduceMotion;
+  const onMotionChange = (e: MediaQueryListEvent) => {
+    reduceMotion = e.matches;
+    controls.enableDamping = !reduceMotion;
+  };
+  motionQuery.addEventListener("change", onMotionChange);
+
+  const start = performance.now();
+  let last = start;
+  renderer.setAnimationLoop((now: number) => {
+    const t = (now - start) / 1000;
+    const dt = Math.min((now - last) / 1000, 0.1);
+    last = now;
+    if (heart) {
+      const bpm = reduceMotion ? 0 : (view?.heartRate ?? 0);
+      // A short beat: quick swell then relax, once per beat.
+      const phase = bpm > 0 ? (t * bpm) / 60 - Math.floor((t * bpm) / 60) : 1;
+      const beat = phase < 0.15 ? Math.sin((phase / 0.15) * Math.PI) : 0;
+      heart.scale.setScalar(1 + 0.08 * beat);
+    }
+    if (lungs) {
+      const rate = reduceMotion ? 0 : (view?.breathRate ?? 0);
+      // Smooth in-and-out, once per breath.
+      const swell = rate > 0 ? 0.5 - 0.5 * Math.cos((t * rate * 2 * Math.PI) / 60) : 0;
+      lungs.scale.set(1 + 0.03 * swell, 1 + 0.02 * swell, 1 + 0.04 * swell);
+    }
+    if (fly) {
+      fly.t = reduceMotion ? 1 : Math.min(1, fly.t + dt / FLY_SECONDS);
+      const k = 1 - Math.pow(1 - fly.t, 3); // ease out
+      controls.target.lerpVectors(fly.from[0], fly.to[0], k);
+      camera.position.lerpVectors(fly.from[1], fly.to[1], k);
+      if (fly.t >= 1) fly = null;
+    }
+    controls.update();
+    renderer.render(scene, camera);
+  });
+
+  const handle: BodyScene = {
+    apply,
+    dispose() {
+      disposed = true;
+      renderer.setAnimationLoop(null);
+      ro.disconnect();
+      motionQuery.removeEventListener("change", onMotionChange);
+      controls.dispose();
+      draco.dispose();
+      clearBody();
+      renderer.dispose();
+      renderer.forceContextLoss();
+      renderer.domElement.remove();
+    },
+  };
+  return handle;
+};

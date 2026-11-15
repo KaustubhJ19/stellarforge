@@ -1,0 +1,90 @@
+[
+ {
+  "schema_version": "1.0.0",
+  "id": "A",
+  "sex": "male",
+  "anchor": {
+   "heart_rate": {
+    "mean": 65,
+    "sd": 5
+   },
+   "resting_heart_rate": {
+    "mean": 58,
+    "sd": 3
+   },
+   "respiration_rate": {
+    "mean": 15,
+    "sd": 1.5
+   },
+   "spo2": {
+    "mean": 0.975,
+    "sd": 0.01
+   },
+   "sleep_duration": {
+    "mean": 420,
+    "sd": 30
+   },
+   "steps": {
+    "mean": 8000,
+    "sd": 1500
+   },
+   "stress": {
+    "mean": 2,
+    "sd": 0.6
+   },
+   "fatigue": {
+    "mean": 2.2,
+    "sd": 0.6
+   },
+   "mood": {
+    "mean": 3,
+    "sd": 0.5
+   }
+  },
+  "missionProfile": "mars_transit"
+ },
+ {
+  "schema_version": "1.0.0",
+  "id": "B",
+  "sex": "female",
+  "anchor": {
+   "heart_rate": {
+    "mean": 65,
+    "sd": 5
+   },
+   "resting_heart_rate": {
+    "mean": 58,
+    "sd": 3
+   },
+   "respiration_rate": {
+    "mean": 15,
+    "sd": 1.5
+   },
+   "spo2": {
+    "mean": 0.975,
+    "sd": 0.01
+   },
+   "sleep_duration": {
+    "mean": 420,
+    "sd": 30
+   },
+   "steps": {
+    "mean": 8000,
+    "sd": 1500
+   },
+   "stress": {
+    "mean": 2,
+    "sd": 0.6
+   },
+   "fatigue": {
+    "mean": 2.2,
+    "sd": 0.6
+   },
+   "mood": {
+    "mean": 3,
+    "sd": 0.5
+   }
+  },
+  "missionProfile": "mars_transit"
+ }
+]

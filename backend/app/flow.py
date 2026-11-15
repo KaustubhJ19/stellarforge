@@ -1,0 +1,423 @@
+"""Emergency flow engine (Spec 4): one server-side state machine shared by every tablet.
+
+Both triggers (auto from Spec 3, manual from the Emergency button) enter `trigger()`
+and nothing after entry branches on the trigger kind. Each tablet asks `view(crew)`
+for the screen it should show. Every state change emits an event; golden replay tests
+assert on those events and screens.
+"""
+from __future__ import annotations
+
+import itertools
+import threading
+from dataclasses import dataclass, field
+
+from . import contracts
+from .clock import MissionClock
+from .content import Protocol, visible_steps
+from .store import Store, StoreError
+
+DISCLAIMER = "Decision support, not diagnosis."
+CONFIRM_TIMEOUT_S = 15.0
+URGENCY_LABEL = {
+    "ACT_NOW": "ACT NOW",
+    "ESCALATE_TO_GROUND": "ESCALATE TO GROUND",
+    "MONITOR": "MONITOR",
+    "ROUTINE": "ROUTINE",
+}
+NOT_ASSESSED = "Urgency not assessed (manual start)"
+ESTIMATE_LABEL = "estimate, not validated"
+
+
+class FlowError(ValueError):
+    """Request is invalid for the current flow state (HTTP 409/422)."""
+
+
+class AccessDenied(PermissionError):
+    pass
+
+
+@dataclass
+class Emergency:
+    id: str
+    patient: str
+    trigger: dict
+    started_t: float
+    confirm_deadline: float | None
+    status: str = "confirming"  # confirming | help_requested | alarm | active | dismissed
+    path: str | None = None  # help_requested | no_answer
+    answers: dict = field(default_factory=dict)
+    observer: str | None = None
+    rescuers: list[str] = field(default_factory=list)  # [R1, R2]
+    done: dict[str, list[str]] = field(default_factory=dict)  # crew -> completed item keys, in order
+    record_view: dict[str, dict] = field(default_factory=dict)  # crew -> record or error
+    timeline: list[dict] = field(default_factory=list)
+    actions: list[dict] = field(default_factory=list)
+
+    @property
+    def open(self) -> bool:
+        return self.status != "dismissed"
+
+    def role(self, crew: str) -> str | None:
+        if crew in self.rescuers:
+            return f"R{self.rescuers.index(crew) + 1}"
+        return None
+
+
+class FlowEngine:
+    def __init__(self, store: Store, clock: MissionClock, protocol: Protocol, profile: dict,
+                 crew_records: dict[str, dict], questions: dict):
+        self.store, self.clock, self.protocol, self.profile = store, clock, protocol, profile
+        self.crew = list(profile["crew"])
+        self.records = crew_records
+        self.questions = questions
+        self.events: list[dict] = []
+        self.emergencies: dict[str, Emergency] = {}
+        self.alerts: dict[str, dict] = {}  # crew -> latest emergency Alert (Spec 3)
+        self.readings: dict[str, dict[str, dict]] = {}  # crew -> indicator -> latest Reading
+        self.ground = None  # set by ground module (ticket 12)
+        self.habitat = None  # Spec 1 service adapter (ticket 15), optional
+        self._ids = itertools.count(1)
+        self._screens: dict[str, str] = {c: "idle" for c in self.crew}
+        self._lock = threading.RLock()
+        for sid, reason in protocol.refused:  # unsafe content never reaches a screen
+            self.emit("step_refused", step=sid, reason=reason)
+
+    # ------------------------------------------------------------------ util
+    def now(self) -> float:
+        return self.clock.now()
+
+    def emit(self, type_: str, **data) -> dict:
+        ev = {"t": round(self.now(), 3), "type": type_, **data}
+        self.events.append(ev)
+        self.store.add_event(ev)
+        return ev
+
+    def _note(self, e: Emergency, what: str, **data) -> None:
+        e.timeline.append({"t": round(self.now(), 3), "event": what, **data})
+
+    def active_for(self, patient: str) -> Emergency | None:
+        return next((e for e in self.emergencies.values() if e.patient == patient and e.open), None)
+
+    def _get(self, eid: str | None, *, for_crew: str | None = None) -> Emergency:
+        if eid:
+            e = self.emergencies.get(eid)
+            if not e or not e.open:
+                raise FlowError(f"no open emergency {eid}")
+            return e
+        opened = [e for e in self.emergencies.values() if e.open and e.patient != for_crew]
+        if len(opened) != 1:
+            raise FlowError("emergency id required" if opened else "no open emergency")
+        return opened[0]
+
+    def _check_crew(self, crew: str) -> None:
+        if crew not in self.crew:
+            raise contracts.ContractError(f"unknown crew '{crew}'")
+
+    # ------------------------------------------------------------- stream in
+    def ingest_alert(self, alert: dict) -> None:
+        with self._lock:
+            contracts.validate("alert", alert)
+            if alert["kind"] == "emergency":
+                self.alerts[alert["crew"]] = alert
+            self.emit("alert", id=alert["id"], crew=alert["crew"], kind=alert["kind"], urgency=alert["urgency"])
+
+    def ingest_reading(self, reading: dict) -> None:
+        with self._lock:
+            contracts.validate("reading", reading)
+            self.readings.setdefault(reading["crew"], {})[reading["indicator"]] = reading
+
+    # -------------------------------------------------------------- triggers
+    def trigger(self, trig: dict) -> Emergency:
+        """Single entry point for auto and manual Triggers (story 3)."""
+        with self._lock:
+            contracts.validate("trigger", trig)
+            self._check_crew(trig["crew"])
+            existing = self.active_for(trig["crew"])
+            if existing:
+                self.emit("trigger_duplicate", emergency=existing.id, kind=trig["kind"], crew=trig["crew"])
+                self._note(existing, "duplicate trigger ignored", kind=trig["kind"])
+                return existing
+            e = Emergency(id=f"em-{next(self._ids)}", patient=trig["crew"], trigger=dict(trig),
+                          started_t=self.now(), confirm_deadline=self.now() + CONFIRM_TIMEOUT_S)
+            self.emergencies[e.id] = e
+            self._note(e, "trigger", kind=trig["kind"], reason=trig["reason"])
+            self.emit("trigger", emergency=e.id, kind=trig["kind"], crew=e.patient, reason=trig["reason"])
+            self._refresh()
+            return e
+
+    def urgency(self, e: Emergency) -> str | None:
+        alert = self.alerts.get(e.patient)
+        return alert["urgency"] if alert else None
+
+    # --------------------------------------------------------- confirmation
+    def answer(self, crew: str, question: str, choice: str, eid: str | None = None) -> Emergency:
+        with self._lock:
+            e = self.active_for(crew) if eid is None else self._get(eid)
+            if not e or e.patient != crew:
+                raise FlowError("only the patient answers the confirm questions")
+            q = next((q for q in self.questions["patient"] if q["id"] == question), None)
+            if not q or choice not in {c["id"] for c in q["choices"]}:
+                raise FlowError(f"invalid answer {question}={choice}")
+            late = e.status != "confirming"
+            e.answers[question] = choice
+            self._note(e, "patient answer", question=question, choice=choice, late=late,
+                       **({"crew_reported": True} if question == "chest_pain" else {}))
+            self.emit("patient_answer", emergency=e.id, question=question, choice=choice, late=late)
+            if late:  # after the alarm the answer is recorded only; the flow is not changed
+                self._refresh()
+                return e
+            e.confirm_deadline = None  # any answer means the patient responded
+            if question == "status" and choice == "false_alarm":
+                e.status = "dismissed"
+                e.trigger["confirmed"] = False
+                reason = "patient answered: " + next(c["label"] for c in q["choices"] if c["id"] == choice)
+                self._note(e, "dismissed as false alarm", reason=reason)
+                self.emit("false_alarm_dismissed", emergency=e.id, reason=reason)
+            elif question == "status" and choice == "need_help":
+                e.status, e.path = "help_requested", "help_requested"
+                e.trigger["confirmed"] = True
+                self._note(e, "confirmed by patient")
+                self.emit("confirmed", emergency=e.id, by="patient")
+                self._started(e)
+            self._refresh()
+            return e
+
+    def tick(self) -> None:
+        """Fire due timers: no answer within 15 s rings the crew alarm (story 6)."""
+        with self._lock:
+            for e in list(self.emergencies.values()):
+                if e.status == "confirming" and e.confirm_deadline is not None and self.now() >= e.confirm_deadline:
+                    e.status, e.path, e.confirm_deadline = "alarm", "no_answer", None
+                    targets = [c for c in self.crew if c != e.patient]
+                    self._note(e, "no answer in 15 s; crew alarm")
+                    self.emit("no_answer", emergency=e.id)
+                    self.emit("crew_alarm", emergency=e.id, targets=targets)
+                    self._started(e)
+            if self.ground:
+                self.ground.tick()
+            self._refresh()
+
+    def due_times(self) -> list[float]:
+        """Mission times at which a timer will fire (used by the replay runner)."""
+        out = [e.confirm_deadline for e in self.emergencies.values()
+               if e.status == "confirming" and e.confirm_deadline is not None]
+        if self.ground:
+            out += self.ground.due_times()
+        return out
+
+    def _started(self, e: Emergency) -> None:
+        if self.ground:
+            self.ground.start(e)
+
+    # --------------------------------------------------------------- rescuers
+    def accept(self, crew: str, eid: str | None = None) -> str:
+        """Accept the crew alarm or join a help request. First wins = Rescuer 1."""
+        with self._lock:
+            self._check_crew(crew)
+            e = self._get(eid, for_crew=crew)
+            if crew == e.patient:
+                raise FlowError("the patient cannot be the rescuer")
+            if e.status not in ("alarm", "help_requested"):
+                if e.rescuers:
+                    raise FlowError(f"already accepted by {e.rescuers[0]}")
+                raise FlowError("nothing to accept")
+            e.rescuers.append(crew)
+            e.status = "active"
+            self._note(e, "rescuer 1 assigned", crew=crew)
+            self.emit("rescuer_assigned", emergency=e.id, crew=crew, role="R1")
+            if e.path == "no_answer":
+                self.emit("alarm_stopped", emergency=e.id)
+            self._enter(e, crew)
+            self._refresh()
+            return "R1"
+
+    def can_join_r2(self, e: Emergency, crew: str) -> bool:
+        return (e.status == "active" and len(e.rescuers) == 1 and crew not in (e.patient, *e.rescuers)
+                and len(self.crew) > 2)  # two-person rover profile: no Rescuer 2
+
+    def join_r2(self, crew: str, eid: str | None = None) -> str:
+        with self._lock:
+            self._check_crew(crew)
+            e = self._get(eid, for_crew=crew)
+            if not self.can_join_r2(e, crew):
+                raise FlowError("Rescuer 2 is not available")
+            e.rescuers.append(crew)
+            self._note(e, "rescuer 2 assigned", crew=crew)
+            self.emit("rescuer_assigned", emergency=e.id, crew=crew, role="R2")
+            self._enter(e, crew)
+            self._refresh()
+            return "R2"
+
+    def observer_answer(self, crew: str, choice: str, eid: str | None = None) -> None:
+        with self._lock:
+            e = self._get(eid, for_crew=crew)
+            if e.role(crew) != "R1" or self._current(e, crew) != "observer":
+                raise FlowError("observer question is for Rescuer 1 after a crew alarm")
+            q = self.questions["observer"]
+            if choice not in {c["id"] for c in q["choices"]}:
+                raise FlowError(f"invalid observer answer {choice}")
+            e.observer = choice
+            self._note(e, "observer answer", question=q["text"], choice=choice, by=crew)
+            self.emit("observer_answer", emergency=e.id, crew=crew, choice=choice)
+            self._advance(e, crew)
+            self._refresh()
+
+    # ------------------------------------------------------------ sequence
+    def steps_for(self, e: Emergency, crew: str):
+        return visible_steps(self.protocol, self.profile["equipment"], len(e.rescuers), e.role(crew))
+
+    def sequence(self, e: Emergency, crew: str) -> list[str]:
+        items = ["observer"] if (e.role(crew) == "R1" and e.path == "no_answer") else []
+        items += ["record", "contributors"] + [f"step:{s.id}" for s in self.steps_for(e, crew)] + ["report"]
+        return items
+
+    def _current(self, e: Emergency, crew: str) -> str | None:
+        done = e.done.get(crew, [])
+        return next((k for k in self.sequence(e, crew) if k not in done), None)
+
+    def _enter(self, e: Emergency, crew: str) -> None:
+        """Side effects when a rescuer lands on an item (record opening, step shown)."""
+        cur = self._current(e, crew)
+        if cur == "record" and crew not in e.record_view:
+            try:
+                e.record_view[crew] = {"ok": True, "record": self.open_record(crew, e.patient, e.id)}
+            except (StoreError, AccessDenied, PermissionError, OSError) as err:
+                e.record_view[crew] = {"ok": False, "error": str(err)}
+        elif cur and cur.startswith("step:"):
+            sid = cur[5:]
+            if not any(a["step"] == sid and a["by"] == crew and a["action"] == "shown" for a in e.actions):
+                e.actions.append({"t": round(self.now(), 3), "action": "shown", "step": sid, "by": crew})
+                self.emit("step_shown", emergency=e.id, crew=crew, step=sid)
+
+    def _advance(self, e: Emergency, crew: str) -> None:
+        cur = self._current(e, crew)
+        if cur is None:
+            return
+        e.done.setdefault(crew, []).append(cur)
+        if cur.startswith("step:"):
+            e.actions.append({"t": round(self.now(), 3), "action": "completed", "step": cur[5:], "by": crew})
+            self._note(e, "step completed", step=cur[5:], by=crew)
+            self.emit("step_completed", emergency=e.id, crew=crew, step=cur[5:])
+        self._enter(e, crew)
+
+    def next(self, crew: str, eid: str | None = None) -> None:
+        with self._lock:
+            e = self._get(eid, for_crew=crew)
+            cur = self._current(e, crew)
+            if e.role(crew) is None or cur in (None, "observer", "report"):
+                raise FlowError("nothing to continue")
+            self._advance(e, crew)
+            self._refresh()
+
+    def back(self, crew: str, eid: str | None = None) -> None:
+        with self._lock:
+            e = self._get(eid, for_crew=crew)
+            done = e.done.get(crew, [])
+            if e.role(crew) is None or not done or done[-1] == "observer":
+                raise FlowError("nothing to go back to")
+            undone = done.pop()
+            self._note(e, "went back", item=undone, by=crew)
+            self._refresh()
+
+    # --------------------------------------------------------- record access
+    def open_record(self, actor: str, subject: str, eid: str | None = None) -> dict:
+        """Emergency-mode access to another person's Crew record. Logged before it is returned."""
+        with self._lock:
+            self._check_crew(actor)
+            self._check_crew(subject)
+            record = self.records.get(subject)
+            if actor == subject:
+                return record
+            e = next((x for x in self.emergencies.values()
+                      if x.open and x.patient == subject and actor in x.rescuers and (eid is None or x.id == eid)), None)
+            if e is None:
+                self.store.log_access(self.now(), actor, subject, eid, False, "refused: not in emergency mode")
+                self.emit("record_access_refused", actor=actor, subject=subject)
+                raise AccessDenied("another person's record opens only in emergency mode")
+            self.store.log_access(self.now(), actor, subject, e.id, True, f"emergency access as {e.role(actor)}")
+            if self.habitat:  # Spec 1 service is the record source and logs the opening as well
+                record = self.habitat.record(subject, actor, emergency=True)
+            self.emit("record_opened", emergency=e.id, actor=actor, subject=subject)
+            self._note(e, "record opened", by=actor)
+            return record
+
+    # ------------------------------------------------------------------ views
+    def view(self, crew: str) -> dict:
+        with self._lock:
+            self._check_crew(crew)
+            v = self._view(crew) | {"t": round(self.now(), 3)}
+            if v["screen"] != "idle":
+                v["disclaimer"] = DISCLAIMER
+            return v
+
+    def _base(self, e: Emergency) -> dict:
+        return {"emergency": e.id, "patient": e.patient, "patient_name": self.name(e.patient)}
+
+    def _view(self, crew: str) -> dict:
+        e = self.active_for(crew)
+        if e:  # this tablet belongs to the patient
+            b = self._base(e)
+            if e.status == "confirming":
+                u = self.urgency(e)
+                left = None if e.confirm_deadline is None else max(0.0, e.confirm_deadline - self.now())
+                return b | {"screen": "verdict", "urgency": u, "urgency_label": URGENCY_LABEL.get(u, NOT_ASSESSED),
+                            "questions": self.questions["patient"], "answers": dict(e.answers),
+                            "seconds_left": None if left is None else round(left, 1)}
+            screen = {"help_requested": "help_requested", "alarm": "patient_alarm", "active": "patient_waiting"}[e.status]
+            return b | {"screen": screen, "rescuers": list(e.rescuers)}
+        for e in self.emergencies.values():
+            if e.open and crew in e.rescuers:
+                return self._base(e) | self._rescuer_view(e, crew)
+        for e in self.emergencies.values():
+            if not e.open or crew == e.patient:
+                continue
+            if e.status == "alarm":
+                return self._base(e) | {"screen": "alarm", "ring": True}
+            if e.status == "help_requested":
+                return self._base(e) | {"screen": "join", "ring": False}
+            if self.can_join_r2(e, crew):
+                return self._base(e) | {"screen": "join_r2", "ring": False, "rescuer1": e.rescuers[0]}
+        return {"screen": "idle"}
+
+    def _rescuer_view(self, e: Emergency, crew: str) -> dict:
+        cur = self._current(e, crew)
+        role = e.role(crew)
+        v = {"role": role, "can_back": bool(e.done.get(crew)) and e.done[crew][-1] != "observer"}
+        if cur == "observer":
+            return v | {"screen": "observer", "question": self.questions["observer"]}
+        if cur == "record":
+            return v | {"screen": "record"} | e.record_view.get(crew, {"ok": False, "error": "not opened"})
+        if cur == "contributors":
+            return v | {"screen": "contributors"} | self.contributors(e)
+        if cur and cur.startswith("step:"):
+            steps = self.steps_for(e, crew)
+            ids = [s.id for s in steps]
+            sid = cur[5:]
+            return v | {"screen": "step", "step": self.protocol.step(sid).public(),
+                        "index": ids.index(sid) + 1, "total": len(ids), "stub": self.protocol.stub}
+        return v | {"screen": "report", "report": self.ground.report_view(e) if self.ground else None}
+
+    def name(self, crew: str) -> str:
+        """Spec 1 CrewRecord has no display name: show the crew id."""
+        return f"Crew {crew}"
+
+    @staticmethod
+    def cause_text(c) -> str:
+        """Spec 1 Alert.likely_causes item: {indicator, direction, note}; Spec 3 writes the note."""
+        if isinstance(c, str):
+            return c
+        return c.get("note") or f"{c.get('indicator')} {c.get('direction')}"
+
+    def contributors(self, e: Emergency) -> dict:
+        alert = self.alerts.get(e.patient)
+        causes = [self.cause_text(c) for c in alert["likely_causes"]][:3] if alert else []
+        return {"causes": causes,
+                "message": None if len(causes) >= 2 else
+                ("No history-based contributors available." if not causes else "Only one history-based contributor available.")}
+
+    def _refresh(self) -> None:
+        for c in self.crew:
+            s = self._view(c)["screen"]
+            if self._screens.get(c) != s:
+                self._screens[c] = s
+                self.emit("screen", crew=c, screen=s)

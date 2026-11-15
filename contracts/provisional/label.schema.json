@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "label.schema.json",
+  "title": "Label",
+  "x-status": "PROVISIONAL: Label is not one of Spec 1's seven contracts. Shape follows backend/service.py post_ground_reply ({crew, t, kind, report}) plus optional note read by Spec 3 detection. Needs team agreement.",
+  "type": "object",
+  "required": [
+    "crew",
+    "t",
+    "kind"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "crew": {
+      "type": "string"
+    },
+    "t": {
+      "type": "number"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "report": {
+      "type": "object"
+    },
+    "note": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "emergency_id": {
+      "type": "string"
+    },
+    "scripted": {
+      "type": "boolean"
+    }
+  }
+}

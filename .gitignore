@@ -34,3 +34,8 @@ replay/generated/
 
 # Scratch / throwaway work
 .scratch/
+
+# Frontend test/build artifacts
+test-results/
+playwright-report/
+*.tsbuildinfo
