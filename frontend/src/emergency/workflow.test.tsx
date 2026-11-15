@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { Screen } from "../screens";
-import type { View } from "../api";
+import { Screen } from "./screens";
+import type { View } from "./api";
 
 const base = { emergency: "em-1", patient: "cmdr", patient_name: "STUB Commander", disclaimer: "Decision support, not diagnosis.", t: 20 };
 const resc = { ...base, role: "R1" as const, can_back: true };

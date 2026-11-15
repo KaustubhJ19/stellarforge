@@ -25,7 +25,7 @@ MEDICATION_PLACEHOLDER = "per flight surgeon / onboard medical checklist"
 
 # Number followed by a dose unit. Plain counts ("30 compressions") do not match.
 DOSE_RE = re.compile(
-    r"\b\d+(?:[.,]\d+)?\s?(?:mg/kg|mcg/kg|mg|mcg|µg|ug|g|ml|l|iu|units?|mmol|meq)(?![a-z])",
+    r"\b\d+(?:[.,]\d+)?\s?(?:mg/kg|mcg/kg|mg|mcg|µg|ug|g|ml|l|iu|units?|mmol|meq)(?![a-z]|/dl)",
     re.IGNORECASE,
 )
 

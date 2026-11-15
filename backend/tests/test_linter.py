@@ -82,3 +82,11 @@ def test_cli_exits_nonzero_on_bad_content(tmp_path):
     assert r.returncode == 1 and "LINT FAIL" in r.stdout
     r = subprocess.run([sys.executable, str(REPO / "tools/lint_content.py")], capture_output=True, text=True)
     assert r.returncode == 0, r.stdout
+
+
+def test_glucose_lab_unit_is_not_a_dose():
+    assert L.find_drug_or_dose("glucose above 250 mg/dL", []) is None
+
+
+def test_real_dose_still_fails():
+    assert L.find_drug_or_dose("give 250 mg now", []) is not None

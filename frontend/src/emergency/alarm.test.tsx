@@ -28,7 +28,7 @@ describe("ticket 06: audible crew alarm", () => {
   it("beeps while the alarm screen is shown and stops after it", async () => {
     vi.resetModules();
     const started = fakeAudio("running");
-    const { Screen: S } = await import("../screens");
+    const { Screen: S } = await import("./screens");
     const { container, rerender } = render(<S crew="eng" view={alarm} offline={false} error={null} act={async () => {}} />);
     expect(started.length).toBe(1);
     expect(container.querySelector("[data-sound]")?.getAttribute("data-sound")).toBe("playing");
@@ -41,7 +41,7 @@ describe("ticket 06: audible crew alarm", () => {
   it("tells the crew when the browser blocks sound", async () => {
     vi.resetModules();
     fakeAudio("suspended");
-    const { Screen: S } = await import("../screens");
+    const { Screen: S } = await import("./screens");
     const { getByRole } = render(<S crew="eng" view={alarm} offline={false} error={null} act={async () => {}} />);
     expect(getByRole("alert")).toHaveTextContent("tap anywhere to enable the alarm sound");
   });
