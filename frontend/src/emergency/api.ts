@@ -22,6 +22,18 @@ export type Briefing = {
   context_label: string;
   evidence?: { text: string; probability?: number; label: string }[];
 };
+// Collapse Copilot L3 investigator (ticket 13): notes already verified in code; shown apart from the briefing.
+export type InvestigatorNote = {
+  claim: string;
+  sources: { tool: string; field: string; value: unknown; crew: string; snapshot_t: number; snapshot_label: string }[];
+};
+export type Investigator = {
+  status: "running" | "ok" | "unavailable";
+  label: string;
+  message?: string;
+  notes?: InvestigatorNote[];
+  dropped?: number;
+};
 export type L0Verdict = {
   rule_id: string;
   protocol_id: string | null;
@@ -36,6 +48,7 @@ type Rescuer = Base & {
   route?: Route | null;
   protocols?: { id: string; title: string }[];
   briefing?: Briefing;
+  investigator?: Investigator;
   l0?: L0Verdict;
 };
 

@@ -88,6 +88,7 @@ class FlowEngine:
         self.ground = None  # set by ground module (ticket 12)
         self.habitat = None  # Spec 1 service adapter (ticket 15), optional
         self.hot_summaries = PushedHotSummaries()  # Spec 3: latest Spec 2 snapshot per crew (runtime replaces it)
+        self.investigator = None  # Spec 3 L3 InvestigatorRunner (runtime sets it)
         self._ids = itertools.count(1)
         self._screens: dict[str, str] = {c: "idle" for c in self.crew}
         self._lock = threading.RLock()
@@ -492,6 +493,8 @@ class FlowEngine:
             v |= {"route": e.route, "protocols": [{"id": p.id, "title": p.title} for p in self.protocols.values()]}
             if e.copilot:  # Spec 3 briefing beside the intake screen and the banner; context, not instruction
                 v |= {"briefing": e.copilot.briefing, "l0": e.copilot.l0}
+                if self.investigator:  # L3 notes: separate panel, read-only, cannot touch route or steps
+                    v |= self.investigator.view(e)
         if cur == "observer":
             return v | {"screen": "observer", "question": self.questions["observer"]}
         if cur == "intake":

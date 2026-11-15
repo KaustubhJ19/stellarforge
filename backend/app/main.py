@@ -244,10 +244,12 @@ def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI
             """Demo/test only: fresh flow state with the same content and settings."""
             fresh = build(protocol=eng.protocol.id, profile=eng.profile["id"], routing=eng.routing,
                           records_path=records_path,  # without it the stub (empty) records came back and every record opened blank
-                          clock=MissionClock(speed=eng.clock.speed), explainer=eng.explainer.transport)
+                          clock=MissionClock(speed=eng.clock.speed), explainer=eng.explainer.transport,
+                          investigator=eng.investigator.transport)
             eng.__dict__.update(fresh.__dict__)
             eng.ground.eng = eng
             eng.explainer.eng = eng
+            eng.investigator.eng = eng
             return {"ok": True}
 
         @app.post("/api/sim/replay")
