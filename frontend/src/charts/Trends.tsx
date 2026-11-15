@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import type { CrewRecord, IndicatorId, MissionTime, ReplayFile } from "../contracts";
 import { HABITAT_INDICATORS, byIndicatorOrder, displayScale, indicatorLabel, scaleRange } from "../indicators";
 import type { MissionState } from "../replay/state";
-import { baselineFor, seriesOf } from "../replay/state";
+import { baselineFor, isNumeric, seriesOf } from "../replay/state";
 import { TrendChart } from "./TrendChart";
 import { Scrubber } from "./Scrubber";
 
@@ -13,7 +13,7 @@ const NOT_CHARTED = HABITAT_INDICATORS.filter((id) => id !== "radiation_dose_acc
 function chartable(replay: ReplayFile): IndicatorId[] {
   const counts = new Map<IndicatorId, number>();
   for (const e of replay.events) {
-    if (e.type === "reading" && !NOT_CHARTED.includes(e.payload.indicator)) counts.set(e.payload.indicator, (counts.get(e.payload.indicator) ?? 0) + 1);
+    if (e.type === "reading" && isNumeric(e.payload) && !NOT_CHARTED.includes(e.payload.indicator)) counts.set(e.payload.indicator, (counts.get(e.payload.indicator) ?? 0) + 1);
   }
   return [...counts]
     .filter(([, n]) => n > 1)
@@ -37,7 +37,7 @@ export function Trends({
   const options = useMemo(() => chartable(replay), [replay]);
   const [picked, setPicked] = useState<IndicatorId | null>(null);
   const indicator = picked ?? options[0];
-  const series = useMemo(() => (indicator ? seriesOf(replay, indicator) : []), [replay, indicator]);
+  const series = useMemo(() => (indicator ? seriesOf(replay, indicator).filter(isNumeric) : []), [replay, indicator]);
   // Only what was known at the scrubbed time; the axis still spans the whole replay.
   // Shown in display units (a 0-1 fraction as %), as the tiles show it.
   const scale = displayScale(series[0]?.unit ?? "");

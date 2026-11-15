@@ -7,9 +7,7 @@ test.describe("home screen in a real browser, no service", () => {
     await waitForBody(page);
     await expect(page.getByRole("region", { name: "Mission" })).toContainText("28.5 min");
     await expect(page.getByText("Decision support, not diagnosis.")).toBeVisible();
-    // Integration: the home now polls the Spec 4 backend, which this suite runs without, so the
-    // browser logs those 404s. Any other error still fails the test.
-    expect(problems.filter((p) => !/Failed to load resource.*404/.test(p))).toEqual([]);
+    expect(problems).toEqual([]);
   });
 
   test("loads only the base body model at start", async ({ page }) => {
@@ -118,14 +116,19 @@ test.describe("home screen in a real browser, no service", () => {
     await expect(page.locator(".trend__tooltip")).toContainText("Watch");
   });
 
-  test("Emergency and Help reach the emergency flow (Spec 4, wired)", async ({ page }) => {
+  test("Emergency and Help reach the emergency-flow hook", async ({ page }) => {
     await openApp(page);
-    // No service in this suite: the tablet reports it and the Spec 4 offline path answers.
-    await expect(page.getByText("Service unavailable — continuing offline")).toBeVisible();
+    const messages: string[] = [];
+    page.on("dialog", (d) => {
+      messages.push(d.message());
+      void d.dismiss();
+    });
     await page.getByRole("button", { name: "Emergency" }).click();
-    await expect(page.getByRole("alert")).toContainText("No cached protocol on this tablet yet");
     await page.getByRole("button", { name: "Help a crewmate" }).click();
-    await expect(page.getByRole("dialog", { name: "Help a crewmate" })).toBeVisible();
+    expect(messages).toEqual([
+      expect.stringContaining("emergency flow"),
+      expect.stringContaining("help a crewmate flow"),
+    ]);
   });
 
   test("a measurement card opens, traps focus and closes with Escape", async ({ page }) => {
@@ -205,14 +208,15 @@ test.describe("phone width", () => {
 });
 
 test.describe("cabin CO₂ banner", () => {
-  test("shows while the cabin replay's CO₂ is high (10:00-12:00) and clears after", async ({ page }) => {
+  // Needs Spec 5's co2_limit in content/profiles/mars_transit.json (their 740e851, not pushed yet).
+  test.fixme("shows while the cabin's 1-hour CO₂ average is over the limit (10:00-12:00) and clears after", async ({ page }) => {
     const problems = await openApp(page, "/?replay=/replay/mars-day3-female.json&cabin=/replay/iss-cabin-day3.json");
     const banner = page.getByRole("status", { name: "Cabin CO₂" });
-    await expect(page.getByRole("region", { name: "Mission" })).toContainText("41.89 mGy");
+    await expect(page.getByRole("region", { name: "Mission" })).toContainText("41.9 mGy");
     await expect(banner).toHaveCount(0);
     await scrubTo(page, 10);
-    await expect(banner).toContainText("Cabin CO₂ high: 5,800 ppm");
-    await expect(banner).toContainText("team value, not yet researched");
+    await expect(banner).toContainText("Cabin CO₂ high: 3.4 mmHg (1-hour average)");
+    await expect(banner).toContainText("Limit 3 mmHg, 1-hour average");
     await banner.scrollIntoViewIfNeeded();
     await page.screenshot({ path: "test-results/co2-banner.png" });
     await scrubTo(page, 12);
@@ -238,4 +242,25 @@ test.describe('"Why this forecast?"', () => {
     await expect(page.getByRole("heading", { name: "What drove the model" })).toHaveCount(0);
     expect(problems).toEqual([]);
   });
+});
+
+test.describe("Mission profile switcher", () => {
+  for (const width of [1440, 390]) {
+    test(`stays at the top, is a large target and switches the delay (${width} px)`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await openApp(page);
+      const bar = page.getByRole("region", { name: "Mission" });
+      const barBox = (await bar.boundingBox())!;
+      const mainBox = (await page.getByRole("main").boundingBox())!;
+      expect(barBox.y).toBeLessThan(mainBox.y);
+      const select = bar.getByRole("combobox", { name: "Mission profile" });
+      expect((await select.boundingBox())!.height).toBeGreaterThanOrEqual(56);
+      await select.selectOption({ label: "Space station (ISS)" });
+      await expect(bar).toContainText("0 min");
+      // Emergency is still first in the tab order from a fresh page.
+      await page.reload();
+      await page.keyboard.press("Tab");
+      await expect(page.getByRole("button", { name: "Emergency" })).toBeFocused();
+    });
+  }
 });

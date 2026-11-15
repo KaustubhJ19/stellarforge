@@ -1,7 +1,7 @@
 import { useId, useState, type PointerEvent } from "react";
 import type { Alert, MissionTime } from "../contracts";
-import type { Baseline, ShownReading } from "../replay/state";
-import { indicatorLabel } from "../indicators";
+import type { Baseline, NumericReading } from "../replay/state";
+import { INDICATORS, formatNumber, indicatorLabel } from "../indicators";
 import { formatClock, formatMissionTime } from "../replay/time";
 import { STATUS_TEXT, StatusBadge } from "../status";
 import { extent, linear, niceTicks } from "./scale";
@@ -13,7 +13,7 @@ const ALERT_SHAPE = { acute: "triangle", drift: "diamond", emergency: "square" }
 const ALERT_WORD = { acute: "Acute", drift: "Drift", emergency: "Emergency" } as const;
 
 export interface TrendChartProps {
-  readings: ShownReading[];
+  readings: NumericReading[];
   baseline?: Baseline;
   alerts: Alert[];
   /** Time axis span; defaults to the Readings' own span. */
@@ -72,6 +72,7 @@ export function TrendChart({ readings, baseline, alerts, domain, cursor }: Trend
     <figure className="trend" aria-label={`${label} trend`}>
       <figcaption className="trend__title">
         {label} <span className="trend__unit">({unit})</span>
+        {INDICATORS[indicator]?.note && <span className="card__label">{INDICATORS[indicator].note}</span>}
       </figcaption>
       <div className="trend__plot">
         <svg
@@ -93,11 +94,11 @@ export function TrendChart({ readings, baseline, alerts, domain, cursor }: Trend
           ))}
           {xTicks.map((t) => (
             <text key={t} className="trend__xtick" x={x(t)} y={H - 8} textAnchor="middle">
-              {formatClock(t)}
+              {xTicks.length > 1 && xTicks[1] - xTicks[0] >= 86400 ? `Day ${Math.floor(t / 86400) + 1}` : formatClock(t)}
             </text>
           ))}
           {baseline && (
-            <g aria-label={`Your normal: ${baseline.low}–${baseline.high} ${unit}`} role="img">
+            <g aria-label={`Your normal: ${formatNumber(baseline.low)}–${formatNumber(baseline.high)} ${unit}`} role="img">
               <rect
                 className="trend__band"
                 x={M.left}
@@ -145,7 +146,7 @@ export function TrendChart({ readings, baseline, alerts, domain, cursor }: Trend
           })}
           <circle className="trend__end" cx={x(last.t)} cy={y(last.value)} r={4} />
           <text className="trend__end-label" x={x(last.t) + 10} y={y(last.value)} dy="0.32em">
-            {last.value}
+            {formatNumber(last.value)}
           </text>
           {shown && (
             <g className="trend__crosshair">
@@ -161,7 +162,7 @@ export function TrendChart({ readings, baseline, alerts, domain, cursor }: Trend
           >
             <div>{formatMissionTime(shown.t)}</div>
             <strong>
-              {shown.value} {unit}
+              {formatNumber(shown.value)} {unit}
             </strong>
             <StatusBadge status={shown.status} />
           </div>
@@ -183,7 +184,7 @@ export function TrendChart({ readings, baseline, alerts, domain, cursor }: Trend
             {readings.map((r) => (
               <tr key={r.t}>
                 <td>{formatMissionTime(r.t)}</td>
-                <td>{r.value}</td>
+                <td>{formatNumber(r.value)}</td>
                 <td>{STATUS_TEXT[r.status].label}</td>
               </tr>
             ))}
@@ -195,9 +196,12 @@ export function TrendChart({ readings, baseline, alerts, domain, cursor }: Trend
 }
 
 /** Ticks on whole hours of the Mission clock, at a step that gives at most six. */
+/** Hour steps for a day; day and week steps for long replays (152 days of crew data). */
+const TICK_HOURS = [1, 2, 3, 6, 12, 24, 48, 72, 168, 336, 720, 1440];
+
 function hourTicks(t0: number, t1: number): number[] {
   const hours = (t1 - t0) / 3600;
-  const step = ([1, 2, 3, 6, 12, 24].find((h) => hours / h <= 6) ?? 24) * 3600;
+  const step = (TICK_HOURS.find((h) => hours / h <= 6) ?? TICK_HOURS[TICK_HOURS.length - 1]) * 3600;
   const ticks: number[] = [];
   for (let t = Math.ceil(t0 / step) * step; t <= t1; t += step) ticks.push(t);
   return ticks;

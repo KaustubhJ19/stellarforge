@@ -7,8 +7,8 @@ Every number below comes from a test or report in `tools/` that anyone can re-ru
 
 | What | Result | Measured on | How to re-run |
 |---|---|---|---|
-| False alerts (drift + acute) | **0.11 per crew-day**, about one every 9 days per crew (68 alerts in 603 crew-days) | 4 crew replays built from PMData (Earth wearable data, 16 people, CC BY 4.0) | `PYTHONPATH=. python tools/test_detection.py` |
-| Same, before tuning | 0.20 per crew-day | same | same |
+| False alerts (drift + acute) | **0.16 per crew-day**, about one every 6 days per crew (91 alerts in 567 crew-days; crew A 0.05, B 0.15, C 0.25, D 0.20). Was 0.11 before the shared replays added steps and soreness and crew D became PMData p10, who also answers the daily wellness questions; most extra alerts are on those self-reported scores | 4 shared crew replays in `replay/` built from PMData (Earth wearable data, 16 people, CC BY 4.0) | `PYTHONPATH=. python tools/test_detection.py` |
+| Same, before tuning | starting values in `tools/test_detection.py` (0.20 on the first replays) | same | same |
 | Drift caught before the event | A +10 bpm rise over 9 days is caught on day 8. The planned +6 bpm over 9 days is not reliably caught: it is smaller than normal life swings in this data. | Calm crew (PMData p01) with the drift added | `tools/test_golden_replays.py` (synthetic); tuning notes in ticket 13 |
 | Emergency auto Trigger | Fires at the first VT/VF/PEA/asystole reading, or heart rate ≥150 or <50 bpm for 30 s with systolic BP <90 mmHg | Stream in the Pulse emergency replay's format | `tools/test_detection.py`, `tools/test_emergency.py` |
 | Webcam heart rate | **4.9 bpm mean error**; 67 % of 20 s windows within 5 bpm | 5 consenting UBFC-rPPG people, 12 windows (research use only) | `PYTHONPATH=. python tools/test_webcam_hr_ubfc.py` |

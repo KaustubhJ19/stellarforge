@@ -24,7 +24,7 @@ Watch it: [backup demo video](media/backup-demo-2026-11-15.webm) (real app and c
 
 Measured on datasets, not on astronauts. Full numbers and how to re-run them: [accuracy page](accuracy.md).
 
-- **False alerts:** 0.11 per crew-day, about one every 9 days per crew, on four crew replays built from Earth wearable data (PMData).
+- **False alerts:** 0.16 per crew-day, about one every 6 days per crew, on the four shared crew replays built from Earth wearable data (PMData). Most of them come from the daily self-reported wellness scores.
 - **Slow drift:** a +10 bpm rise over 9 days is caught on day 8. Smaller drifts can hide inside normal life swings.
 - **Emergency trigger:** fires at the first dangerous heart rhythm, or at a very fast or very slow heart rate with low blood pressure.
 - **Webcam heart rate:** 4.9 bpm mean error on 5 consenting people (research data).

@@ -22,6 +22,20 @@
    "type": "reading",
    "payload": {
     "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.1,
+    "unit": "mmHg",
+    "t": 172800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
     "indicator": "cabin_temperature",
     "value": 22.4,
     "unit": "degC",
@@ -67,6 +81,20 @@
     "indicator": "cabin_co2",
     "value": 2837,
     "unit": "ppm",
+    "t": 176400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.14,
+    "unit": "mmHg",
     "t": 176400,
     "source": "sensor",
     "confidence": 1,
@@ -134,6 +162,20 @@
    "type": "reading",
    "payload": {
     "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.17,
+    "unit": "mmHg",
+    "t": 180000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
     "indicator": "cabin_temperature",
     "value": 23,
     "unit": "degC",
@@ -179,6 +221,20 @@
     "indicator": "cabin_co2",
     "value": 2911,
     "unit": "ppm",
+    "t": 183600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.21,
+    "unit": "mmHg",
     "t": 183600,
     "source": "sensor",
     "confidence": 1,
@@ -246,6 +302,20 @@
    "type": "reading",
    "payload": {
     "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.25,
+    "unit": "mmHg",
+    "t": 187200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
     "indicator": "cabin_temperature",
     "value": 22.9,
     "unit": "degC",
@@ -291,6 +361,20 @@
     "indicator": "cabin_co2",
     "value": 2985,
     "unit": "ppm",
+    "t": 190800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.29,
+    "unit": "mmHg",
     "t": 190800,
     "source": "sensor",
     "confidence": 1,
@@ -358,6 +442,20 @@
    "type": "reading",
    "payload": {
     "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.32,
+    "unit": "mmHg",
+    "t": 194400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
     "indicator": "cabin_temperature",
     "value": 22.8,
     "unit": "degC",
@@ -403,6 +501,20 @@
     "indicator": "cabin_co2",
     "value": 3059,
     "unit": "ppm",
+    "t": 198000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.36,
+    "unit": "mmHg",
     "t": 198000,
     "source": "sensor",
     "confidence": 1,
@@ -470,6 +582,20 @@
    "type": "reading",
    "payload": {
     "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.4,
+    "unit": "mmHg",
+    "t": 201600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
     "indicator": "cabin_temperature",
     "value": 22.7,
     "unit": "degC",
@@ -515,6 +641,20 @@
     "indicator": "cabin_co2",
     "value": 2833,
     "unit": "ppm",
+    "t": 205200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.13,
+    "unit": "mmHg",
     "t": 205200,
     "source": "sensor",
     "confidence": 1,
@@ -582,6 +722,20 @@
    "type": "reading",
    "payload": {
     "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 3.4,
+    "unit": "mmHg",
+    "t": 208800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
     "indicator": "cabin_temperature",
     "value": 22.6,
     "unit": "degC",
@@ -627,6 +781,20 @@
     "indicator": "cabin_co2",
     "value": 5820,
     "unit": "ppm",
+    "t": 212400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 3.4,
+    "unit": "mmHg",
     "t": 212400,
     "source": "sensor",
     "confidence": 1,
@@ -694,6 +862,20 @@
    "type": "reading",
    "payload": {
     "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.24,
+    "unit": "mmHg",
+    "t": 216000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
     "indicator": "cabin_temperature",
     "value": 22.5,
     "unit": "degC",
@@ -739,6 +921,20 @@
     "indicator": "cabin_co2",
     "value": 2981,
     "unit": "ppm",
+    "t": 219600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.28,
+    "unit": "mmHg",
     "t": 219600,
     "source": "sensor",
     "confidence": 1,
@@ -806,6 +1002,20 @@
    "type": "reading",
    "payload": {
     "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.32,
+    "unit": "mmHg",
+    "t": 223200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
     "indicator": "cabin_temperature",
     "value": 22.4,
     "unit": "degC",
@@ -851,6 +1061,20 @@
     "indicator": "cabin_co2",
     "value": 3055,
     "unit": "ppm",
+    "t": 226800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.35,
+    "unit": "mmHg",
     "t": 226800,
     "source": "sensor",
     "confidence": 1,
@@ -918,6 +1142,20 @@
    "type": "reading",
    "payload": {
     "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.39,
+    "unit": "mmHg",
+    "t": 230400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
     "indicator": "cabin_temperature",
     "value": 23,
     "unit": "degC",
@@ -963,6 +1201,20 @@
     "indicator": "cabin_co2",
     "value": 2829,
     "unit": "ppm",
+    "t": 234000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.13,
+    "unit": "mmHg",
     "t": 234000,
     "source": "sensor",
     "confidence": 1,
@@ -1030,6 +1282,20 @@
    "type": "reading",
    "payload": {
     "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.17,
+    "unit": "mmHg",
+    "t": 237600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
     "indicator": "cabin_temperature",
     "value": 22.9,
     "unit": "degC",
@@ -1075,6 +1341,20 @@
     "indicator": "cabin_co2",
     "value": 2903,
     "unit": "ppm",
+    "t": 241200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.2,
+    "unit": "mmHg",
     "t": 241200,
     "source": "sensor",
     "confidence": 1,
@@ -1142,6 +1422,20 @@
    "type": "reading",
    "payload": {
     "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.24,
+    "unit": "mmHg",
+    "t": 244800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
     "indicator": "cabin_temperature",
     "value": 22.8,
     "unit": "degC",
@@ -1187,6 +1481,20 @@
     "indicator": "cabin_co2",
     "value": 2977,
     "unit": "ppm",
+    "t": 248400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.28,
+    "unit": "mmHg",
     "t": 248400,
     "source": "sensor",
     "confidence": 1,
@@ -1254,6 +1562,20 @@
    "type": "reading",
    "payload": {
     "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.31,
+    "unit": "mmHg",
+    "t": 252000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
     "indicator": "cabin_temperature",
     "value": 22.7,
     "unit": "degC",
@@ -1299,6 +1621,20 @@
     "indicator": "cabin_co2",
     "value": 3051,
     "unit": "ppm",
+    "t": 255600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.35,
+    "unit": "mmHg",
     "t": 255600,
     "source": "sensor",
     "confidence": 1,

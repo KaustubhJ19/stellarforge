@@ -22,7 +22,7 @@ Optional: `SF_HABITAT_URL=http://127.0.0.1:8765` to run against Spec 1's habitat
 2. Don't answer. After 15 s every other tablet rings **CREW ALARM**.
 3. Rescuer: **Accept** → "Does the patient respond?" → **No response** → record (access logged) → contributors → one cited step per screen → **Why this step?** → ground report with "Expected reply at T+57 min".
 4. Third tablet: **Join as Rescuer 2** → its own steps (role map).
-5. Skip mission time for the delay (demo clock): `curl -X POST localhost:8000/api/sim/clock/advance -H "Content-Type: application/json" -d "{\"seconds\":1710}"`.
+5. Skip mission time for the delay (demo clock): (start the backend with `SF_SIM=1` for this and the reset step) `curl -X POST localhost:8000/api/sim/clock/advance -H "Content-Type: application/json" -d "{\"seconds\":1710}"`.
 6. Console: report has arrived → type a reply (or **Send scripted fallback reply** if the console is too slow) → advance 1710 s again → reply shows on the rescuer's report and is stored as a Label.
 7. Backend down: stop uvicorn → tablets show "Service unavailable — continuing offline" → **Help a crewmate** → offline cited steps. Restart → queue syncs.
 8. Reset between runs: `POST /api/sim/reset`.

@@ -267,3 +267,17 @@ describe("units as the crew reads them", () => {
     expect(screen.getByRole("group", { name: "Respiration" })).toHaveTextContent("15 /min");
   });
 });
+
+describe("emergency Alerts (Spec 3, recorded emergency replay)", () => {
+  it("leaves an emergency Alert with no Indicator to Spec 4's flow: no tile or body change, nothing breaks", () => {
+    const m = missionWith([{ indicator: "heart_rate", value: 70, t: 8 * HOUR }]);
+    m.replay.events.push({
+      t: 9 * HOUR, type: "alert",
+      payload: { id: "B-emergency", kind: "emergency", crew: "A", indicator: null, deviation: null, status: "red", urgency: "ACT_NOW", likely_causes: [], t: 9 * HOUR },
+    });
+    const body = fakeBodyScene();
+    render(<App {...m} bodyScene={body.factory} />);
+    expect(screen.getByRole("group", { name: "Heart rate" })).toHaveAttribute("data-status", "green");
+    expect(body.view.wholeBody).toBeNull();
+  });
+});

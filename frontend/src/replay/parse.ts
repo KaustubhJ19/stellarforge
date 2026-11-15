@@ -12,7 +12,7 @@ const PAYLOAD_FIELDS: Record<string, string[]> = {
   forecast: ["crew", "t", "value", "low", "high"],
 };
 
-/** The forecast is un-contracted, so check the fields its views do arithmetic on. */
+/** The forecast schema is only provisional, so check the fields its views do arithmetic on. */
 function forecastReadable(p: Record<string, unknown>): boolean {
   const nums = ["value", "low", "high", "population", "personal_correction"].every((k) => typeof p[k] === "number");
   return nums && isObject(p.drivers) && Object.values(p.drivers).every((v) => typeof v === "number");

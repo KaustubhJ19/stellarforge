@@ -1,11 +1,14 @@
-import { Component, StrictMode, type ReactNode } from "react";
+import { Component, StrictMode, useEffect, useState, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
-import { unlockAudioOnGesture } from "./alarm";
-import Shell from "./Shell";
+import type { CrewRecord, ReplayFile } from "./contracts";
+import { App } from "./App";
+import { loadMission, missionFrom, withCabin, type MissionResult } from "./replay/load";
+import marsDay3 from "./fixtures/mars-day3.replay.json";
+import crewRecords from "./fixtures/crew-records.json";
+import cabinDay3 from "./fixtures/iss-cabin-day3.json";
 import "./theme.css";
-import "./styles.css";
 
-/** Last line of defence: say what broke instead of showing a blank page. (Spec 2) */
+/** Last line of defence: say what broke instead of showing a blank page. */
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state = { error: null as Error | null };
   static getDerivedStateFromError(error: Error) {
@@ -19,16 +22,44 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
   }
 }
 
-unlockAudioOnGesture();
+/**
+ * The app never talks to the service: it renders a replay file and its Crew record.
+ * By default the bundled Mars fixture; `?replay=<path>` loads another replay file served by
+ * the app itself, with its Crew record from the crew-records.json beside it.
+ */
+interface Mission {
+  replay: ReplayFile;
+  crew: CrewRecord;
+}
+const BUNDLED: MissionResult = missionFrom(marsDay3, crewRecords, "bundled crew-records.json");
+const bundledMission = BUNDLED.ok
+  ? { replay: withCabin(BUNDLED.replay, cabinDay3 as ReplayFile), crew: BUNDLED.crew }
+  : null;
+
+function Root() {
+  const params = new URLSearchParams(location.search);
+  const url = params.get("replay");
+  const cabin = params.get("cabin") ?? undefined;
+  const [mission, setMission] = useState<Mission | null>(url ? null : bundledMission);
+  const [error, setError] = useState<string | null>(!url && !BUNDLED.ok ? BUNDLED.error : null);
+
+  useEffect(() => {
+    if (!url) return;
+    void loadMission(url, location.origin, fetch, cabin).then((result) => {
+      if (result.ok) setMission({ replay: result.replay, crew: result.crew });
+      else setError(result.error);
+    });
+  }, [url, cabin]);
+
+  if (error) return <p className="load-message">Could not load replay file: {error}</p>;
+  if (!mission) return <p className="load-message">Loading replay…</p>;
+  return <App replay={mission.replay} crew={mission.crew} />;
+}
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ErrorBoundary>
-      <Shell />
+      <Root />
     </ErrorBoundary>
   </StrictMode>,
 );
-
-if ("serviceWorker" in navigator && import.meta.env.PROD) {
-  navigator.serviceWorker.register("/sw.js").catch(() => undefined);
-}

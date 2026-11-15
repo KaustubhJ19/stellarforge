@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CardContent, CrewRecord, IndicatorId, Reading, ReplayFile } from "./contracts";
-import { missionStateAt, replayRange, seriesOf } from "./replay/state";
+import { isNumeric, missionStateAt, replayRange, seriesOf, type NumericReading } from "./replay/state";
 import { MeasurementCard } from "./home/MeasurementCard";
-import { CONTENT_CARDS, cardFor } from "./content";
+import { CONTENT_CARDS, CONTENT_PROFILES, cardFor, type ProfileContent } from "./content";
+import { profileChoices, profileFor } from "./profiles";
 import { MissionBar } from "./home/MissionBar";
 import { Co2Banner } from "./home/Co2Banner";
 import { HealthSummary } from "./home/HealthSummary";
@@ -44,6 +45,7 @@ export function App({
   bodyScene = threeBodyScene,
   onEmergency = emergencyNotWired,
   cards = CONTENT_CARDS,
+  profiles = CONTENT_PROFILES,
   onReadings = () => {},
 }: {
   replay: ReplayFile;
@@ -54,6 +56,8 @@ export function App({
   onEmergency?: (request: EmergencyRequest) => void;
   /** Measurement card content (Spec 5); defaults to content/cards/ at the repo root. */
   cards?: CardContent[];
+  /** Mission profiles (Spec 5); defaults to content/profiles/ at the repo root. */
+  profiles?: ProfileContent[];
   /** Readings the crew logged in a form (stand test, post-EVA), for the service (POST /reading). */
   onReadings?: (readings: Reading[], note?: string) => void;
 }) {
@@ -72,6 +76,10 @@ export function App({
           },
     [givenReplay, logged],
   );
+  // Mission profile: starts on the replay's own; the crew can switch in the mission bar (ticket 17).
+  const [chosen, setChosen] = useState({ replay: givenReplay.profile, id: givenReplay.profile });
+  const profileId = chosen.replay === givenReplay.profile ? chosen.id : givenReplay.profile;
+  const profile = profileFor(profileId, profiles);
   const [form, setForm] = useState<CrewForm | null>(null);
   const closeForm = useCallback(() => setForm(null), []);
   // Logged at the mission time now (the end of the replay), and the screen returns to now.
@@ -94,8 +102,10 @@ export function App({
 
   const glow = useMemo(() => glowFrom(state.latest), [state]);
   const model = crew.sex === "female" ? "female" : "male";
-  const heartRate = state.latest.get("heart_rate")?.value ?? null;
-  const breathRate = state.latest.get("respiration_rate")?.value ?? null;
+  const hr = state.latest.get("heart_rate");
+  const heartRate = isNumeric(hr) ? hr.value : null;
+  const br = state.latest.get("respiration_rate");
+  const breathRate = isNumeric(br) ? br.value : null;
   // Insight and cards need a Reading at the scrubbed time; scrubbing to before one closes them.
   const insightReading = insight ? state.latest.get(insight) : undefined;
   const cardReading = openCard ? state.latest.get(openCard) : undefined;
@@ -118,8 +128,7 @@ export function App({
 
   return (
     <div className="app">
-      <MissionBar replay={replay} state={state} />
-      <Co2Banner latest={state.latest} />
+      <Co2Banner latest={state.latest} now={state.t} limit={profile.co2Limit} />
       <main className="home">
         {/* First in tab order so Emergency is one Tab away; CSS places it on screen. */}
         <ActionButtons onEmergency={onEmergency} />
@@ -158,16 +167,32 @@ export function App({
           <TaskList tasks={state.tasks} notes={notes} onLog={setForm} />
         </div>
       </main>
+      {/* After main so Emergency stays first in the tab order; CSS shows it at the top. */}
+      <MissionBar
+        state={state}
+        profileId={profileId}
+        profile={profile}
+        choices={profileChoices(givenReplay.profile, profiles)}
+        onProfile={(id) => setChosen({ replay: givenReplay.profile, id })}
+      />
       {cardReading && (
         <MeasurementCard
           reading={cardReading}
-          history={seriesOf(replay, cardReading.indicator).filter((r) => r.t <= state.t)}
+          history={seriesOf(replay, cardReading.indicator).filter((r) => r.t <= state.t && isNumeric(r)) as NumericReading[]}
           content={cardFor(cards, cardReading.indicator)}
           onClose={closeCard}
         />
       )}
       {form === "stand-test" && <StandTestForm crew={crew} t={range[1]} onSave={log} onClose={closeForm} />}
-      {form === "post-eva" && <PostEvaForm crew={crew.id} t={range[1]} onSave={log} onClose={closeForm} />}
+      {form === "post-eva" && (
+        <PostEvaForm
+          crew={crew.id}
+          t={range[1]}
+          onSave={log}
+          onClose={closeForm}
+          onWarningSign={() => onEmergency("emergency")}
+        />
+      )}
       <footer className="disclaimer">Decision support, not diagnosis.</footer>
     </div>
   );

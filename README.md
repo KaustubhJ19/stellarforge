@@ -62,6 +62,7 @@ Folders are empty on purpose; each stream fills its own.
 - The collapse is a Pulse approximation, labelled "estimate, not validated".
 - Published space guidance exists only for CPR. Partial-gravity CPR is not covered.
 - Accuracy is measured on datasets, not real astronauts.
+- The emergency service trusts who a tablet says it is (`crew=`, `actor=`, `viewer=` in the request). There is no sign-in, so it is for a trusted habitat network only; the record access log shows who asked, not who was verified. Demo helpers (`/api/sim/*`) are off unless the service starts with `SF_SIM=1`.
 
 ## Licence
 

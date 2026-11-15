@@ -1,8 +1,8 @@
 import { useId, useRef, type ReactNode } from "react";
 import { useModal } from "./useModal";
 import type { CardContent } from "../contracts";
-import type { ShownReading } from "../replay/state";
-import { formatValue, indicatorLabel, sourceLabel } from "../indicators";
+import type { NumericReading, ShownReading } from "../replay/state";
+import { INDICATORS, formatValue, indicatorLabel, sourceLabel } from "../indicators";
 import { StatusBadge } from "../status";
 import { Sparkline } from "../charts/Sparkline";
 
@@ -31,7 +31,7 @@ export function MeasurementCard({
   onClose,
 }: {
   reading: ShownReading;
-  history: ShownReading[];
+  history: NumericReading[];
   content?: CardContent;
   onClose: () => void;
 }) {
@@ -68,6 +68,7 @@ export function MeasurementCard({
           <Sparkline readings={history} />
         </div>
         <p className="card__source">Source: {sourceLabel(reading.source)}</p>
+        {INDICATORS[reading.indicator]?.note && <span className="card__label">{INDICATORS[reading.indicator].note}</span>}
         {content?.labels?.map((l) => (
           <span key={l} className="card__label">
             {l}

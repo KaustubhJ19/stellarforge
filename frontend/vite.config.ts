@@ -3,11 +3,13 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  // Dev only: the Spec 4 backend (FastAPI) serves /api; in production it serves the built app too.
   // contracts/ and content/ live at the repo root, shared with the other streams.
-  server: { proxy: { "/api": "http://127.0.0.1:8000" }, fs: { allow: [".", "../content", "../contracts"] } },
-  // `vite preview` must not inherit the dev proxy: Spec 2's e2e suite runs it with no service.
-  preview: { proxy: {} },
+  server: {
+    fs: { allow: [".", "../content", "../contracts"] },
+    proxy: { "/api": "http://127.0.0.1:8000" }, // Spec 4's emergency service
+  },
+  // Two pages: the replay app (index.html) and Spec 4's emergency flow (emergency.html).
+  build: { rollupOptions: { input: { main: "index.html", emergency: "emergency.html" } } },
   test: {
     environment: "jsdom",
     globals: true,

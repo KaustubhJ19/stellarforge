@@ -20,6 +20,13 @@ export interface ShownReading extends Reading {
   status: Status;
 }
 
+/** A shown Reading whose value is a number (charts, rates); text values are shown, never plotted. */
+export type NumericReading = ShownReading & { value: number };
+
+export function isNumeric<T extends Reading>(r: T | undefined): r is T & { value: number } {
+  return r !== undefined && typeof r.value === "number" && Number.isFinite(r.value);
+}
+
 /** The person's own normal band for an Indicator. */
 export interface Baseline {
   low: number;
@@ -73,7 +80,8 @@ class OpenAlerts {
 function shows(replay: ReplayFile, e: ReplayEvent): boolean {
   if (e.type === "forecast") return e.payload.crew === replay.crew;
   if (e.type !== "reading" && e.type !== "alert") return true;
-  return e.payload.crew === replay.crew || HABITAT_INDICATORS.includes(e.payload.indicator);
+  const indicator = e.payload.indicator;
+  return e.payload.crew === replay.crew || (indicator !== null && HABITAT_INDICATORS.includes(indicator));
 }
 
 export function missionStateAt(replay: ReplayFile, t: MissionTime): MissionState {

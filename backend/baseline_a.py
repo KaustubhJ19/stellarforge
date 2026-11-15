@@ -86,11 +86,13 @@ class _Window:
 
 
 class BaselineA:
-    def __init__(self, crew: str, anchor: dict, thresholds: Thresholds, expected_shift: dict):
+    def __init__(self, crew: str, anchor: dict, thresholds: Thresholds, expected_shift: dict, shift_ramp_s: float = 0.0):
+        """shift_ramp_s: expected_shift grows in a straight line from 0 at launch (t = 0) to full size at this time; 0 = full at once."""
         bad = [k for k, a in anchor.items() if not a["sd"] > 0]
         if bad:
             raise ValueError(f"Anchor spread must be > 0 for {bad}")
         self.crew, self.anchor, self.th, self.shift = crew, anchor, thresholds, expected_shift
+        self.shift_ramp_s = shift_ramp_s
         self.windows: dict[str, _Window] = {}
         self.cusum: dict[str, tuple[float, float]] = {}  # (upward, downward)
         self.raised: dict[tuple[str, str], str] = {}  # highest tier already alerted per (indicator, kind)
@@ -99,6 +101,11 @@ class BaselineA:
         self.held: list[dict] = []
         self.hold_since: float | None = None
         self.event_store: list[dict] = []
+
+    def shift_at(self, indicator: str, t: float) -> float:
+        """Expected space shift at Mission time t (seconds from launch)."""
+        full = self.shift.get(indicator, 0.0)
+        return full * min(max(t / self.shift_ramp_s, 0.0), 1.0) if self.shift_ramp_s > 0 else full
 
     def adaptive_mean(self, indicator: str) -> float | None:
         w = self.windows.get(indicator)
@@ -112,7 +119,7 @@ class BaselineA:
         cusum_next = None
         if indicator in self.anchor:  # Drift: CuSum against Anchor + expected space shift
             a = self.anchor[indicator]
-            z = (value - a["mean"] - self.shift.get(indicator, 0.0)) / a["sd"]
+            z = (value - a["mean"] - self.shift_at(indicator, t)) / a["sd"]
             up, down = self.cusum.get(indicator, (0.0, 0.0))
             cusum_next = (max(0.0, up + z - self.th.cusum_k), max(0.0, down - z - self.th.cusum_k))
             c = max(cusum_next)
@@ -132,7 +139,7 @@ class BaselineA:
             alerts += self._maybe_alert("acute", indicator, tier, {"sigma": za, "cusum": None}, t)
 
         reading = fields | {"crew": self.crew, "indicator": indicator, "value": value, "unit": unit, "t": t}
-        if alerts and self.hold_since is None:
+        if any(al["status"] != "green" for al in alerts) and self.hold_since is None:  # a cleared Alert holds nothing
             self.hold_since = t
         if self.hold_since is not None:  # Quarantine: held data never updates A
             reading["state"] = "quarantined"
@@ -166,11 +173,12 @@ class BaselineA:
     def _maybe_alert(self, kind: str, indicator: str, tier: str, deviation: dict, t: float) -> list[dict]:
         key = (indicator, kind)
         if tier == "green":
-            self.raised.pop(key, None)
-            return []
-        if TIERS.index(tier) <= TIERS.index(self.raised.get(key, "green")):
+            if self.raised.pop(key, None) is None:
+                return []  # nothing to clear
+        elif TIERS.index(tier) <= TIERS.index(self.raised.get(key, "green")):
             return []  # already alerted at this tier
-        self.raised[key] = tier
+        else:
+            self.raised[key] = tier
         zs = list(self.latest_z.values())
         deviation |= {"combined": math.sqrt(sum(z * z for z in zs) / len(zs)) if zs else None}
         return [{"id": f"{self.crew}-{kind}-{indicator}-{t:.0f}", "kind": kind, "crew": self.crew,
@@ -194,7 +202,7 @@ def _drift_note(a: BaselineA, indicator: str) -> str | None:
     run = a.drift.get(indicator)
     if not run or not run["n"]:
         return None
-    normal = a.anchor[indicator]["mean"] + a.shift.get(indicator, 0.0)
+    normal = a.anchor[indicator]["mean"] + a.shift_at(indicator, run["last"])
     days = round((run["last"] - run["start"]) / 86_400) + 1
     return f"{indicator.replace('_', ' ')} {run['sum'] / run['n'] - normal:+.0f} {run['unit']} over {days} days"
 

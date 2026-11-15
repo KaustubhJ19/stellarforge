@@ -127,6 +127,29 @@ test.describe("crew forms for gloved hands", () => {
     });
   }
 
+  test("a Yes to a post-EVA warning sign opens the emergency flow", async ({ page }) => {
+    await openApp(page);
+    await page.getByRole("button", { name: "Log post-EVA check" }).click();
+    const dialog = page.getByRole("dialog");
+    await dialog.getByLabel("Heart rate (bpm)").fill("88");
+    await dialog.getByRole("radio", { name: "3" }).check();
+    const warning = dialog.getByRole("group", { name: "Warning signs" });
+    for (const group of await dialog.getByRole("radiogroup").all()) {
+      const name = await group.getAttribute("aria-labelledby");
+      if (!name?.endsWith("fatigue")) await group.getByRole("radio", { name: "No" }).check();
+    }
+    await warning.getByRole("radiogroup", { name: "Numbness" }).getByRole("radio", { name: "Yes" }).check();
+    // Standalone, the hook shows Spec 4's placeholder; on the tablet it starts their flow.
+    const messages: string[] = [];
+    page.once("dialog", (notice) => {
+      messages.push(notice.message());
+      void notice.dismiss();
+    });
+    await dialog.getByRole("button", { name: "Save" }).click();
+    expect(messages).toEqual([expect.stringContaining("emergency flow opens here")]);
+    await expect(page.getByRole("region", { name: "Physical health" }).getByRole("group", { name: "Numbness" })).toContainText("Yes");
+  });
+
   test("a stand test logged in the browser shows on the home screen with the comparison", async ({ page }) => {
     const problems = await openApp(page);
     await page.getByRole("button", { name: "Log stand test" }).click();

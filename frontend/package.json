@@ -2,6 +2,7 @@
   "name": "stellarforge-frontend",
   "version": "1.0.0",
   "scripts": {
+    "predev": "node scripts/sync-replays.mjs",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
@@ -9,12 +10,14 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:e2e:emergency": "playwright test -c playwright.emergency.config.ts",
+    "lint:content": "python3 ../tools/lint_content.py",
     "audit:a11y": "node scripts/a11y-audit.mjs",
-    "dev:female": "vite --open \"/?replay=/replay/mars-day3-female.json&cabin=/replay/iss-cabin-day3.json\"",
+    "dev:female": "node scripts/sync-replays.mjs && vite --open \"/?replay=/replay/mars-day3-female.json&cabin=/replay/iss-cabin-day3.json\"",
+    "dev:real": "node scripts/sync-replays.mjs && vite --open \"/?replay=/replay/shared/crew-A.json&cabin=/replay/shared/iss-cabin-dose-RR-1.json\"",
+    "dev:recorded": "node scripts/sync-replays.mjs && vite --open \"/?replay=/replay/shared/recorded/crew-A.json&cabin=/replay/shared/iss-cabin-dose-RR-1.json\"",
     "fixtures": "node scripts/make-fixture.mjs",
-    "lint:content": "python ../tools/lint_content.py",
-    "prebuild": "npm run lint:content",
-    "e2e": "playwright test"
+    "prebuild": "node scripts/sync-replays.mjs"
   },
   "type": "module",
   "dependencies": {

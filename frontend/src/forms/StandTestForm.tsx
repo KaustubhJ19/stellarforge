@@ -3,6 +3,7 @@ import type { CrewRecord, MissionTime, Reading } from "../contracts";
 import { APOLLO_RETURN_SHIFT } from "../references";
 import { FormDialog, problemsWith, readNumber, type NumberField } from "./FormDialog";
 import { manualReading } from "./manualReading";
+import { isNumeric } from "../replay/state";
 
 /** The stand test's three measures, as Apollo AP005 reported them. */
 const HEART: [number, number] = [20, 250];
@@ -76,7 +77,9 @@ export function StandTestForm({
             </thead>
             <tbody>
               {MEASURES.map((m, i) => {
-                const value = saved[i].value;
+                const r = saved[i];
+                if (!isNumeric(r)) return null;
+                const value = r.value;
                 const own = Object.hasOwn(crew.anchor, m.indicator) ? crew.anchor[m.indicator].mean : null;
                 const apollo = APOLLO_RETURN_SHIFT.shift[m.indicator];
                 return (

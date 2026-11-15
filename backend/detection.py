@@ -36,7 +36,8 @@ class Detection:
         th = Thresholds(**{k: cutoffs[k] for k in Thresholds.__dataclass_fields__})
         eth = EmergencyThresholds(**{k: cutoffs[k] for k in EmergencyThresholds.__dataclass_fields__})
         self.min_sigma = cutoffs["min_sigma"]
-        shift = cutoffs.get("expected_shift", {})  # "team value"; none known yet
+        shift = cutoffs.get("expected_shift", {})
+        ramp_s = cutoffs.get("expected_shift_ramp_days", 0) * 86_400  # the shift builds up from launch
         floor = cutoffs.get("min_anchor_sd", {})  # a 14-day Anchor spread is too tight for months of real life
         self.bounds = {b["indicator"]: b for b in safety_bounds}
         self.breached: set[tuple[str, str]] = set()
@@ -44,7 +45,7 @@ class Detection:
         for rec in crew_records:
             anchor = {k: {**a, "sd": max(a["sd"], floor.get(k, 0))} for k, a in rec["anchor"].items()}
             anchor = {k: a for k, a in anchor.items() if a["sd"] > 0}  # a zero spread cannot score
-            self.baselines[rec["id"]] = BaselineA(rec["id"], anchor, th, shift)
+            self.baselines[rec["id"]] = BaselineA(rec["id"], anchor, th, shift, ramp_s)
             self.auto[rec["id"]] = AutoDetect(rec["id"], eth)
 
     def on_message(self, message: dict) -> list[dict]:
@@ -74,20 +75,19 @@ class Detection:
         return out
 
     def _safety(self, p: dict) -> list[dict]:
-        """Safety bound: an absolute limit that never learns. Outside it -> one red alert until back inside."""
+        """Safety bound: an absolute limit that never learns. Outside it -> one red alert; back inside -> one green alert."""
         bound, key = self.bounds.get(p["indicator"]), (p["crew"], p["indicator"])
         if bound is None or not isinstance(p["value"], (int, float)):
             return []
-        if status("green", p["value"], bound)["status"] != "red":
-            self.breached.discard(key)
-            return []
-        if key in self.breached:
-            return []
-        self.breached.add(key)
+        inside = status("green", p["value"], bound)["status"] != "red"
+        if inside != (key in self.breached):
+            return []  # still inside, or still outside and already alerted
+        self.breached ^= {key}
+        tier = "green" if inside else "red"  # green: back inside, clears the earlier red Alert
         return [_message("alert", {"id": f"{p['crew']}-safety-{p['indicator']}-{p['t']:.0f}", "kind": "acute",
                                    "crew": p["crew"], "indicator": p["indicator"],
                                    "deviation": {"value": p["value"], "bound": {k: bound.get(k) for k in ("low", "high", "label", "source")}},
-                                   "status": "red", "urgency": urgency("acute", "red"), "likely_causes": [], "t": p["t"]})]
+                                   "status": tier, "urgency": urgency("acute", tier), "likely_causes": [], "t": p["t"]})]
 
     def briefing(self, crew: str) -> list[str]:
         return briefing(self.baselines[crew])

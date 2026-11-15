@@ -9,7 +9,7 @@ describe("app loaded from a replay file", () => {
     expect(within(bar).getByText("Day 3")).toBeInTheDocument();
     expect(within(bar).getByText("Mars transit")).toBeInTheDocument();
     expect(within(bar).getByText("28.5 min")).toBeInTheDocument();
-    expect(within(bar).getByText("41.89 mGy")).toBeInTheDocument();
+    expect(within(bar).getByText("41.9 mGy")).toBeInTheDocument();
   });
 });
 

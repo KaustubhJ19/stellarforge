@@ -19,6 +19,8 @@ npx playwright install chromium   # only for the browser tests and the audit
 ```
 npm run dev          # http://localhost:5173 with the bundled Mars day-3 replay (male crew)
 npm run dev:female   # same day for a female crew member, with the cabin replay: opens the female body
+npm run dev:real     # the data lead's real replay: crew A (152 days) with the ISS RR-1 cabin
+npm run dev:recorded # the same crew A after Spec 3's detection: real Alerts and forecasts
 npm run build        # production build in dist/ (static files, works offline)
 npm run preview      # serve the build
 ```
@@ -29,6 +31,27 @@ Load another replay file served by the app (for example one placed in `public/re
 (`replay/generated/crew-A.json` beside `crew-records.json`). Add the habitat's cabin replay
 (CO₂, temperature, humidity, dose) with `&cabin=/replay/<file>.json`; its events are merged in by
 time. Files from other addresses are refused.
+
+## Real replays (Spec 1)
+
+`replay/` at the repo root holds the data lead's shared replays (copied from
+`workstream-1-data-service`): `crew-A..D.json` with `crew-records.json`, `iss-cabin-dose-RR-1.json`
+(cabin, use with `&cabin=`), `emergency-crew-B.json` (Pulse, starts day 152). `npm run dev`, `build`
+and the browser tests copy them to `public/replay/shared/` (git-ignored), e.g.
+`/?replay=/replay/shared/crew-A.json&cabin=/replay/shared/iss-cabin-dose-RR-1.json`.
+
+What the real data needed: rounding long decimals, text values (`cardiac_rhythm`) shown in
+words and kept out of charts, `degC` read as °C, `soreness` on the thigh muscles, day ticks on
+long charts, and cabin data that stops early (RR-1 covers 42 days): the CO₂ banner shows only for
+a Reading from the last hour and the dose says "as of …" when older than 36 h. Crew D is female
+(PMData p10, mission days 6–120, made female at our request), so `crew-D.json` and its recording
+open the female body; crews A–C are male.
+
+`replay/recorded/` holds the same replays after Spec 3's recording script
+(`tools/record_replays.py`) ran detection over them: they add Alerts, `reading_state` events and
+forecasts, so Status colours, the readiness forecast and "Why this forecast?" show real output. Their
+Crew records are read from `crew-records.json` one folder up. An emergency Alert (no Indicator) is
+left to Spec 4's flow; its Safety-bound Alerts colour the Indicators they name.
 
 ## Data contracts
 
@@ -50,18 +73,29 @@ The app reads Spec 1's frozen shapes: the JSON Schemas in `contracts/` at the re
   Revisit when body temperature data exists.
 - **Mission profile** name and Earth delay come from Spec 5's `content/profiles/<id>.json`
   (`name`, `comm_delay`), with the delay's direction and "team value" label shown; an
-  unknown profile shows its id and "Not known".
+  unknown profile shows its id and "Not known". A **Mission profile** dropdown in the mission
+  bar lists every profile in `content/profiles/` (Mars transit, Space station (ISS)) and
+  starts on the replay's own; switching it changes the name and ground delay shown. The
+  mission bar comes after `main` in the page so Emergency stays first in the tab order; CSS
+  shows it at the top.
 - **Measurement cards** come from Spec 5's structured `content/cards/*.json` (How as steps,
   Why with the NASA HRP risk and space note, If abnormal in four parts). A card also covers
   its `related_indicators`. Fields in another shape read "Not added yet."
 - **Habitat Readings** (`radiation_dose_*`, `cabin_*`) stay out of the health summaries; the
   mission bar shows `radiation_dose_accumulated`.
-- **Readiness forecast** (`forecast` events, un-contracted: Spec 3's proposed recorded
-  output) shows tomorrow's readiness with its range and label. "Why this forecast?" draws
-  what drove the general model as a violet heat-map on the body (`--explain`, never a Status
-  colour) with the drivers in words; it says the personal adjustment comes on top.
-- **CO₂ banner** shows while the latest cabin CO₂ is over 5,000 ppm, a team value (not yet
-  researched) kept in `src/teamValues.ts` and labelled on screen.
+- **Readiness forecast** (`forecast` events, Spec 3's recorded output, checked against Spec 1's
+  provisional `contracts/provisional/forecast.schema.json`) shows tomorrow's readiness with its
+  range and label. "Why this forecast?" draws what drove the general model as a violet
+  heat-map on the body (`--explain`, never a Status colour) with the drivers in words; it says
+  the personal adjustment comes on top.
+- **Stand test** compares with the astronaut's own pre-flight test, then the Apollo AP005
+  after-landing group shift, read from Spec 3's `content/profiles/detection-cut-offs.json`
+  (`return_to_gravity_shift`) with its label and source.
+- **CO₂ banner** shows while the cabin's trailing 1-hour CO₂ average (`cabin_pco2_1h`, mmHg,
+  from the cabin replay) is over the Mission profile's `co2_limit.value` (Spec 5: 3 mmHg,
+  NASA-STD-3001 Vol 2 [V2 6004]). Both are mmHg, so the app converts nothing. The limit comes
+  from the profile chosen in the mission bar, with its averaging window and source, or its
+  status when not sourced. A profile with no `co2_limit` shows no banner.
 - **Tasks** (`task` events) are app-side; no contract carries them yet. `trigger` and
   `crew_report` events are ignored here (Spec 4).
 
@@ -96,17 +130,23 @@ src/
   fixtures/           hand-made Mars replay and Crew records in Spec 1's shapes
 e2e/                  Playwright browser tests
 public/models/        male and female body GLBs built by tools/anatomy/export_body.py (CC BY-SA 4.0)
-public/draco/         vendored Draco decoder so models load offline
+public/draco/         vendored Draco decoder so models load offline (Google, Apache 2.0, see its LICENSE)
 ```
 
 ## Hooks for other specs
 
 - **Spec 4 (emergency flow):** pass `onEmergency` to `<App>`; it receives `"emergency"` or
-  `"help-crewmate"`. Until then a placeholder alert shows.
+  `"help-crewmate"`. Until then a placeholder alert shows. The post-EVA check also calls it
+  with `"emergency"` when the crew answers Yes to any warning sign: NASA's Type II
+  decompression sickness signs (numbness, weakness, confusion, dizziness or ear problems,
+  chest pain or trouble breathing; OCHMO-TB-037 Rev D, p. 3). The Readings are saved first.
+  The question wording awaits the medical reviewer.
 - **Readings logged on screen** (stand test, post-EVA check from today's tasks): pass
-  `onReadings` to `<App>`; it receives the Readings (`source: "manual"`) and the optional
-  post-EVA note, for the service's `POST /reading`. Until that is wired they live only on
-  the page and are gone on reload.
+  `onReadings` to `<App>`; it receives a list of Readings (`source: "manual"`) and the
+  optional post-EVA note. Each Reading is complete on its own (with `schema_version`) and
+  passes `contracts/reading.schema.json`. The service's `POST /reading` takes one Reading per
+  request and refuses a list, so send one POST per Reading. Until that is wired they live only
+  on the page and are gone on reload.
 - **Spec 5 (content):** pass `cards` to `<App>` (shape `CardContent` in `contracts.ts`);
   missing sections read "Not added yet".
 

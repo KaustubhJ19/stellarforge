@@ -3,17 +3,14 @@
 const CACHE = "sf-shell-v1";
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(["/", "/index.html"])).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(["/emergency.html"])).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (e) => e.waitUntil(self.clients.claim()));
 
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
-  // Only the app shell: page navigations and built assets. Data files (replays, crew records,
-  // models) and /api/* are left to the browser so the app's own loaders see them unchanged.
-  const shell = e.request.mode === "navigate" || url.pathname.startsWith("/assets/");
-  if (e.request.method !== "GET" || url.origin !== self.location.origin || !shell) return;
+  if (e.request.method !== "GET" || url.origin !== self.location.origin || url.pathname.startsWith("/api/")) return;
   e.respondWith(
     fetch(e.request)
       .then((res) => {
@@ -21,6 +18,6 @@ self.addEventListener("fetch", (e) => {
         caches.open(CACHE).then((c) => c.put(e.request, copy));
         return res;
       })
-      .catch(() => caches.match(e.request).then((m) => m || caches.match("/index.html"))),
+      .catch(() => caches.match(e.request).then((m) => m || caches.match("/emergency.html"))),
   );
 });

@@ -82,6 +82,14 @@ To switch: set `SF_PROTOCOL=microgravity-cpr` (or change `DEFAULT_PROTOCOL` / `D
   - The glove check fails on real UI: a home "Head" zoom button is 56 px, below the 64 px team value (Spec 2 and Spec 4 to agree).
   - `frontend/playwright.config.ts` hard-codes a Windows Python path (`../backend/.venv/Scripts/python.exe`), so it won't start on macOS or Linux.
 
+## Found when merging `main` into the Spec 5 branch (PR prep)
+
+- **Crew records format (Spec 1 and Spec 4):** Spec 4's `load_records` on `main` expects `{"records": [...]}`, but Spec 1's `replay/crew-records.json` is a bare list. So the real crew A–D cannot be loaded; `tools/tests/test_integration_1.py` wraps the list to test.
+- **Records setting (Spec 4):** `main` dropped `SF_RECORDS` (and the comma list), so the server always uses `replay/stub-crew-records.json`. The demo needs a way to choose the real records.
+- **Demo endpoints (Spec 4):** `/api/sim/*` now exist only with `SF_SIM=1`. Our demo docs now say so.
+- **Accuracy changed (Spec 3):** false alerts are now 0.16 per crew-day, not 0.11. The write-up and video script are updated, and `tools/tests/test_write_up.py` caught it.
+- **Stale files dropped:** 39 Spec 4 files from the old integration branch that `main` moved (`frontend/src/emergency/`, `frontend/e2e-emergency/`) or removed are deleted on this branch, so the PR does not re-add them.
+
 ## For everyone
 
 Every protocol step and Safety bound is listed in `docs/medical-review.md` for a qualified clinician to sign. If nobody signs, the write-up says "Medical content not clinically reviewed."

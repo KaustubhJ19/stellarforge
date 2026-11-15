@@ -84,8 +84,9 @@ def test_cli_exits_nonzero_on_bad_content(tmp_path):
     assert r.returncode == 0, r.stdout
 
 
-def test_lab_units_are_not_doses():
-    # A glucose limit "54 to 250 mg/dL" (Spec 5's glucose card) is a lab value, not a dose.
-    assert L.find_drug_or_dose("Safety bound 54 to 250 mg/dL (ADA level 2).", FAKE_DENY) is None
-    assert L.find_drug_or_dose("Give 5 mg now.", FAKE_DENY) == "dose '5 mg'"
-    assert L.find_drug_or_dose("Give 2 mg/kg now.", FAKE_DENY) == "dose '2 mg/kg'"
+def test_glucose_lab_unit_is_not_a_dose():
+    assert L.find_drug_or_dose("glucose above 250 mg/dL", []) is None
+
+
+def test_real_dose_still_fails():
+    assert L.find_drug_or_dose("give 250 mg now", []) is not None

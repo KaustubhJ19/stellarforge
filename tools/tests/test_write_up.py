@@ -52,7 +52,7 @@ def test_states_the_disclaimer():
     assert "Decision support, not diagnosis" in text()
 
 
-@pytest.mark.parametrize("number", ["0.11 per crew-day", "4.9 bpm", "1.12 points", "89.6 %"])
+@pytest.mark.parametrize("number", ["0.16 per crew-day", "4.9 bpm", "1.12 points", "89.6 %"])
 def test_accuracy_numbers_match_the_accuracy_page(number):
     assert number in (ROOT / "docs" / "accuracy.md").read_text(encoding="utf-8")
     assert number in text()

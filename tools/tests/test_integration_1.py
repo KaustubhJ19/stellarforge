@@ -51,8 +51,18 @@ def wait(cond, timeout=90.0):  # 25,740 replay Readings pass through detection f
 # ---- manual trigger, in-process -------------------------------------------------
 
 @pytest.fixture
-def eng():
-    return build(protocol="microgravity-cpr", profile="mars_transit", records_path=str(RECORDS), explainer=None)
+def records_file(tmp_path):
+    # Spec 1's replay/crew-records.json is a bare list; Spec 4's load_records (main) wants {"records": [...]}.
+    # Mismatch flagged in docs/notes-from-integration.md; wrap it here so the real records are used unchanged.
+    data = json.loads(RECORDS.read_text(encoding="utf-8"))
+    path = tmp_path / "crew-records.json"
+    path.write_text(json.dumps(data if isinstance(data, dict) else {"records": data}), encoding="utf-8")
+    return path
+
+
+@pytest.fixture
+def eng(records_file):
+    return build(protocol="microgravity-cpr", profile="mars_transit", records_path=records_file, explainer=None)
 
 
 def to_steps(eng, patient="B", rescuer="A"):
@@ -101,7 +111,7 @@ class FakeMonotonic:
 
 
 @pytest.fixture
-def chain(tmp_path):
+def chain(tmp_path, records_file):
     with socket.socket() as s:
         s.bind(("127.0.0.1", 0))
         port = s.getsockname()[1]
@@ -115,7 +125,7 @@ def chain(tmp_path):
     httpd = make_server(svc, port=port, tick_interval=0.05)
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
     url = f"http://127.0.0.1:{port}"
-    eng = build(protocol="microgravity-cpr", profile="mars_transit", records_path=str(RECORDS),
+    eng = build(protocol="microgravity-cpr", profile="mars_transit", records_path=records_file,
                 explainer=None, habitat_url=url)
     eng.habitat.start()
     assert eng.habitat.connected.wait(5)
