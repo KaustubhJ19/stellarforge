@@ -14,11 +14,29 @@ export type Step = {
 type Base = { emergency: string; patient: string; patient_name: string; disclaimer: string };
 // Present only when the service routes by intent (docs/spec-intent-routing.md).
 export type Route = { protocol_id: string | null; rule_id: string; reason: string };
+// Collapse Copilot (Spec 3), briefing.schema.json. Present only for a routed emergency.
+export type Briefing = {
+  assessment_id: string;
+  text: string;
+  source: "template" | "llm";
+  context_label: string;
+  evidence?: { text: string; probability?: number; label: string }[];
+};
+export type L0Verdict = {
+  rule_id: string;
+  protocol_id: string | null;
+  protocol_available: boolean;
+  reason: string;
+  life_threat: boolean;
+  fired: boolean;
+};
 type Rescuer = Base & {
   role: "R1" | "R2";
   can_back: boolean;
   route?: Route | null;
   protocols?: { id: string; title: string }[];
+  briefing?: Briefing;
+  l0?: L0Verdict;
 };
 
 export type View = (

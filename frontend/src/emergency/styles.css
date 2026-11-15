@@ -102,11 +102,12 @@ fieldset.question ~ .big.primary { width: 100%; margin-top: 14px; }
 .lead { font-size: 0.85rem; font-weight: 600; margin: 0; }
 
 /* Cards and lists: one look for record, causes, route, report */
-.record, .causes, .route, .report details {
+.record, .causes, .route, .briefing, .report details {
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
   padding: 12px 16px; margin: 0; font-size: 0.8rem;
 }
-.record p, .route p { margin: 0 0 6px; }
+.record p, .route p, .briefing p { margin: 0 0 6px; }
+.briefing ul { margin: 0; padding-left: 1.2em; }
 .record h2 { margin-top: 12px; }
 .record ul, .causes, .bullets { margin: 0; padding-left: 1.2em; }
 .record li, .causes li, .bullets li { margin: 4px 0; }
