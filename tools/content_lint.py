@@ -238,7 +238,8 @@ def lint_dir(content_dir):
     failures = {}
     folder = Path(content_dir) / "protocols"
     ids = set()
-    for path in sorted(p for p in folder.glob("*.json") if p.name != COVERAGE_FILE):
+    # <id>.roles/.excerpts/.recorded.json are Spec 4 companion files, not protocols.
+    for path in sorted(p for p in folder.glob("*.json") if p.name != COVERAGE_FILE and p.name.count(".") == 1):
         doc, problems = _load(path)
         if doc is not None:
             problems = lint_protocol(doc)

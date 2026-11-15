@@ -41,6 +41,28 @@ If the Vite dev server refuses a file outside `frontend/`, add `server: { fs: { 
 
 **Mission profile:** read `content/profiles/mars_transit.json`; your `groundDelayMin` is `comm_delay.value`.
 
+## For the emergency-flow lead (Spec 4)
+
+**Real protocol content is ready to replace the stubs** (Spec 5 ticket 08). Checked against your engine on `integrate/spec2-into-emergency-services` in a scratch copy:
+
+- `content/protocols/microgravity-cpr.json` (13 steps) and `content/protocols/chest-pain.json` (5 steps), each with its companion files:
+  - `<id>.roles.json`: Rescuer 1 / Rescuer 2 split. This is a team value; the guideline does not assign roles. Unmapped steps show to everyone.
+  - `<id>.excerpts.json`: verbatim excerpts from the cited source for every step.
+  - `<id>.recorded.json`: a recorded "Why this step?" answer for every step.
+- `content/profiles/mars_transit.json` and `station.json` now carry your fields: `crew`, `equipment`, `delay_one_way_s`, `delay_label`. Both pass `contracts/provisional/mission_profile.schema.json`.
+- `tools/drug-denylist.txt`: 64 names (ISS crew-kit drugs plus emergency drugs). Your file is empty, so take ours when merging.
+
+Results with your loader and tests:
+- `load_protocol`: 0 steps refused for either protocol. `runtime.build(protocol="microgravity-cpr", profile="mars_transit")` works.
+- With one rescuer, steps that need 2 or more (airway, venous access) are hidden, as the guideline requires.
+- Your linter with our deny-list: 0 issues. Your backend tests: 214 passed, 1 failed. The failure (`test_no_external_urls_in_runtime_code`) fails the same way on your branch without our files.
+
+To switch: set `SF_PROTOCOL=microgravity-cpr` (or change `DEFAULT_PROTOCOL` / `DEFAULT_PROFILE` in `backend/app/runtime.py` to `microgravity-cpr` / `mars_transit`).
+
+**Two things to agree:**
+- **Crew ids:** your stubs use `cmdr`, `eng`, `sci`, `cmo`. The data lead's replays use `A` to `D`, so the profiles use `A` to `D`.
+- **Equipment:** both profiles list every item the protocols use, so no step is hidden. On a Mars vehicle that is a team value; on the ISS the defibrillator is sourced (part of the crew health care system).
+
 ## For everyone
 
 Every protocol step and Safety bound is listed in `docs/medical-review.md` for a qualified clinician to sign. If nobody signs, the write-up says "Medical content not clinically reviewed."

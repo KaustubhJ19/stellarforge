@@ -1,0 +1,19 @@
+{
+  "protocol": "microgravity-cpr",
+  "note": "Recorded answers for 'Why this step?' when the explainer is off. Written by the team from the cited excerpts; not clinically reviewed (see docs/medical-review.md).",
+  "answers": {
+    "cpr-1-start": "The guideline says to start CPR in anyone who appears to be in cardiac arrest, even when no defibrillator is on board. Survival is unlikely without defibrillation, but starting CPR is still recommended.",
+    "cpr-2-er-compressions": "The Evetts-Russomano method needs no restraint and no equipment, so one rescuer can start at once, wherever the crewmember is. It also lets a third person move patient and rescuer while compressions continue. If you cannot give adequate compressions with it, switch to the Reverse-Bear-Hug method.",
+    "cpr-3-hs-on-cmrs": "Once the patient is restrained on the Crew Medical Restraint System, the Handstand method gives the best compressions in weightlessness, if the spacecraft and your height allow it.",
+    "cpr-4-restrained-alternative": "If the Handstand method is not possible, the guideline recommends restrained CPR in the standard or straddling position instead.",
+    "cpr-5-accd": "An automated compression device may help on a restrained patient, but only if one is available, and setting it up must not delay good compressions.",
+    "cpr-6-aed": "A defibrillator should only be used on a patient restrained to an electrically isolated, safe surface, such as the restraint system. Self-adhesive pads keep your hands free.",
+    "cpr-7-defibrillate": "The guideline says to defibrillate when appropriate, even though survival is likely to be lower in space.",
+    "cpr-8-airway-gate": "Airway management needs at least two rescuers and a restrained patient, so compressions can continue while the airway is handled.",
+    "cpr-9-supraglottic": "Without a rescuer trained in tracheal intubation, a second-generation supraglottic airway device is recommended. Keep the manual suction device ready during airway management.",
+    "cpr-10-intubation": "Tracheal intubation is the gold standard when a skilled provider does it, with patient and rescuer restrained on the restraint system.",
+    "cpr-11-venous-access": "Venous access is only attempted when more than two rescuers are present and good CPR is under way. If a vein cannot be used, the intraosseous route at the shin is next.",
+    "cpr-12-medication": "This tool never names a drug or a dose. Any medication is decided by the flight surgeon or the onboard medical checklist.",
+    "cpr-13-termination": "The crewmember with the highest medical qualification decides whether to stop, after talking with the ground if possible. If the delay is too long, they decide alone."
+  }
+}

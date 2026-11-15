@@ -1,0 +1,96 @@
+{
+  "protocol": "microgravity-cpr",
+  "note": "Verbatim excerpts from the cited source for each step.",
+  "excerpts": [
+    {
+      "step": "cpr-1-start",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 14",
+      "text": "Even if survival is highly unlikely without defibrillation, CPR SHOULD start when a defibrillator is unavailable in the space vehicle, in patients who appear to be in cardiac arrest."
+    },
+    {
+      "step": "cpr-2-er-compressions",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 2",
+      "text": "For initial BLS at the site of emergency, the Evetts-Russomano method (ER) SHOULD be applied initially. If the rescuer cannot perform adequate chest compressions with the ER method, the rescuer should switch to the Reverse-Bear-Hug method (RBH)."
+    },
+    {
+      "step": "cpr-2-er-compressions",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), rationale for Recommendation 1",
+      "text": "This includes the recommendation of a chest compression technique for BLS that does not require patient or rescuer to be restrained or is dependent on the distance between two surfaces (such as the HS-method) and can therefore be initiated, immediately and without any equipment."
+    },
+    {
+      "step": "cpr-3-hs-on-cmrs",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 3",
+      "text": "As soon as the patient has been restrained on the Crew Medical Restraint System chest compressions SHOULD be applied using the Handstand-method (HS) if favored by the dimensions of the spacecraft and provider height."
+    },
+    {
+      "step": "cpr-4-restrained-alternative",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 4",
+      "text": "If the application of the HS method seems impossible either the restrained CPR method using the standard OR straddling position SHOULD be applied."
+    },
+    {
+      "step": "cpr-5-accd",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 5",
+      "text": "An automated chest compression device COULD be used on a restrained patient (if available). Its installation, however, should not delay high quality chest compressions."
+    },
+    {
+      "step": "cpr-6-aed",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 10",
+      "text": "A defibrillator SHOULD only be used on a patient that is restrained to an electrically isolated and safe surface."
+    },
+    {
+      "step": "cpr-6-aed",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 11",
+      "text": "An automated external defibrillator (AED), with long duration batteries and long shelf-life self-adhesive pads, SHOULD be stored with the emergency equipment."
+    },
+    {
+      "step": "cpr-7-defibrillate",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 15",
+      "text": "Although the survival rate is likely to be reduced in the absence of medical skills and/or equipment for on-going medical support in the event of ROSC in microgravity, defibrillation SHOULD take place when appropriate."
+    },
+    {
+      "step": "cpr-8-airway-gate",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Abstract (Results)",
+      "text": "Airway management should only be performed if at least two rescuers are present and the patient has been restrained."
+    },
+    {
+      "step": "cpr-9-supraglottic",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 6",
+      "text": "If no rescuer with extensive training in tracheal intubation is present, a second generation supraglottic airway device SHOULD be used for airway management."
+    },
+    {
+      "step": "cpr-9-supraglottic",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 9",
+      "text": "A manual suction device SHOULD be included in the emergency kit and be readily available during CPR, especially during airway management."
+    },
+    {
+      "step": "cpr-10-intubation",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 7",
+      "text": "The tracheal intubation remains the gold standard for securing the airway if performed by a skilled provider and SHOULD be performed in that case."
+    },
+    {
+      "step": "cpr-10-intubation",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 8",
+      "text": "When tracheal intubation is attempted patient and rescuer should be restrained using the Crew Medical Restraint System."
+    },
+    {
+      "step": "cpr-11-venous-access",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 16",
+      "text": "Venous access SHOULD ONLY be performed if more than two rescuers are present during a cardiac arrest and high-quality CPR is performed."
+    },
+    {
+      "step": "cpr-11-venous-access",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 18",
+      "text": "When a peripheral venous access cannot be established in a patient in cardiac arrest in microgravity, the intraosseous tibial route SHOULD be used."
+    },
+    {
+      "step": "cpr-12-medication",
+      "section": "Spec 5, Protocol content rules (team rule)",
+      "text": "Medication steps read \"per flight surgeon / onboard medical checklist\"."
+    },
+    {
+      "step": "cpr-13-termination",
+      "section": "Hinkelbein et al. 2020 (doi:10.1186/s13049-020-00793-y), Recommendation 22",
+      "text": "The decision to terminate resuscitation SHOULD be made by the crewmember with the highest medical qualification after consultation with telemedicine support. Only if telemedicine support is unavailable or time delay prevents prompt feedback the decision has to be made by the crewmember with the highest medical qualification alone."
+    }
+  ]
+}

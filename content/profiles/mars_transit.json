@@ -60,5 +60,27 @@
     "status": "sourced",
     "source": "https://www.nasa.gov/hrp/hazards/",
     "note": "NASA HRP hazards: isolation and confinement, and hostile closed environments inside a spacecraft."
-  }
+  },
+  "crew": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "equipment": [
+    "Crew Medical Restraint System",
+    "automated chest compression device (if available)",
+    "automated external defibrillator (AED)",
+    "self-adhesive defibrillation pads",
+    "second-generation supraglottic airway device",
+    "manual suction device",
+    "tracheal intubation equipment",
+    "peripheral venous cannula",
+    "intraosseous access device",
+    "ECG recorder",
+    "communication link to Mission Control"
+  ],
+  "delay_one_way_s": 1710.0,
+  "delay_label": "team value: 28.5 min one way / 57 min round trip (above NASA's stated 20 min maximum)",
+  "spec4_note": "Spec 4 fields. crew: Spec 1 replay crew ids, size per crew_size (team value). equipment: every item the CPR and chest-pain protocols use, assumed on board so no step is hidden; not confirmed for a Mars vehicle (team value). delay: comm_delay in seconds (team value, above NASA's stated 20 min maximum)."
 }

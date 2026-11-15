@@ -1,0 +1,10 @@
+{
+  "protocol": "chest-pain",
+  "note": "team value: role split between Rescuer 1 and Rescuer 2, not stated by the guideline. Unmapped steps show to everyone.",
+  "roles": {
+    "cp-1-ecg": "R1",
+    "cp-2-defibrillator-ready": "R2",
+    "cp-3-restrain": "R1",
+    "cp-4-mission-control": "R2"
+  }
+}

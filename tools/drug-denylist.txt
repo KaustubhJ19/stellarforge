@@ -1,0 +1,68 @@
+# Drug-name deny-list for the content linters (one term per line, case-insensitive).
+# Used ONLY to block content; never displayed to users.
+# Generated from tools/drug_blocklist.json (Spec 5), where every group carries its source:
+# ISS crew-kit drugs (Wotring 2016; Du 2011) and a team-value emergency group.
+acetaminophen
+acetylsalicylic
+acyclovir
+adenosine
+adrenaline
+alteplase
+amantadine
+amiodarone
+amoxicillin
+aspirin
+atorvastatin
+atropine
+calcium chloride
+cefadroxil
+cilastatin
+ciprofloxacin
+clavulanate
+clopidogrel
+clotrimazole
+dextroamphetamine
+dextrose
+diazepam
+epinephrine
+famotidine
+fentanyl
+fluconazole
+furosemide
+glucagon
+glyceryl trinitrate
+heparin
+ibuprofen
+imipenem
+ketamine
+levothyroxine
+lidocaine
+loperamide
+loratadine
+magnesium sulfate
+melatonin
+metronidazole
+midazolam
+modafinil
+morphine
+mupirocin
+naloxone
+nitroglycerin
+noradrenaline
+norepinephrine
+promethazine
+propofol
+pseudoephedrine
+rimantadine
+silver sulfadiazine
+sodium bicarbonate
+sulfamethoxazole
+temazepam
+tenecteplase
+tetracycline
+ticagrelor
+triamcinolone
+trimethoprim
+vancomycin
+vasopressin
+zolpidem

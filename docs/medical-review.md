@@ -72,6 +72,31 @@ Files: `content/cards/*.json`. Check the Why, the if-abnormal steps and the spac
 | card `sleep_duration` | Risk of Inadequate Sleep and Irregular Schedules | Compare with the crewmember's own normal, not with one night. | NASA schedules an 8.5 hour sleep period (NASA-STD-3001 [V1 6001]). ISS crews actually slept about 6.1 hours a night in flight (Barger 2014). On Earth, adults need 7 or more hours (AASM). No Safety bound: judged against the personal baseline only. | ☐ | |
 | card `systolic_bp` | Risk of Cardiovascular Adaptations | Check the cuff size and position. If the crewmember is unresponsive, start the CPR protocol. | After landing, Apollo crews' average standing systolic pressure was 13 mmHg lower than before flight (118.8 to 105.8). Safety bound: systolic below 90 mmHg, an Earth reference, no space data (AHA 2020); no upper limit sourced. | ☐ | |
 
+## Recorded "Why this step?" answers
+
+Files: `content/protocols/<id>.recorded.json`. Written by the team from the cited excerpts (`<id>.excerpts.json`); shown when the explainer is off.
+
+| Step | Recorded answer | OK? | Change needed |
+|---|---|---|---|
+| recorded `cpr-1-start` | The guideline says to start CPR in anyone who appears to be in cardiac arrest, even when no defibrillator is on board. Survival is unlikely without defibrillation, but starting CPR is still recommended. | ☐ | |
+| recorded `cpr-2-er-compressions` | The Evetts-Russomano method needs no restraint and no equipment, so one rescuer can start at once, wherever the crewmember is. It also lets a third person move patient and rescuer while compressions continue. If you cannot give adequate compressions with it, switch to the Reverse-Bear-Hug method. | ☐ | |
+| recorded `cpr-3-hs-on-cmrs` | Once the patient is restrained on the Crew Medical Restraint System, the Handstand method gives the best compressions in weightlessness, if the spacecraft and your height allow it. | ☐ | |
+| recorded `cpr-4-restrained-alternative` | If the Handstand method is not possible, the guideline recommends restrained CPR in the standard or straddling position instead. | ☐ | |
+| recorded `cpr-5-accd` | An automated compression device may help on a restrained patient, but only if one is available, and setting it up must not delay good compressions. | ☐ | |
+| recorded `cpr-6-aed` | A defibrillator should only be used on a patient restrained to an electrically isolated, safe surface, such as the restraint system. Self-adhesive pads keep your hands free. | ☐ | |
+| recorded `cpr-7-defibrillate` | The guideline says to defibrillate when appropriate, even though survival is likely to be lower in space. | ☐ | |
+| recorded `cpr-8-airway-gate` | Airway management needs at least two rescuers and a restrained patient, so compressions can continue while the airway is handled. | ☐ | |
+| recorded `cpr-9-supraglottic` | Without a rescuer trained in tracheal intubation, a second-generation supraglottic airway device is recommended. Keep the manual suction device ready during airway management. | ☐ | |
+| recorded `cpr-10-intubation` | Tracheal intubation is the gold standard when a skilled provider does it, with patient and rescuer restrained on the restraint system. | ☐ | |
+| recorded `cpr-11-venous-access` | Venous access is only attempted when more than two rescuers are present and good CPR is under way. If a vein cannot be used, the intraosseous route at the shin is next. | ☐ | |
+| recorded `cpr-12-medication` | This tool never names a drug or a dose. Any medication is decided by the flight surgeon or the onboard medical checklist. | ☐ | |
+| recorded `cpr-13-termination` | The crewmember with the highest medical qualification decides whether to stop, after talking with the ground if possible. If the delay is too long, they decide alone. | ☐ | |
+| recorded `cp-1-ecg` | An Earth guideline for suspected heart attack recommends recording an ECG straight away. There is no space-specific guidance for this step. | ☐ | |
+| recorded `cp-2-defibrillator-ready` | The same Earth guideline says everyone caring for a suspected heart attack should have a defibrillator to hand. | ☐ | |
+| recorded `cp-3-restrain` | If a shock is needed, the defibrillator may only be used on a patient restrained to an electrically isolated, safe surface, so restrain early. | ☐ | |
+| recorded `cp-4-mission-control` | The crew must tell Mission Control about an ongoing medical emergency. On a Mars mission the reply is delayed, so the crew does not wait for it. | ☐ | |
+| recorded `cp-5-medication` | This tool never names a drug or a dose. Any medication is decided by the flight surgeon or the onboard medical checklist. | ☐ | |
+
 ## Points to check first
 
 - Rescuer counts of 1: the guideline names a single "rescuer" or gives no number for those steps.
@@ -80,3 +105,4 @@ Files: `content/cards/*.json`. Check the Why, the if-abnormal steps and the spac
 - Body temperature: in-flight resting core temperature rises about 1 °C (Stahn 2017), so the 38 °C Earth fever bound may fire on healthy crew. Detection applies a +1 °C expected shift.
 - "Stop activity" was dropped from the chest-pain phase: no source found.
 - Card Why texts summarise NASA's HRP risk descriptions in plain words; only part of each is quoted verbatim.
+- Rescuer 1 / Rescuer 2 role split (`<id>.roles.json`) is a team value; the guideline does not assign roles.
