@@ -64,10 +64,12 @@ def test_ground_re_verifies_the_carried_copy_and_catches_an_edit(reng):
 
 
 def test_investigator_event_is_folded_into_the_chain_and_into_the_report(reng):
-    e = started(reng)
-    reng.copilot_event(e, "investigator", status="ok", elapsed_s=2.5, notes=[], dropped=0)
+    e = started(reng)  # the rescuer view already started the real investigator run (no model: it ends at once)
+    reng.investigator.join(e.id)  # wait for its event; adding a second one would race the thread
     section = reng.ground.build(e)["copilot"]
-    assert section["timings"]["investigator_elapsed_s"] == 2.5 and section["chain"]["ok"]
+    ran = [ev for ev in section["events"] if ev["type"] == "copilot_investigator"]
+    assert len(ran) == 1 and section["timings"]["investigator_elapsed_s"] == ran[0]["elapsed_s"]
+    assert section["chain"]["ok"]
     assert reng.verify_copilot(e.id).ok
 
 
