@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "decision-record.schema.json",
+  "title": "DecisionRecord",
+  "x-status": "PROVISIONAL: not one of Spec 1's seven contracts. Spec 3 (Collapse copilot): hash-chained copilot events on the emergency timeline; each event carries the SHA-256 of the previous one. Probabilities inside event data follow condition-assessment (source label required). Needs team agreement before it is frozen.",
+  "type": "object",
+  "required": ["emergency_id", "crew", "events"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "emergency_id": {"type": "string"},
+    "crew": {"type": "string"},
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["seq", "type", "t", "data", "prev_hash", "hash"],
+        "properties": {
+          "seq": {"type": "integer", "minimum": 0},
+          "type": {"enum": [
+            "trigger", "rule_verdict", "hot_summary", "assessment", "briefing",
+            "investigator_notes", "rescuer_choice", "step", "ground_report",
+            "ground_reply", "outcome_label"
+          ]},
+          "t": {"type": "number", "description": "Mission clock seconds"},
+          "actor": {"type": "string", "description": "Who acted, e.g. for a protocol switch"},
+          "data": {"type": "object"},
+          "prev_hash": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$", "description": "null on the first event"},
+          "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}

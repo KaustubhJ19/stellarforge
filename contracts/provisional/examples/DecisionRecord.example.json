@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "emergency_id": "em-1",
+  "crew": "A",
+  "events": [
+    {
+      "seq": 0,
+      "type": "trigger",
+      "t": 7200,
+      "data": {"trigger_id": "trigger-1"},
+      "prev_hash": null,
+      "hash": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "seq": 1,
+      "type": "rescuer_choice",
+      "t": 7210,
+      "actor": "rescuer-1",
+      "data": {"protocol_id": "example-protocol"},
+      "prev_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+      "hash": "2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  ]
+}

@@ -25,6 +25,11 @@ Every document carries a `schema_version` field. The schemas enforce only what t
 | Shape | Schema | Replay event type | Owner |
 |---|---|---|---|
 | Forecast | `provisional/forecast.schema.json` | `forecast` | Spec 3 (Forecast B, P1) |
+| ConditionAssessment | `provisional/condition-assessment.schema.json` | none | Spec 3 (Collapse copilot) |
+| Briefing | `provisional/briefing.schema.json` | none | Spec 3 (Collapse copilot) |
+| DecisionRecord | `provisional/decision-record.schema.json` | none | Spec 3 (Collapse copilot) |
+
+Examples for the Spec 3 shapes are in `provisional/examples/`. Every probability in them carries a source label (required, non-empty). `Alert` gains an optional `assessment_id` (add-only).
 
 Other replay event types in use: `crew_report` (emergency replay: chest pain is crew-reported).
 

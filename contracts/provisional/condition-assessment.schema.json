@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "condition-assessment.schema.json",
+  "title": "ConditionAssessment",
+  "x-status": "PROVISIONAL: not one of Spec 1's seven contracts. Spec 3 (Collapse copilot): ranked conditions with posterior, evidence lines, labels and mapped protocol id. Every probability carries a source label. Needs team agreement before it is frozen.",
+  "type": "object",
+  "required": ["id", "crew", "t", "conditions"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "id": {"type": "string", "description": "Referenced by Alert.assessment_id, Briefing.assessment_id and decision-record events"},
+    "crew": {"type": "string"},
+    "t": {"type": "number", "description": "Mission clock seconds"},
+    "conditions": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Ranked, most likely first",
+      "items": {"$ref": "#/$defs/condition"}
+    }
+  },
+  "$defs": {
+    "label": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Source label, e.g. \"trained on simulation (Pulse), estimate, not validated\", \"team value\", \"NASA base rate\""
+    },
+    "condition": {
+      "type": "object",
+      "required": ["condition", "rank", "posterior", "label", "evidence", "protocol_id"],
+      "properties": {
+        "condition": {"type": "string"},
+        "rank": {"type": "integer", "minimum": 1},
+        "posterior": {"type": "number", "minimum": 0, "maximum": 1},
+        "prior": {"type": "number", "minimum": 0, "maximum": 1},
+        "label": {"$ref": "#/$defs/label"},
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidenceLine"}},
+        "protocol_id": {"type": ["string", "null"], "description": "Mapped protocol, null when none maps"}
+      }
+    },
+    "evidenceLine": {
+      "type": "object",
+      "required": ["text", "label"],
+      "properties": {
+        "text": {"type": "string", "minLength": 1},
+        "likelihood_ratio": {"type": "number", "exclusiveMinimum": 0},
+        "label": {"$ref": "#/$defs/label"}
+      }
+    }
+  }
+}
