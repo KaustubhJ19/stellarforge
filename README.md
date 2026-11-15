@@ -6,54 +6,65 @@ It learns each person's own normal, flags drift early, and walks the crew throug
 
 > **Decision support, not diagnosis.** Prototype for a hackathon. Not medical advice.
 
-**Deadline:** Sun 15 Nov 2026, 11:59 PM Melbourne time.
+## What is in it
 
-## Team streams
-
-Each person owns one stream. The plan and specs are shared by the team outside this repo.
-
-| Stream | Role | Folders it mostly touches |
+| Part | What it does | Where |
 |---|---|---|
-| Data, clock, contracts | Data lead. **Starts first, others wait on the contracts** | `contracts/`, `replay/`, `backend/` |
-| 3D body and home screen | 3D / UI lead | `frontend/` |
-| Detection and baseline | AI / detection lead | `backend/` |
-| Emergency flow | Emergency-flow lead | `frontend/`, `backend/`, `tools/` |
-| Integration and submission | Integration lead (Team Owner) | `content/`, `docs/` |
+| Health app | See-through 3D body that glows from each Indicator's Status, trends, forecast, crew forms | `frontend/` (`index.html`) |
+| Detection | Personal baseline, Acute and Drift alerts, readiness forecast | `backend/detection.py`, `baseline_a.py`, `forecast_b.py` |
+| Habitat service | Mission clock, SQLite store, replays, Alerts and Triggers pushed to windows | `backend/service.py` |
+| Emergency flow | Crew alarm, rescuer tasks, cited protocol steps, ground report and console, offline mode | `backend/app/`, `frontend/src/emergency/` (`emergency.html`) |
+| Content | Protocols, measurement cards, mission profiles, detection cut-offs (every item sourced) | `content/` |
+
+## Quick start
+
+Needs Python 3.11+ and Node.js 20+.
+
+```bash
+# Backend (from the repo root)
+python3 -m venv backend/.venv && source backend/.venv/bin/activate
+pip install -r backend/requirements.txt -r contracts/requirements.txt
+python -m pytest backend contracts tools          # unit and integration tests
+python tools/lint_content.py                      # content linter: sources present, no doses
+
+# Frontend
+cd frontend
+npm ci
+npm run dev                                       # health app on http://localhost:5173 (replay files, no service)
+npm test                                          # unit tests
+npm run test:e2e                                  # browser tests (npx playwright install chromium first)
+```
+
+Emergency flow, which needs the service:
+
+```bash
+cd frontend && npm run build && cd ..
+python -m uvicorn app.main:app --app-dir backend --port 8000
+# open http://localhost:8000/emergency.html  (tablets: ?crew=<id>, ground console: ?view=console)
+```
+
+See [frontend/README.md](frontend/README.md) for the app's options and [docs/rehearsal.md](docs/rehearsal.md) for the demo script.
 
 ## Repo layout
 
 ```
+backend/     Python: detection, habitat service (service.py), emergency service (app/)
+frontend/    React + Three.js: health app (src/) and emergency flow (src/emergency/)
 contracts/   Shared JSON Schemas. The only shapes that cross a stream boundary
+content/     Protocols, measurement cards, mission profiles (protocols/, cards/, profiles/)
 replay/      Pre-generated crew days, emergency episode, ISS cabin data (JSON)
-content/     Protocols, measurement cards, mission profiles (every item has a source)
-  protocols/
-  cards/
-  profiles/
-backend/     Local Python backend: Mission clock, detection, store, explainer
-frontend/    Web app (React + Three.js)
-tools/       Content linter, replay generator, golden tests
-docs/        SI-use log, credits, write-up
+tools/       Content linter, replay generators, golden-replay and accuracy tests
+docs/        Datasets, accuracy, cut-offs, rehearsal script, AI-use log (see docs/README.md)
 ```
-
-Folders are empty on purpose; each stream fills its own.
-
-## Tech stack (from the plan)
-
-- **Web:** TypeScript, React, Three.js (offline-capable)
-- **Backend and ML:** Python, scikit-learn, `shap`, MAPIE, Pulse Physiology Engine
-- **Storage:** SQLite
-- **Explainer:** Ollama with a small free model
-- All free tools and data only.
 
 ## Working rules
 
 - **Contracts first.** Add a field to a contract only by agreement in the team chat. Never remove one.
 - **One test seam.** A replay file goes in; the alerts, status and screens that come out are checked.
-- **Cite everything.** Every protocol step and threshold needs a source. No drug names or doses, ever.
+- **Cite everything.** Every protocol step and threshold needs a source. No drug names or doses, ever (`tools/lint_content.py` enforces it).
 - **Honest labels.** Use "team value", "Earth reference, no space data", "estimate, not validated" where they apply.
-- **Feature freeze at H24.** After that: fix, rehearse, record, submit.
 - **Log AI use.** Add every use of an AI tool to `docs/si-log.md` (who, which tool, what for). The event requires a statement.
-- Commit messages: `type: description` (feat, fix, docs, test, chore, refactor).
+- **Commits:** `type: description` (feat, fix, docs, test, chore, refactor). Open a pull request; do not push to `main`.
 
 ## Known limitations
 
