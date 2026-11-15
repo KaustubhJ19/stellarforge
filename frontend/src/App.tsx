@@ -3,6 +3,7 @@ import type { CardContent, CrewRecord, IndicatorId, Reading, ReplayFile } from "
 import { isNumeric, missionStateAt, replayRange, seriesOf, type NumericReading } from "./replay/state";
 import { MeasurementCard } from "./home/MeasurementCard";
 import { useSparkHistory } from "./home/sparkHistory";
+import { EmergencyAlert } from "./home/EmergencyAlert";
 import { CONTENT_CARDS, CONTENT_PROFILES, cardFor, type ProfileContent } from "./content";
 import { profileChoices, profileFor } from "./profiles";
 import { MissionBar } from "./home/MissionBar";
@@ -50,6 +51,7 @@ export function App({
   cards = CONTENT_CARDS,
   profiles = CONTENT_PROFILES,
   onReadings = () => {},
+  watchEmergency = false,
 }: {
   replay: ReplayFile;
   /** The Crew record the replay belongs to (sex picks the body; anchor gives "your normal"). */
@@ -63,6 +65,8 @@ export function App({
   profiles?: ProfileContent[];
   /** Readings the crew logged in a form (stand test, post-EVA), for the service (POST /reading). */
   onReadings?: (readings: Reading[], note?: string) => void;
+  /** Pop up when another crew member needs help (asks the emergency service; off in replay-only use and tests). */
+  watchEmergency?: boolean;
 }) {
   // Readings logged on this screen join the replay, so every part of the app shows them.
   const [logged, setLogged] = useState<Reading[]>([]);
@@ -133,6 +137,7 @@ export function App({
 
   return (
     <div className="app">
+      {watchEmergency && <EmergencyAlert crew={crew.id} />}
       <Co2Banner latest={state.latest} now={state.t} limit={profile.co2Limit} />
       <main className="home">
         {/* First in tab order so Emergency is one Tab away; CSS places it on screen. */}

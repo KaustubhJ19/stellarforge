@@ -59,13 +59,14 @@ class Reply(BaseModel):
 
 
 def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI:
+    records_path = Path(os.environ.get("SF_RECORDS", REAL_RECORDS))
     eng = engine or build(
         # Real content by default; SF_PROTOCOL=stub-protocol SF_PROFILE=stub-mars SF_RECORDS=<stub file> runs the test doubles.
         # Setting SF_PROTOCOL forces that one protocol and turns intent-first routing off.
         routing="SF_PROTOCOL" not in os.environ,
         protocol=os.environ.get("SF_PROTOCOL", "microgravity-cpr"),
         profile=os.environ.get("SF_PROFILE", "mars_transit"),
-        records_path=Path(os.environ.get("SF_RECORDS", REAL_RECORDS)),
+        records_path=records_path,
         db=os.environ.get("SF_DB", ":memory:"),
         clock=MissionClock(speed=float(os.environ.get("SF_CLOCK_SPEED", "1"))),
     )
@@ -242,6 +243,7 @@ def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI
         def sim_reset():
             """Demo/test only: fresh flow state with the same content and settings."""
             fresh = build(protocol=eng.protocol.id, profile=eng.profile["id"], routing=eng.routing,
+                          records_path=records_path,  # without it the stub (empty) records came back and every record opened blank
                           clock=MissionClock(speed=eng.clock.speed), explainer=eng.explainer.transport)
             eng.__dict__.update(fresh.__dict__)
             eng.ground.eng = eng
