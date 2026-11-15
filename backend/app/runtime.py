@@ -25,7 +25,8 @@ def load_records(path=DEFAULT_RECORDS) -> dict[str, dict]:
 
 def build(protocol: str = DEFAULT_PROTOCOL, profile: str = DEFAULT_PROFILE, db: str = ":memory:",
           clock: MissionClock | None = None, records_path=DEFAULT_RECORDS, content_root=CONTENT,
-          explainer="ollama", habitat_url: str | None = None, routing: bool = False) -> FlowEngine:
+          explainer="ollama", habitat_url: str | None = None, routing: bool = False,
+          investigator=None) -> FlowEngine:
     habitat_url = habitat_url or os.environ.get("SF_HABITAT_URL")
     if habitat_url:
         from .habitat import HabitatClock
@@ -44,10 +45,20 @@ def build(protocol: str = DEFAULT_PROTOCOL, profile: str = DEFAULT_PROFILE, db: 
     eng = FlowEngine(Store(db), clock or MissionClock(), main, load_profile(profile, content_root),
                      load_records(records_path), questions, protocols=protocols, routes=routes)
     from .explainer import Explainer, ollama_transport
+    url = os.environ.get("SF_OLLAMA_URL", "http://127.0.0.1:11434")
     if explainer == "ollama":
-        explainer = ollama_transport(os.environ.get("SF_OLLAMA_MODEL", "llama3.2:3b"),
-                                     os.environ.get("SF_OLLAMA_URL", "http://127.0.0.1:11434"))
+        explainer = ollama_transport(os.environ.get("SF_OLLAMA_MODEL", "llama3.2:3b"), url)
+        from copilot.investigator_eval import load_config
+        cfg = load_config()
+        if investigator is None and cfg["enabled"]:  # ship gate (ticket 14): off by default unless the eval passed
+            from copilot.investigator import SYSTEM, TIME_BOX_S  # same local server, JSON replies, longer answers
+            investigator = ollama_transport(os.environ.get("SF_INVESTIGATOR_MODEL", cfg["model"]), url,
+                                            timeout=TIME_BOX_S, system=SYSTEM, num_predict=400, json_mode=True)
     eng.explainer = Explainer(eng, explainer)
+    from copilot.investigator import InvestigatorRunner
+    eng.investigator = InvestigatorRunner(eng, investigator)
+    from copilot.hot_summary import PushedHotSummaries  # Spec 3: latest Spec 2 snapshot per crew
+    eng.hot_summaries = PushedHotSummaries(habitat_configured=bool(habitat_url))
     if habitat_url:
         from .habitat import Habitat
         eng.habitat = Habitat(eng, habitat_url)

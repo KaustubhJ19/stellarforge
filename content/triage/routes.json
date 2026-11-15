@@ -1,24 +1,37 @@
 {
   "note": "Router table (docs/spec-intent-routing.md). First matching row wins. A row picks a protocol; it never contains clinical steps. Routing rules are team values, not clinical guidance.",
   "pending_protocols": ["decompression-sickness", "seizure"],
+  "thresholds": {
+    "spo2_low": {"value": 0.9, "unit": "fraction", "source": "team value (placeholder, not clinically reviewed; Spec 1 to cite a bound)"}
+  },
   "rows": [
     {
       "id": "auto-trigger",
       "when": {"trigger_kind": "auto"},
       "protocol": "microgravity-cpr",
-      "reason": "The automatic arrest rule fired, so the questions are skipped."
+      "reason": "The automatic arrest rule fired, so the questions are skipped.",
+      "life_threat": true
     },
     {
       "id": "unresponsive-not-breathing",
       "when": {"responsive": "no", "breathing": ["none", "abnormal"]},
       "protocol": "microgravity-cpr",
-      "reason": "Rescuer reports the patient does not respond and is not breathing normally."
+      "reason": "Rescuer reports the patient does not respond and is not breathing normally.",
+      "life_threat": true
     },
     {
       "id": "arrest-rhythm",
       "when": {"live_arrest": true},
       "protocol": "microgravity-cpr",
-      "reason": "The live heart rhythm is an arrest rhythm."
+      "reason": "The live heart rhythm is an arrest rhythm.",
+      "life_threat": true
+    },
+    {
+      "id": "airway-low-spo2-or-no-breathing",
+      "when": {"airway_threat": true},
+      "protocol": "cabin-air",
+      "reason": "Oxygen saturation is below the bound, or the rescuer reports the patient is not breathing.",
+      "life_threat": true
     },
     {
       "id": "chest-pain-responsive",

@@ -1,0 +1,29 @@
+{
+  "note": "FAKE placeholder library until Spec 1 delivers condition records. Every prior and likelihood ratio is a team value, not clinical evidence. Protocol ids for conditions without an authored protocol are pending.",
+  "conditions": [
+    {"id": "fainting", "name": "Fainting (syncope)", "prior": 0.45, "prior_source": "team value (placeholder, not clinically reviewed)", "protocol_id": "fainting", "simulatable": true,
+     "signs": [
+       {"id": "rapid_recovery", "text": "Responded within a minute of lying flat", "lr": 3.0, "source": "team value (placeholder, not clinically reviewed)"},
+       {"id": "standing_onset", "text": "Collapsed on standing or after exertion", "lr": 2.0, "source": "team value (placeholder, not clinically reviewed)"}]},
+    {"id": "low-blood-sugar", "name": "Low blood sugar", "prior": 0.12, "prior_source": "team value (placeholder, not clinically reviewed)", "protocol_id": "low-blood-sugar", "simulatable": true,
+     "signs": [
+       {"id": "glucose_falling", "text": "Glucose trend falling", "lr": 3.5, "source": "team value (placeholder, not clinically reviewed)"},
+       {"id": "no_recent_meal", "text": "No meal logged for many hours", "lr": 2.5, "source": "team value (placeholder, not clinically reviewed)"}]},
+    {"id": "cardiac-arrest", "name": "Cardiac arrest", "prior": 0.05, "prior_source": "team value (placeholder, not clinically reviewed)", "protocol_id": "microgravity-cpr", "simulatable": true,
+     "signs": [
+       {"id": "no_breathing", "text": "Not breathing normally", "lr": 8.0, "source": "team value (placeholder, not clinically reviewed)"},
+       {"id": "no_response", "text": "Does not respond", "lr": 4.0, "source": "team value (placeholder, not clinically reviewed)"}]},
+    {"id": "decompression-sickness", "name": "Decompression sickness", "prior": 0.10, "prior_source": "team value (placeholder, not clinically reviewed)", "protocol_id": "decompression-sickness", "simulatable": false,
+     "signs": [
+       {"id": "joint_pain_post_eva", "text": "Joint pain reported on the post-EVA form", "lr": 6.0, "source": "team value (placeholder, not clinically reviewed)"},
+       {"id": "recent_eva", "text": "EVA within the last 24 hours", "lr": 2.5, "source": "team value (placeholder, not clinically reviewed)"}]},
+    {"id": "seizure", "name": "Seizure", "prior": 0.05, "prior_source": "team value (placeholder, not clinically reviewed)", "protocol_id": "seizure", "simulatable": false,
+     "signs": [
+       {"id": "shaking_witnessed", "text": "Shaking or stiffening witnessed by the rescuer", "lr": 9.0, "source": "team value (placeholder, not clinically reviewed)"},
+       {"id": "confusion_after", "text": "Confused after waking", "lr": 3.0, "source": "team value (placeholder, not clinically reviewed)"}]},
+    {"id": "head-injury", "name": "Head injury", "prior": 0.05, "prior_source": "team value (placeholder, not clinically reviewed)", "protocol_id": "head-injury", "simulatable": false,
+     "signs": [
+       {"id": "head_strike", "text": "Rescuer saw or heard a head strike", "lr": 10.0, "source": "team value (placeholder, not clinically reviewed)"},
+       {"id": "vomiting", "text": "Vomiting after the event", "lr": 3.0, "source": "team value (placeholder, not clinically reviewed)"}]}
+  ]
+}

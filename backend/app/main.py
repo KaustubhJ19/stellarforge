@@ -49,8 +49,17 @@ class IntakeForm(CrewAction):
 class SwitchProtocol(CrewAction):
     protocol: str
 
+class CopilotChoice(CrewAction):
+    choice: str
+    protocol: str | None = None
+
 class Explain(CrewAction):
     question: str | None = None
+
+class Outcome(BaseModel):
+    report: str | None = None
+    text: str = ""
+
 
 class Reply(BaseModel):
     report: str | None = None
@@ -165,6 +174,11 @@ def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI
         eng.switch_protocol(a.crew, a.protocol, a.emergency)
         return eng.view(a.crew)
 
+    @app.post("/api/copilot-choice")
+    def copilot_choice(a: CopilotChoice):
+        eng.copilot_choice(a.crew, a.choice, a.protocol, a.emergency)
+        return eng.view(a.crew)
+
     @app.post("/api/next")
     def nxt(a: CrewAction):
         eng.next(a.crew, a.emergency)
@@ -221,6 +235,12 @@ def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI
             raise FlowError("ground console not available")
         return eng.ground.console_reply(r.report, r.text, scripted=r.scripted)
 
+    @app.post("/api/console/outcome")
+    def console_outcome(o: Outcome):
+        if not eng.ground:
+            raise FlowError("ground console not available")
+        return eng.ground.add_outcome(o.report, o.text)
+
     @app.get("/api/labels")
     def labels(crew: str | None = None):
         return eng.store.labels(crew)
@@ -244,10 +264,12 @@ def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI
             """Demo/test only: fresh flow state with the same content and settings."""
             fresh = build(protocol=eng.protocol.id, profile=eng.profile["id"], routing=eng.routing,
                           records_path=records_path,  # without it the stub (empty) records came back and every record opened blank
-                          clock=MissionClock(speed=eng.clock.speed), explainer=eng.explainer.transport)
+                          clock=MissionClock(speed=eng.clock.speed), explainer=eng.explainer.transport,
+                          investigator=eng.investigator.transport)
             eng.__dict__.update(fresh.__dict__)
             eng.ground.eng = eng
             eng.explainer.eng = eng
+            eng.investigator.eng = eng
             return {"ok": True}
 
         @app.post("/api/sim/replay")

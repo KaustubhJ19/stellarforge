@@ -1,4 +1,5 @@
 import type { ReportView } from "./api";
+import { CopilotRecord } from "./CopilotRecord";
 
 const mmss = (s: number) => {
   const m = Math.floor(s / 60);
@@ -34,6 +35,7 @@ export function ReportPanel({ view }: { view: ReportView | null }) {
       )}
       <h2>Summary</h2>
       <SummaryList text={r.summary} />
+      <CopilotRecord section={r.copilot} />
       <details>
         <summary>History ({r.history.length}) · Timeline ({r.timeline.length}) · Actions ({r.actions.length})</summary>
         <pre>{JSON.stringify({ history: r.history, timeline: r.timeline, actions: r.actions }, null, 1)}</pre>

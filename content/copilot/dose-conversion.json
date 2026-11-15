@@ -1,0 +1,8 @@
+{
+  "name": "iss_mean_quality_factor",
+  "value": 2.26,
+  "unit": "mSv per mGy",
+  "label": "team value derived from one ISS measurement (estimate, not validated)",
+  "source": "Berger T et al. DOSIS & DOSIS 3D: radiation measurements with the DOSTEL instruments onboard the Columbus Laboratory of the ISS in the years 2009-2016. J Space Weather Space Clim 2017;7:A8. doi:10.1051/swsc/2017005 (CC BY 4.0). Abstract, end of May 2016: absorbed dose up to 286 uGy/day, dose equivalent 647 uSv/day; 647 / 286 = 2.26.",
+  "note": "Converts Spec 2's absorbed dose (mGy, from cabin readings) to dose equivalent (mSv) for the copilot. The mean quality factor varies with orbit, solar cycle and shielding (GCR Q about 3.1, SAA Q about 1.2 in the same paper); one value is a simplification."
+}

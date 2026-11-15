@@ -43,6 +43,26 @@ def words(text: str) -> set[str]:
     return {w for w in re.findall(r"[a-z0-9]+", text.lower()) if len(w) > 2 and w not in STOP}
 
 
+def call_within(transport: Transport, prompt: str, timeout: float, slow_message: str) -> str:
+    """Run the model call in a daemon thread; raise TimeoutError if it is not back in `timeout` seconds."""
+    box: dict = {}
+
+    def run():
+        try:
+            box["out"] = transport(prompt)
+        except Exception as err:  # noqa: BLE001
+            box["err"] = err
+
+    th = threading.Thread(target=run, daemon=True)
+    th.start()
+    th.join(timeout)
+    if th.is_alive():
+        raise TimeoutError(slow_message)
+    if "err" in box:
+        raise box["err"]
+    return box["out"]
+
+
 @dataclass(frozen=True)
 class Doc:
     step: str
@@ -51,11 +71,12 @@ class Doc:
     text: str
 
 
-def ollama_transport(model: str, url: str = "http://127.0.0.1:11434", timeout: float = TIMEOUT_S) -> Transport:
+def ollama_transport(model: str, url: str = "http://127.0.0.1:11434", timeout: float = TIMEOUT_S,
+                     system: str = SYSTEM, num_predict: int = 80, json_mode: bool = False) -> Transport:
     def call(prompt: str) -> str:
         r = httpx.post(f"{url}/api/generate", timeout=timeout, json={
-            "model": model, "system": SYSTEM, "prompt": prompt, "stream": False, "keep_alive": "30m",
-            "options": {"temperature": 0, "num_predict": 80},
+            "model": model, "system": system, "prompt": prompt, "stream": False, "keep_alive": "30m",
+            "options": {"temperature": 0, "num_predict": num_predict}, **({"format": "json"} if json_mode else {}),
         })
         r.raise_for_status()
         return r.json().get("response", "")
@@ -155,22 +176,7 @@ class Explainer:
         return self._refuse(reason)
 
     def _call(self, prompt: str) -> str:
-        box: dict = {}
-
-        def run():
-            try:
-                box["out"] = self.transport(prompt)
-            except Exception as err:  # noqa: BLE001
-                box["err"] = err
-
-        th = threading.Thread(target=run, daemon=True)
-        th.start()
-        th.join(self.timeout)
-        if th.is_alive():
-            raise TimeoutError("explainer slower than 5 s")
-        if "err" in box:
-            raise box["err"]
-        return box["out"]
+        return call_within(self.transport, prompt, self.timeout, "explainer slower than 5 s")
 
     @staticmethod
     def _refuse(reason: str) -> dict:

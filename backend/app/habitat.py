@@ -84,9 +84,18 @@ class Habitat:
         kind, payload = msg.get("type"), msg.get("payload") or {}
         summary = msg.get("hot_summary")
         if kind in ("alert", "trigger") and isinstance(summary, dict) and summary.get("crew") == payload.get("crew"):
-            self.eng.hot_summaries[payload["crew"]] = summary
+            try:  # a summary the copilot cannot read never blocks the Alert or Trigger itself
+                self.eng.hot_summaries.update(summary)
+            except ValueError as e:
+                self.errors.append(f"hot_summary: {e}")
+                self.eng.emit("habitat_message_rejected", message_type="hot_summary", error=str(e))
         try:
-            if kind in ("reading", "reading_state"):
+            if kind in ("alert", "trigger") and "hot_summary" in payload:  # Spec 2 snapshot rides on the push
+                payload = dict(payload)
+                self.eng.hot_summaries.update(payload.pop("hot_summary"))
+            if kind == "hot_summary":
+                self.eng.hot_summaries.update(payload)
+            elif kind in ("reading", "reading_state"):
                 self.eng.ingest_reading(payload)
             elif kind == "alert":
                 self.eng.ingest_alert(payload)
@@ -104,6 +113,16 @@ class Habitat:
     def post_ground_reply(self, report: dict) -> None:
         r = httpx.post(f"{self.url}/ground_reply", json=report, timeout=self.timeout)
         r.raise_for_status()
+
+    def hot_summary(self, crew: str, requester: str, emergency: bool) -> dict:
+        """Spec 2 full HotSummary, free text included; another person's only in emergency mode (the service logs it)."""
+        try:
+            r = httpx.get(f"{self.url}/hot_summary/{crew}", params={"requester": requester, "emergency": int(emergency)},
+                          timeout=self.timeout)
+            r.raise_for_status()
+        except httpx.HTTPError as e:
+            raise ConnectionError(f"hot summary not available: {e}") from None
+        return r.json()
 
     def record(self, crew: str, requester: str, emergency: bool) -> dict:
         try:

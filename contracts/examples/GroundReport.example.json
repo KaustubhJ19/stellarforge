@@ -8,5 +8,28 @@
   "actions": [],
   "sent_t": 1000,
   "reply_t": 4420,
-  "reply": "Example reply"
+  "reply": "Example reply",
+  "copilot": {
+    "chain": {
+      "ok": true,
+      "reason": "",
+      "length": 1,
+      "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "events": [
+      {
+        "t": 990,
+        "type": "copilot_assessment",
+        "emergency": "em-1",
+        "prev": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "versions": {
+      "schema_version": "1.0.0",
+      "model": "none (L0 rules only)"
+    },
+    "timings": {
+      "assessed_t": 990
+    }
+  }
 }

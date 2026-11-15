@@ -53,6 +53,10 @@
     "t": {
       "type": "number",
       "description": "Mission clock seconds"
+    },
+    "assessment_id": {
+      "type": "string",
+      "description": "Optional. Id of the Spec 3 condition-assessment this alert relates to (provisional)."
     }
   },
   "required": [

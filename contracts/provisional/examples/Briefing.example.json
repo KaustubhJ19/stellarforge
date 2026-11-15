@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "assessment_id": "assess-1",
+  "crew": "A",
+  "t": 7200,
+  "text": "Example two-sentence briefing. Example second sentence.",
+  "template_text": "Example template briefing.",
+  "source": "llm",
+  "context_label": "context; the protocol above comes first",
+  "evidence": [
+    {"text": "Example evidence line", "probability": 0.42, "label": "team value"}
+  ]
+}

@@ -74,7 +74,7 @@ def test_every_listed_field_is_required(name, field):
     rejected(name, doc)
 
 
-OPTIONAL = {"GroundReport": ["reply_t", "reply"], "Trigger": ["confirmed"]}
+OPTIONAL = {"GroundReport": ["reply_t", "reply", "copilot"], "Trigger": ["confirmed"]}
 
 
 @pytest.mark.parametrize("name,field", [(n, f) for n, fs in OPTIONAL.items() for f in fs])

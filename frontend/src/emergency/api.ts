@@ -14,11 +14,46 @@ export type Step = {
 type Base = { emergency: string; patient: string; patient_name: string; disclaimer: string };
 // Present only when the service routes by intent (docs/spec-intent-routing.md).
 export type Route = { protocol_id: string | null; rule_id: string; reason: string };
+// Collapse Copilot (Spec 3), briefing.schema.json. Present only for a routed emergency.
+export type Briefing = {
+  assessment_id: string;
+  text: string;
+  source: "template" | "llm";
+  context_label: string;
+  evidence?: { text: string; probability?: number; label: string }[];
+};
+// Collapse Copilot L3 investigator (ticket 13): notes already verified in code; shown apart from the briefing.
+export type InvestigatorNote = {
+  claim: string;
+  sources: { tool: string; field: string; value: unknown; crew: string; snapshot_t: number; snapshot_label: string }[];
+};
+export type Investigator = {
+  status: "running" | "ok" | "unavailable";
+  label: string;
+  message?: string;
+  notes?: InvestigatorNote[];
+  dropped?: number;
+};
+// The rescuer's required decision about the copilot (ticket 05); null until made.
+export type CopilotChoice = { kind: "router" | "suggestion" | "other" | "none"; protocol_id: string | null; by: string };
+export type L0Verdict = {
+  rule_id: string;
+  protocol_id: string | null;
+  protocol_available: boolean;
+  reason: string;
+  life_threat: boolean;
+  fired: boolean;
+};
 type Rescuer = Base & {
   role: "R1" | "R2";
   can_back: boolean;
   route?: Route | null;
   protocols?: { id: string; title: string }[];
+  briefing?: Briefing;
+  investigator?: Investigator;
+  l0?: L0Verdict;
+  choice?: CopilotChoice | null;
+  suggestion?: { protocol_id: string; title: string } | null;
 };
 
 export type View = (
@@ -52,8 +87,19 @@ export type CrewRecord = {
   anchor: Record<string, { mean: number; sd: number }>;
 };
 
+// Collapse Copilot (ticket 06): the hash-chained record carried in the ground report.
+export type CopilotEvent = { t: number; type: string; prev: string; [k: string]: unknown };
+export type ChainStatus = { ok: boolean; reason?: string; length: number };
+export type CopilotSection = {
+  chain: ChainStatus & { head: string };
+  events: CopilotEvent[];
+  versions?: Record<string, unknown>;
+  timings?: Record<string, number>;
+};
+
 export type ReportView = {
   report: {
+    copilot?: CopilotSection;
     id: string;
     crew: string;
     summary: string;
@@ -110,6 +156,8 @@ export const api = {
   observer: (crew: string, choice: string) => call<View>("POST", "/api/observer", { crew, choice }),
   intake: (crew: string, intake: Record<string, string>) => call<View>("POST", "/api/intake", { crew, intake }),
   switchProtocol: (crew: string, protocol: string) => call<View>("POST", "/api/switch-protocol", { crew, protocol }),
+  copilotChoice: (crew: string, choice: CopilotChoice["kind"], protocol?: string) =>
+    call<View>("POST", "/api/copilot-choice", { crew, choice, protocol }),
   next: (crew: string) => call<View>("POST", "/api/next", { crew }),
   back: (crew: string) => call<View>("POST", "/api/back", { crew }),
   explain: (crew: string) => call<Explanation>("POST", "/api/explain", { crew }),
@@ -119,6 +167,7 @@ export const api = {
   console: () => call<ConsoleView>("GET", "/api/console"),
   reply: (report: string, text: string, scripted = false) =>
     call<unknown>("POST", "/api/console/reply", { report, text, scripted }),
+  outcome: (report: string, text: string) => call<unknown>("POST", "/api/console/outcome", { report, text }),
 };
 
 export type ConsoleView = {
@@ -131,5 +180,7 @@ export type ConsoleView = {
     arrives_t: number;
     report: ReportView["report"];
     replied: boolean;
+    copilot_chain?: ChainStatus | null;
+    outcomes?: { id: string; t: number; text: string }[];
   }[];
 };
