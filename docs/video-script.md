@@ -5,14 +5,13 @@ About 3 minutes. Check the length against the Submission Guide (ticket 01). Ever
 ## Before recording
 
 1. **Freeze:** after H24 only bug fixes. The integration lead calls it in the team chat.
-2. **Start the demo with the real content** (macOS / Linux; on Windows use `.venv\Scripts\python`):
+2. **Start the demo** (macOS / Linux; real content is the default, see the README for one-time setup):
    ```bash
-   cd frontend && npx vite build && cd ..
-   SF_SIM=1 SF_PROTOCOL=microgravity-cpr SF_PROFILE=mars_transit SF_RECORDS=$PWD/replay/crew-records.json \
-     .venv/bin/python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000
+   cd frontend && npm run build && cd ..
+   SF_SIM=1 backend/.venv/bin/python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000
    ```
-   Tablets: `http://127.0.0.1:8000/?crew=B` (patient), `/?crew=A` (rescuer), `/?crew=C` (Rescuer 2), `/console` (ground). Reset between takes: `curl -X POST localhost:8000/api/sim/reset -H 'content-type: application/json' -d '{}'`.
-3. **Collapse:** run `.venv/bin/python tools/demo/demo_collapse.py out/collapse.json` (Spec 3 detection on the real crew B replay). Then post the Alert and the Trigger from that file to `/api/stream/alert` and `/api/stream/trigger`, or let `tools/demo/record_demo.mjs` do it.
+   Open `http://127.0.0.1:8000/emergency.html?crew=B` (patient), `?crew=A` (rescuer), `?crew=C` (Rescuer 2) and `?view=console` (ground). The health app is `/` (`?replay=/replay/shared/crew-B.json` for crew B). Reset between takes: `curl -X POST localhost:8000/api/sim/reset -H 'content-type: application/json' -d '{}'`.
+3. **Collapse:** run `backend/.venv/bin/python tools/demo/demo_collapse.py out/collapse.json` (Spec 3 detection on the real crew B replay). Then post the Alert and the Trigger from that file to `/api/stream/alert` and `/api/stream/trigger`, or let `tools/demo/record_demo.mjs` do it.
 4. **Check:** `python tools/content_lint.py` is clean, and the first CPR step shows "Hinkelbein … Recommendation 14".
 
 ## Script

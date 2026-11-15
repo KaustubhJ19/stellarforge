@@ -27,7 +27,7 @@ await api("/api/sim/reset", {});
 const crew = await api("/api/sim/crew");
 console.log("server content:", crew.protocol, crew.profile, "stub:", crew.stub, "crew:", crew.crew);
 
-await go("/?crew=B", "1  Home screen: crew B on Mars transit (28.5 min ground delay). Readings come from the team's replay.");
+await go("/?replay=/replay/shared/crew-B.json&cabin=/replay/shared/iss-cabin-dose-RR-1.json", "1  Home screen: crew B on Mars transit (28.5 min ground delay). Readings come from the team's replay.");
 await pause(6);
 
 const now = (await api("/api/sim/crew")).t;
@@ -40,7 +40,7 @@ await page.getByTestId("urgency").waitFor({ timeout: 10000 }).catch(() => {});
 await pause(6);
 
 await api("/api/sim/clock/advance", { seconds: 15 });
-await go("/?crew=A", "3  No answer from crew B in 15 s: the crew alarm sounds on crewmate A's tablet.");
+await go("/emergency.html?crew=A", "3  No answer from crew B in 15 s: the crew alarm sounds on crewmate A's tablet.");
 await page.getByText(/CREW ALARM/).first().waitFor({ timeout: 10000 }).catch(() => {});
 await pause(4);
 await page.getByRole("button", { name: /Accept/ }).click(); await caption("4  A accepts and becomes Rescuer 1. Does crew B respond?"); await pause(3);
@@ -56,7 +56,7 @@ for (let i = 0; i < 20; i++) {
 }
 await caption("10  Ground report sent: on Mars transit the reply is expected 57 min later."); await pause(6);
 
-await go("/console", "11  Ground console: the report is still in transit (28.5 min one way).");
+await go("/emergency.html?view=console", "11  Ground console: the report is still in transit (28.5 min one way).");
 await pause(5);
 await api("/api/sim/clock/advance", { seconds: 1710 });
 await page.reload(); await page.waitForTimeout(1500);
@@ -65,7 +65,7 @@ await page.getByLabel("Reply").fill("Ground: report received. Flight surgeon is 
 await pause(3);
 await page.getByRole("button", { name: "Send reply" }).click(); await pause(3);
 await api("/api/sim/clock/advance", { seconds: 1710 });
-await go("/?crew=A", "13  The reply reaches the crew 28.5 min later and is saved as a Label.");
+await go("/emergency.html?crew=A", "13  The reply reaches the crew 28.5 min later and is saved as a Label.");
 await page.getByTestId("ground-reply").waitFor({ timeout: 10000 }).catch(() => {});
 await pause(6);
 const video = page.video();

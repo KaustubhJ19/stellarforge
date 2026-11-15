@@ -15,6 +15,7 @@
 
 | File | What it is |
 |---|---|
+| [plan-coverage.md](plan-coverage.md) | The implementation plan against the repo: what is done, partial, missing; which datasets are in or out |
 | [datasets.md](datasets.md) | Datasets used (PMData, OSDR ISS cabin RR-1, Inspiration4), licences and mappings |
 | [accuracy.md](accuracy.md) | Measured accuracy and the honest limits of detection and forecast |
 | [cut-offs-needed.md](cut-offs-needed.md) | Every detection cut-off and Safety bound, its source, and what still needs medical review |
