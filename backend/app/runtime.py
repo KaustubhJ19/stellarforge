@@ -45,9 +45,11 @@ def build(protocol: str = DEFAULT_PROTOCOL, profile: str = DEFAULT_PROFILE, db: 
     url = os.environ.get("SF_OLLAMA_URL", "http://127.0.0.1:11434")
     if explainer == "ollama":
         explainer = ollama_transport(os.environ.get("SF_OLLAMA_MODEL", "llama3.2:3b"), url)
-        if investigator is None:  # L3 investigator: same local server, JSON replies, longer answers
-            from copilot.investigator import SYSTEM, TIME_BOX_S
-            investigator = ollama_transport(os.environ.get("SF_INVESTIGATOR_MODEL", "llama3.2:3b"), url,
+        from copilot.investigator_eval import load_config
+        cfg = load_config()
+        if investigator is None and cfg["enabled"]:  # ship gate (ticket 14): off by default unless the eval passed
+            from copilot.investigator import SYSTEM, TIME_BOX_S  # same local server, JSON replies, longer answers
+            investigator = ollama_transport(os.environ.get("SF_INVESTIGATOR_MODEL", cfg["model"]), url,
                                             timeout=TIME_BOX_S, system=SYSTEM, num_predict=400, json_mode=True)
     eng.explainer = Explainer(eng, explainer)
     from copilot.investigator import InvestigatorRunner
