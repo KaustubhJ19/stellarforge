@@ -1,5 +1,7 @@
 # Backup demo recording (ticket 09)
 
+**Video:** [`docs/media/backup-demo-2026-11-15.webm`](media/backup-demo-2026-11-15.webm) (recorded 2026-11-15, 8.8 MB).
+
 A one-take screen recording of the real app with real content, in case the live demo fails:
 home screen → collapse → guidance → ground report → delayed ground reply.
 
