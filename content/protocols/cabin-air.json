@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "id": "cabin-air",
+  "title": "Cabin air: low oxygen (Earth reference, no space data)",
+  "condition_ids": [
+    "cabin-air"
+  ],
+  "steps": [
+    {
+      "id": "air-1-check",
+      "text": "Look for signs of low oxygen (bluish lips, nails or skin) and measure oxygen saturation with a pulse oximeter.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, ABCDE (Table 3), B-Breathing"
+      },
+      "equipment": [
+        "pulse oximeter"
+      ],
+      "rescuers": 1,
+      "status": "draft",
+      "drafted_by": "Claude Code (Claude Opus 5.5)"
+    },
+    {
+      "id": "air-2-oxygen",
+      "text": "If you are trained, give oxygen by face mask to a crewmember who has difficulty breathing and looks blue, and adjust the flow to keep oxygen saturation at 94–98 %.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Use of a pulse oximetry and use of oxygen"
+      },
+      "equipment": [
+        "oxygen supply with face mask",
+        "pulse oximeter"
+      ],
+      "rescuers": 1,
+      "status": "draft",
+      "drafted_by": "Claude Code (Claude Opus 5.5)"
+    },
+    {
+      "id": "air-3-severe-hypoxaemia",
+      "text": "If oxygen saturation is below 88 %, give oxygen at a higher flow.",
+      "source": {
+        "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+        "section": "Concise guidelines for clinical practice, Use of a pulse oximetry and use of oxygen, life-threatening hypoxaemia"
+      },
+      "equipment": [
+        "oxygen supply with face mask",
+        "pulse oximeter"
+      ],
+      "rescuers": 1,
+      "status": "draft",
+      "drafted_by": "Claude Code (Claude Opus 5.5)"
+    }
+  ]
+}

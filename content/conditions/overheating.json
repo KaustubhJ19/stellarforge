@@ -3,7 +3,7 @@
   "name": "Overheating / fever",
   "protocol": "overheating",
   "state": "pending",
-  "guidance_candidate": "ERC first aid (candidate from Spec 1; verified when the evidence pack is built)",
+  "guidance_candidate": "ERC 2025 First Aid (verified: overheating.evidence.json)",
   "prior_incidence": {
     "status": "pending",
     "value": null,
@@ -16,7 +16,8 @@
     "scenario": null
   },
   "labels": [
-    "pending: no approved protocol, routes to not covered",
+    "Earth reference, no space data",
+    "draft: awaiting human approval, routes to not covered",
     "not clinically reviewed"
   ]
 }

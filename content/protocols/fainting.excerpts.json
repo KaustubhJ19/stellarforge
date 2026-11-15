@@ -1,0 +1,26 @@
+{
+  "protocol": "fainting",
+  "note": "Verbatim recommendation text for each step (ERC First Aid).",
+  "excerpts": [
+    {
+      "step": "faint-1-safe",
+      "section": "ERC 2021 First Aid, Management of presyncope",
+      "text": "Ensure the casualty is safe and will not fall or injure themselves if they lose consciousness."
+    },
+    {
+      "step": "faint-2-counterpressure",
+      "section": "ERC 2021 First Aid, Management of presyncope",
+      "text": "Use simple physical counterpressure manoeuvres to abort presyncope of vasovagal or orthostatic origin."
+    },
+    {
+      "step": "faint-2-counterpressure",
+      "section": "ERC 2021 First Aid, Management of presyncope",
+      "text": "Lower body physical counterpressure manoeuvres are more effective than upper body manoeuvres."
+    },
+    {
+      "step": "faint-3-recovery-position",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Recovery position",
+      "text": "Place adults and children with decreased level of responsiveness who do NOT meet the criteria for CPR into a lateral (side-lying) recovery position"
+    }
+  ]
+}

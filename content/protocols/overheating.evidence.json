@@ -1,0 +1,51 @@
+{
+  "note": "Spec 1 evidence pack drafted by Claude Code (Claude Opus 5.5). Every quote was checked by script as verbatim in the guideline PDF text (ignoring line breaks and ligatures). Dose amounts and deny-listed product names in the guideline were left out (Rule 4).",
+  "protocol": "overheating",
+  "conditions": [
+    "overheating"
+  ],
+  "why": "Heat stroke causes confusion, seizures and unresponsiveness; suit or cabin cooling failures make it relevant. ERC 2025 'Heat stroke' is first-aid guidance a non-doctor can follow. Fever from infection is not covered (see sepsis).",
+  "sources": [
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "licence": "© 2025 European Resuscitation Council, published by Elsevier B.V.; open copy in the KU Leuven repository (Lirias). Quote recommendation text only",
+      "licence_checked": false,
+      "url": "https://lirias.kuleuven.be/retrieve/f38482b2-c212-4a30-88fe-f999cc5f5516"
+    }
+  ],
+  "recommendations": [
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Heat stroke",
+      "quotes": [
+        "Consider symptoms of heat stroke with high ambient temperature, like elevated core body temperature, confusion, agitation, disorientation, seizures or unresponsiveness."
+      ]
+    },
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Heat stroke, passive cooling",
+      "quotes": [
+        "With suspected heat stroke remove the person from the heat source and commence passive cooling by removing excess clothing and placing the person in a cooler/shaded location"
+      ]
+    },
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Heat stroke, active cooling",
+      "quotes": [
+        "Use any technique immediately available to provide active cooling, if core temperature >40°C."
+      ]
+    },
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Heat stroke, duration",
+      "quotes": [
+        "If a core temperature cannot be obtained, continue cooling for 15 min or until neurological symptoms resolve, whichever is first."
+      ]
+    }
+  ],
+  "microgravity": "Earth reference, no space data. Cold-water immersion and other cooling methods in the guideline are not feasible in flight and were left out; evaporative and convective cooling behave differently in weightlessness.",
+  "pulse": {
+    "model": "check",
+    "scenario": null
+  }
+}

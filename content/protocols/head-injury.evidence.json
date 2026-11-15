@@ -1,0 +1,44 @@
+{
+  "note": "Spec 1 evidence pack drafted by Claude Code (Claude Opus 5.5). Every quote was checked by script as verbatim in the guideline PDF text (ignoring line breaks and ligatures). Dose amounts and deny-listed product names in the guideline were left out (Rule 4).",
+  "protocol": "head-injury",
+  "conditions": [
+    "head-injury"
+  ],
+  "why": "A head injury can cause confusion, seizures and loss of responsiveness. ERC 2025 'Concussion' is first-aid guidance a non-doctor can follow; it covers recognising concussion, not severe head trauma.",
+  "sources": [
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "licence": "© 2025 European Resuscitation Council, published by Elsevier B.V.; open copy in the KU Leuven repository (Lirias). Quote recommendation text only",
+      "licence_checked": false,
+      "url": "https://lirias.kuleuven.be/retrieve/f38482b2-c212-4a30-88fe-f999cc5f5516"
+    }
+  ],
+  "recommendations": [
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Concussion",
+      "quotes": [
+        "Suspect a concussion if a person has difficulties with thinking/remembering, displays physical symptoms (headache, change in vision, dizziness, nausea or vomiting, seizures, sensitivity to light/noise), emotional changes or changes in behaviour (increased sleepiness, reduction in normal activities, loss of responsiveness, confusion)."
+      ]
+    },
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Concussion, activity",
+      "quotes": [
+        "Remove the person from physical activities."
+      ]
+    },
+    {
+      "guideline": "Djärv T, Rogers J, Semeraro F, et al. European Resuscitation Council Guidelines 2025 First Aid. Resuscitation. 2025;215:110752. doi:10.1016/j.resuscitation.2025.110752 (Earth reference, no space data)",
+      "section": "Concise guidelines for clinical practice, Concussion, referral",
+      "quotes": [
+        "Refer to a healthcare professional for assessment and further advice."
+      ]
+    }
+  ],
+  "microgravity": "Earth reference, no space data. 'Healthcare professional' is the flight surgeon (via ground) in flight; that mapping is a team value.",
+  "pulse": {
+    "model": "no",
+    "scenario": null
+  }
+}

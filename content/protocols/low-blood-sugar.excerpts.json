@@ -1,0 +1,26 @@
+{
+  "protocol": "low-blood-sugar",
+  "note": "Verbatim recommendation text for each step (ERC First Aid).",
+  "excerpts": [
+    {
+      "step": "lbs-1-suspect",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Hypoglycaemia (low blood sugar value)",
+      "text": "Suspect hypoglycaemia in someone with diabetes or chronic malnutrition AND sudden impaired responsiveness or behavioural change."
+    },
+    {
+      "step": "lbs-2-sugar-by-mouth",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Hypoglycaemia (low blood sugar value)",
+      "text": "by mouth if the person is awake and able to swallow."
+    },
+    {
+      "step": "lbs-3-unresponsive",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Hypoglycaemia (low blood sugar value), unresponsive persons",
+      "text": "For unresponsive persons, do not give oral sugar due to the risk of aspiration, instead call your local emergency number (112)."
+    },
+    {
+      "step": "lbs-4-snack",
+      "section": "ERC 2025 First Aid, Concise guidelines for clinical practice, Hypoglycaemia (low blood sugar value), after recovery",
+      "text": "Following recovery from symptoms (5–10 min after sugar intake) encourage the person to eat a light snack."
+    }
+  ]
+}
