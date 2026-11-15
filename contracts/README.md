@@ -17,6 +17,7 @@ Every document carries a `schema_version` field. The schemas enforce only what t
 ## Rules
 - Add a field only by agreement in the team chat. Never remove one.
 - 2026-11-15, team agreement (Spec 1): Protocol gains optional `condition_ids`; steps gain optional `status`, `drafted_by`, `approved_by`, `approved_on`, `approved_hash`.
+- 2026-11-15, team agreement (Spec 3): GroundReport gains optional `copilot` (the hash-chained copilot record: `chain`, `events`, `versions`, `timings`).
 - In a ReplayFile, an event of type `reading` must carry a complete Reading and an event of type `trigger` a complete Trigger. The payload may omit `schema_version`; it takes the file's. The service (`backend/service.py`) rejects the file otherwise.
 - Example documents are placeholders for testing, not medical content.
 
