@@ -14,7 +14,7 @@ Everything is **replay-first**: the web app runs from JSON replay files alone, a
  replay/*.json   4 crew days (PMData) · Pulse collapse · ISS cabin and dose · Inspiration4 labs
       │
       ├──────────────► HEALTH APP  (frontend/, index.html)   standalone, no service needed
-      │                 3D body glowing by Status · trends and scrubber · forecast · forms · cards
+      │                 3D body glowing by Status · trends and scrubber · forecast · forms · cards · Accuracy and Credits pages
       │                 Emergency button ────────────────┐
       ▼                                                  ▼
  HABITAT SERVICE (backend/service.py)         EMERGENCY SERVICE (backend/app/) + EMERGENCY APP
@@ -101,7 +101,7 @@ backend/.venv/bin/python -m pytest backend contracts tools    # 693 tests, 7 ski
 backend/.venv/bin/python tools/content_lint.py                # every step and bound sourced; no drugs or doses
 backend/.venv/bin/python tools/lint_content.py --deny tools/drug-denylist.txt   # emergency-protocol linter
 cd frontend
-npx tsc && npm test                                           # typecheck and 242 unit tests
+npx tsc && npm test                                           # typecheck and 247 unit tests
 npx playwright install chromium                               # once
 npm run test:e2e                                              # health app in a real browser
 PYTHON=../backend/.venv/bin/python npm run test:e2e:emergency # emergency flow against the real service
@@ -155,7 +155,7 @@ docs/        Start at docs/README.md; plan coverage, datasets, accuracy, write-u
 The P0 slice works end to end and the demo records all 13 scenes. Known gaps against the plan, with the full table in [docs/plan-coverage.md](docs/plan-coverage.md):
 
 - Missing: the **daily briefing sentence**, **check-in streaks**, hosted replay on GitHub Pages.
-- Partial: the **Accuracy** and **Credits** pages are documents, not screens in the app; webcam heart rate has an algorithm and accuracy test but no morning-check screen.
+- Partial: webcam heart rate has an algorithm and accuracy test but no morning-check screen.
 - Not done: clinical review of the protocol and Safety bounds ([docs/medical-review.md](docs/medical-review.md)).
 
 ## Working rules

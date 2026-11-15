@@ -25,8 +25,8 @@ Legend: **Done** is in the repo and tested. **Partial** exists but not as the pl
 | Ground report with delay, ground console, reply stored as Label | Done | `backend/app/ground.py`, `frontend/src/emergency/Console.tsx` |
 | Content linter (every step sourced, no drugs or doses) | Done | `tools/content_lint.py`, `tools/lint_content.py` |
 | Measurement cards (How / Why / If abnormal, NASA HRP risk) | Done | `content/cards/` (6 cards) |
-| **Accuracy page** inside the app | **Partial** | The numbers exist in `docs/accuracy.md`, but there is no page in the UI. |
-| **Credits page** inside the app | **Partial** | `docs/credits.md` is generated from `content/credits.json`, but there is no page in the UI. |
+| Accuracy page inside the app | Done | Footer button "How accurate is this?" (`frontend/src/about/AccuracyPage.tsx`, data in `content/accuracy.json`, kept in step with `docs/accuracy.md` by `tools/tests/test_accuracy_json.py`) |
+| Credits page inside the app | Done | Footer button "Credits" (`frontend/src/about/CreditsPage.tsx`), read directly from `content/credits.json` |
 | "Decision support, not diagnosis" labels | Done | Every emergency screen, README, write-up |
 
 ## P1 (after the P0 slice)

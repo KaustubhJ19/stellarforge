@@ -1,0 +1,54 @@
+{
+ "title": "How accurate is this?",
+ "intro": "Measured on datasets, not on astronauts. Every number comes from a test or report in tools/ that anyone can re-run.",
+ "checked": "2026-11-15",
+ "results": [
+  {
+   "what": "False alerts (drift + acute)",
+   "result": "0.16 per crew-day, about one every 6 days per crew (91 alerts in 567 crew-days; crew A 0.05, B 0.15, C 0.25, D 0.20). Was 0.11 before the shared replays added steps and soreness and crew D became PMData p10, who also answers the daily wellness questions; most extra alerts are on those self-reported scores",
+   "measured_on": "4 shared crew replays in replay/ built from PMData (Earth wearable data, 16 people, CC BY 4.0)",
+   "rerun": "PYTHONPATH=. python tools/test_detection.py"
+  },
+  {
+   "what": "False alerts before tuning",
+   "result": "starting values in tools/test_detection.py (0.20 on the first replays)",
+   "measured_on": "The same four crew replays",
+   "rerun": "The same command as the row above"
+  },
+  {
+   "what": "Drift caught before the event",
+   "result": "A +10 bpm rise over 9 days is caught on day 8. The planned +6 bpm over 9 days is not reliably caught: it is smaller than normal life swings in this data.",
+   "measured_on": "Calm crew (PMData p01) with the drift added",
+   "rerun": "tools/test_golden_replays.py (synthetic); tuning notes in ticket 13"
+  },
+  {
+   "what": "Emergency auto Trigger",
+   "result": "Fires at the first VT/VF/PEA/asystole reading, or heart rate ≥150 or <50 bpm for 30 s with systolic BP <90 mmHg",
+   "measured_on": "Stream in the Pulse emergency replay's format",
+   "rerun": "tools/test_detection.py, tools/test_emergency.py"
+  },
+  {
+   "what": "Webcam heart rate",
+   "result": "4.9 bpm mean error; 67 % of 20 s windows within 5 bpm",
+   "measured_on": "5 consenting UBFC-rPPG people, 12 windows (research use only)",
+   "rerun": "PYTHONPATH=. python tools/test_webcam_hr_ubfc.py"
+  },
+  {
+   "what": "Tomorrow's readiness forecast (P1)",
+   "result": "Mean error 1.12 points on a 0–10 scale, the same as \"tomorrow = today\" (1.12); range covers the true answer 89.6 % of the time (target about 90 %)",
+   "measured_on": "16 PMData people, each forecast only for people never used to train",
+   "rerun": "PYTHONPATH=. python tools/test_forecast_b.py"
+  }
+ ],
+ "labels": "every detection cut-off is a \"team value\" or an \"Earth reference, no space data\" (sources in `content/profiles/detection-cut-offs.json`). The forecast and webcam numbers are \"estimate, not validated\".",
+ "limits": [
+  "Accuracy is measured on datasets, not on astronauts. Real-time performance with real astronauts may differ.",
+  "No open astronaut wearable stream exists. Normal days come from Earth wearable data (PMData) shaped to look like a crew.",
+  "Detection has no training step, so no person was \"seen in training\". But the cut-offs were tuned on the same four crews they are measured on, so the false-alert number is optimistic.",
+  "On real Earth data, people's resting heart rate moves by several bpm over weeks without any illness. A slow drift has to be larger than that to be caught reliably.",
+  "The emergency is a Pulse Physiology Engine simulation (\"estimate, not validated\"). Chest pain is crew-reported, not simulated.",
+  "Safety limits are Earth clinical references (AHA). There are no published in-flight limits. A low heart rate can be normal for fit people, so the low limit is applied to the live heart rate only, not to resting heart rate.",
+  "Webcam heart rate was measured on 5 people in good light, sitting still. One person had errors of 8–20 bpm.",
+  "The readiness forecast is no more accurate than assuming tomorrow equals today. Its value is the range and the explanation, not the number."
+ ]
+}
