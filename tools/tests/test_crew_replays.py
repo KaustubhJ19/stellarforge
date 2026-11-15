@@ -82,6 +82,7 @@ def test_reads_daily_indicators_from_the_pmdata_files(pm):
     assert day["steps"] == 600                   # per-minute steps summed per day
     assert day["sleep_score"] == 72
     assert (day["fatigue"], day["mood"], day["readiness"], day["sleep_quality"], day["stress"]) == (3, 3, 7, 3, 2)
+    assert day["soreness"] == 2  # PMData wellness soreness, 1-5 (Spec 3 request 2026-11-15)
 
 
 def test_zero_resting_heart_rate_means_no_reading(tmp_path):
@@ -153,7 +154,7 @@ def test_units_and_sources(pm):
     units = {p["indicator"]: p["unit"] for p in payloads}
     assert units == {"resting_heart_rate": "bpm", "sleep_duration": "min", "steps": "steps", "sleep_score": "score 0-100",
                      "fatigue": "score 1-5", "mood": "score 1-5", "readiness": "score 0-10",
-                     "sleep_quality": "score 1-5", "stress": "score 1-5"}
+                     "sleep_quality": "score 1-5", "stress": "score 1-5", "soreness": "score 1-5"}
     sources = {p["indicator"]: p["source"] for p in payloads}
     assert sources["resting_heart_rate"] == "sensor" and sources["fatigue"] == "manual"
     assert all(p["state"] == "released" for p in payloads)
@@ -248,6 +249,26 @@ def test_command_line_writes_replays_records_and_source(pm, tmp_path):
     for r in records:
         validate("CrewRecord", r)
     assert json.loads((out / "crew-replays.source.json").read_text(encoding="utf-8"))["licence"] == "CC BY 4.0"
+
+
+def test_assign_puts_a_chosen_participant_in_one_crew_slot_and_keeps_the_others(pm, tmp_path):
+    write_person(pm, "p07", 25)  # not among the four most complete
+    sexes = {"p01": "male", "p02": "female", "p03": "male", "p04": "female", "p05": "female", "p07": "female"}
+    plain = cr.build_all(pm, seed=1, sexes=sexes)
+    out = cr.build_all(pm, seed=1, sexes=sexes, assign={"D": "p07"})
+    assert out["mapping"]["D"] == "p07"
+    assert {c: out["mapping"][c] for c in "ABC"} == {c: plain["mapping"][c] for c in "ABC"}
+    assert next(r for r in out["crew_records"] if r["id"] == "D")["sex"] == "female"
+    assert out["source"]["assigned"] == {"D": "p07"}
+    validate("ReplayFile", out["replays"]["D"])
+
+
+def test_assign_rejects_unknown_crew_or_participant_and_duplicates(pm):
+    sexes = {p: "male" for p in ("p01", "p02", "p03", "p04", "p05")}
+    plain = cr.build_all(pm, seed=1, sexes=sexes)
+    for bad in ({"E": "p01"}, {"D": "p99"}, {"D": plain["mapping"]["A"]}):
+        with pytest.raises(ValueError):
+            cr.build_all(pm, seed=1, sexes=sexes, assign=bad)
 
 
 def test_reads_sex_from_the_participant_overview_spreadsheet(tmp_path):

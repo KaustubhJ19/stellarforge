@@ -9,7 +9,7 @@ Daily indicators (PMData file -> indicator, unit, Reading.source):
   fitbit/sleep.json               sleep_duration      min          sensor  (main sleep minutesAsleep)
   fitbit/steps.json               steps               steps        sensor  (per-minute steps summed per day)
   fitbit/sleep_score.csv          sleep_score         score 0-100  sensor  (overall_score)
-  pmsys/wellness.csv              fatigue, mood, sleep_quality, stress (score 1-5), readiness (score 0-10)  manual
+  pmsys/wellness.csv              fatigue, mood, sleep_quality, stress, soreness (score 1-5), readiness (score 0-10)  manual
 Scales from the PMData page: 1-5 with 3 normal; readiness 0-10.
 
 Planted drift (crew A, team-planted): over the last 9 days with a resting heart rate, resting HR
@@ -52,8 +52,9 @@ INDICATORS = {
     "readiness": ("score 0-10", "manual"),
     "sleep_quality": ("score 1-5", "manual"),
     "stress": ("score 1-5", "manual"),
+    "soreness": ("score 1-5", "manual"),  # added 2026-11-15 at Spec 3's request (forecast input)
 }
-WELLNESS = ("fatigue", "mood", "readiness", "sleep_quality", "stress")
+WELLNESS = ("fatigue", "mood", "readiness", "sleep_quality", "stress", "soreness")
 
 NOTES = [
     "Earth wearable data (PMData, Fitbit Versa 2 and PMSys) shaped to look like a crew; no open astronaut wearable stream exists.",
@@ -172,10 +173,20 @@ def _plant_drift(daily):
     return planted
 
 
-def build_all(root, seed=1, sexes=None, n=4, anchor_days=14, profile="mars_transit"):
+def build_all(root, seed=1, sexes=None, n=4, anchor_days=14, profile="mars_transit", assign=None):
+    """assign: {crew: participant} overrides for chosen slots, e.g. {"D": "p10"} for a female crew member."""
     root = Path(root)
     chosen = choose_people(root, n=n)
     mapping = assign_crew(chosen, seed)
+    assign = dict(assign or {})
+    for crew, pid in assign.items():
+        if crew not in CREW_IDS:
+            raise ValueError(f"Unknown crew {crew!r}; expected one of {list(CREW_IDS)}")
+        if pid not in _participants(root):
+            raise ValueError(f"Unknown PMData participant {pid!r}")
+        if any(other != crew and mapping[other] == pid and other not in assign for other in mapping):
+            raise ValueError(f"{pid} is already crew {next(c for c in mapping if mapping[c] == pid)}")
+        mapping[crew] = pid
     data = {crew: read_person(root / pid) for crew, pid in mapping.items()}
     start = min(parse_date(min(d)) for d in data.values())
     sexes = sexes or {}
@@ -195,7 +206,8 @@ def build_all(root, seed=1, sexes=None, n=4, anchor_days=14, profile="mars_trans
         "licence_url": "https://creativecommons.org/licenses/by/4.0/",
         "citation": "Thambawita V. et al., PMData: A Sports Logging Dataset, MMSys '20, doi:10.1145/3339825.3394926",
         "changes": "Daily values reshaped into StellarForge Readings; crew A has a planted drift.",
-        "seed": seed, "mapping": mapping, "start_date": start.isoformat(), "anchor_days": anchor_days,
+        "seed": seed, "mapping": mapping, "assigned": assign, "start_date": start.isoformat(),
+        "anchor_days": anchor_days,
         "planted_drift": dict(DRIFT, shape="linear ramp over the last 9 days with a resting HR", source="sim"),
         "emergency_offset_suggestion": (b_last + 1) * DAY,
         "notes": NOTES,
@@ -237,13 +249,15 @@ def main(argv=None):
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--sex", help="p01=male,p02=female,...")
     parser.add_argument("--overview", help="PMData participant-overview.xlsx")
+    parser.add_argument("--assign", help="crew=participant overrides, e.g. D=p10 (team request: a female crew D)")
     args = parser.parse_args(argv)
+    assign = dict(item.split("=") for item in args.assign.split(",")) if args.assign else {}
     sexes = {}
     if args.overview:
         sexes.update(read_overview_sexes(args.overview))
     if args.sex:
         sexes.update(dict(item.split("=") for item in args.sex.split(",")))
-    out = build_all(args.pmdata, seed=args.seed, sexes=sexes)
+    out = build_all(args.pmdata, seed=args.seed, sexes=sexes, assign=assign)
     sys.path.insert(0, str(ROOT / "contracts"))
     from validate import validate
     for replay in out["replays"].values():

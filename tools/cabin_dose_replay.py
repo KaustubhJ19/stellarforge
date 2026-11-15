@@ -41,12 +41,34 @@ INDICATORS = {
     "accumulated": ("radiation_dose_accumulated", "mGy"),
 }
 CONFIDENCE = 1  # EDA provides no quality score; see source record note
+
+# Derived CO2 partial pressure. NASA-STD-3001 Vol 2 V2 6004 limits the average one-hour ppCO2 to 3 mmHg.
+# ppm is a fraction of the air it was measured in, so it is converted at the pressure of THAT air: the ISS
+# cabin, nominal 14.7 psia (101.3 kPa, about 760 mmHg). Never the demo's mission-profile cabin_pressure.
+ISS_PRESSURE_MMHG = 760
+ISS_PRESSURE_PSIA = 14.7
+PCO2_WINDOW_S = 3600
+PCO2_MIN_SAMPLES = 9  # of 12 five-minute samples in the hour (team value): gaps never give a fake average
+DERIVED = {
+    "pressure_mmHg": ISS_PRESSURE_MMHG,
+    "pressure_psia": ISS_PRESSURE_PSIA,
+    "pressure_basis": "ISS cabin nominal total pressure, sea-level equivalent (NASA OCHMO habitable-atmosphere "
+                      "technical brief: 1 atm = 14.7 psia). Operating band about 14.0-14.9 psia (NASA ICES-2025-126) "
+                      "changes pCO2 by about -5% to +1%.",
+    "formula": "cabin_pco2 [mmHg] = cabin_co2 [ppm] x 760 / 1e6",
+    "window_s": PCO2_WINDOW_S,
+    "min_samples": PCO2_MIN_SAMPLES,
+    "limit_reference": "NASA-STD-3001 Vol 2 V2 6004: average one-hour ppCO2 no more than 3 mmHg "
+                       "(https://www.nasa.gov/reference/6-0-natural-and-induced-environments-vol-2)",
+}
 NOTES = [
     "Values copied unchanged from the EDA; missing values skipped, never filled.",
     "Units from the EDA chart axis labels; accumulated dose is the running sum of daily total dose (EDA tooltip), unit mGy.",
     "EDA timestamps have no time zone; treated as UTC.",
     "confidence = 1 because the EDA gives no quality score; it is not a validated quality measure.",
     "Telemetry is from ISS cabin sensors recorded during this Rodent Research mission; ground-control series excluded.",
+    "cabin_pco2 and cabin_pco2_1h are derived from cabin_co2 at ISS nominal pressure (where the air was measured), "
+    "not the mission profile's cabin_pressure; Reading.source is 'sensor' because the contract has no 'derived' value.",
 ]
 
 
@@ -88,8 +110,29 @@ def build_replay(data, crew="habitat", profile="mars_transit", offset=0):
                 payload = {"crew": crew, "indicator": indicator, "value": series[key][i], "unit": unit, "t": t,
                            "source": "sensor", "confidence": CONFIDENCE, "state": "released"}
                 events.append({"t": t, "type": "reading", "payload": payload})
+    events += _derived_pco2(events, crew)
     events.sort(key=lambda e: e["t"])  # stable: keeps series order within one time
     return {"schema_version": SCHEMA_VERSION, "crew": crew, "profile": profile, "events": events}
+
+
+def _reading(crew, indicator, value, t):
+    return {"t": t, "type": "reading", "payload": {"crew": crew, "indicator": indicator, "value": value, "unit": "mmHg",
+                                                   "t": t, "source": "sensor", "confidence": CONFIDENCE,
+                                                   "state": "released"}}
+
+
+def _derived_pco2(events, crew):
+    """cabin_pco2 for every CO2 sample, and cabin_pco2_1h (trailing hour) where the hour has enough samples."""
+    co2 = [(e["t"], e["payload"]["value"]) for e in events if e["payload"]["indicator"] == "cabin_co2"]
+    out, window = [], []
+    for t, ppm in co2:
+        out.append(_reading(crew, "cabin_pco2", round(ppm * ISS_PRESSURE_MMHG / 1e6, 4), t))
+        window.append((t, ppm))
+        window = [(wt, v) for wt, v in window if wt > t - PCO2_WINDOW_S]
+        if len(window) >= PCO2_MIN_SAMPLES:
+            mean_ppm = sum(v for _, v in window) / len(window)
+            out.append(_reading(crew, "cabin_pco2_1h", round(mean_ppm * ISS_PRESSURE_MMHG / 1e6, 4), t))
+    return out
 
 
 def source_record(data, raw_bytes, url, downloaded):
@@ -102,7 +145,9 @@ def source_record(data, raw_bytes, url, downloaded):
         "downloaded": downloaded,
         "sha256": hashlib.sha256(raw_bytes).hexdigest(),
         "t0_utc": data["telemetry"]["time"][0],
-        "units": {indicator: unit for indicator, unit in INDICATORS.values()},
+        "units": dict({indicator: unit for indicator, unit in INDICATORS.values()},
+                      cabin_pco2="mmHg", cabin_pco2_1h="mmHg"),
+        "derived": DERIVED,
         "citation": "NASA OSDR Environmental Data App, https://visualization.osdr.nasa.gov/eda/ ; "
                     "radiation data cited as visualization (not a primary dataset).",
         "terms": "https://www.nasa.gov/reference/osdr-help-terms-and-conditions/",

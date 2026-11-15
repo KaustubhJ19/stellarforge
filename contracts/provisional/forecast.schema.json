@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "forecast.schema.json",
+  "title": "Forecast",
+  "x-status": "PROVISIONAL: Forecast is not one of Spec 1's seven contracts. Shape follows Spec 3 backend/forecast_b.py (Forecast B, P1): predicted readiness for tomorrow with a conformal range and drivers. Replay event type: forecast. Needs team agreement before it is frozen.",
+  "type": "object",
+  "required": ["crew", "t", "value", "low", "high", "label", "drivers", "population", "personal_correction", "base"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "crew": {"type": "string"},
+    "t": {"type": "number", "description": "Mission clock seconds"},
+    "value": {"type": "number", "description": "Predicted readiness (PMData scale 0-10)"},
+    "low": {"type": "number", "description": "Lower end of the conformal range"},
+    "high": {"type": "number", "description": "Upper end of the conformal range"},
+    "label": {"type": "string", "description": "Honest label, e.g. \"estimate, not validated\""},
+    "drivers": {
+      "type": "object",
+      "description": "Feature name -> contribution (explanation values)",
+      "additionalProperties": {"type": "number"}
+    },
+    "population": {"type": "number", "description": "Population model prediction"},
+    "personal_correction": {"type": "number", "description": "Per-person residual correction"},
+    "base": {"type": "number", "description": "Explanation base value"}
+  }
+}

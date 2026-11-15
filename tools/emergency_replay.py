@@ -59,6 +59,7 @@ COLUMNS = {
     "OxygenSaturation": "spo2",
     "RespirationRate(1/min)": "respiration_rate",
     "EndTidalCarbonDioxidePressure(mmHg)": "etco2",
+    "CoreTemperature(degC)": "body_temperature",  # added 2026-11-15 (Spec 2 card, Spec 5 request)
 }
 UNITLESS = {"OxygenSaturation": "fraction"}  # Pulse reports SpO2 as a 0-1 fraction with no unit in the header
 
