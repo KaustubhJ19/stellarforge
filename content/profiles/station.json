@@ -84,7 +84,12 @@
     "peripheral venous cannula",
     "intraosseous access device",
     "ECG recorder",
-    "communication link to Mission Control"
+    "communication link to Mission Control",
+    "tourniquet",
+    "standard or haemostatic wound dressing",
+    "pressure dressing",
+    "pulse oximeter",
+    "oxygen supply with face mask"
   ],
   "delay_one_way_s": 0,
   "delay_label": "near real time from low Earth orbit (sourced: comm_delay)",

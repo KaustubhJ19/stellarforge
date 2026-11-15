@@ -78,7 +78,12 @@
     "peripheral venous cannula",
     "intraosseous access device",
     "ECG recorder",
-    "communication link to Mission Control"
+    "communication link to Mission Control",
+    "tourniquet",
+    "standard or haemostatic wound dressing",
+    "pressure dressing",
+    "pulse oximeter",
+    "oxygen supply with face mask"
   ],
   "delay_one_way_s": 1710.0,
   "delay_label": "team value: 28.5 min one way / 57 min round trip (above NASA's stated 20 min maximum)",
