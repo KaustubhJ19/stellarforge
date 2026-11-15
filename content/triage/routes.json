@@ -43,18 +43,50 @@
       "when": {"live_cabin_alert": true},
       "protocol": "cabin-air",
       "reason": "A cabin air alert is active."
+    },
+    {
+      "id": "low-blood-sugar-reported",
+      "when": {"main_problem": "low_blood_sugar"},
+      "protocol": "low-blood-sugar",
+      "reason": "Rescuer reports low blood sugar."
+    },
+    {
+      "id": "bleeding-reported",
+      "when": {"main_problem": "bleeding"},
+      "protocol": "severe-bleeding",
+      "reason": "Rescuer reports severe bleeding."
+    },
+    {
+      "id": "head-injury-reported",
+      "when": {"main_problem": "head_injury"},
+      "protocol": "head-injury",
+      "reason": "Rescuer reports a head injury."
+    },
+    {
+      "id": "infection-reported",
+      "when": {"main_problem": "infection"},
+      "protocol": "sepsis",
+      "reason": "Rescuer reports a severe infection."
+    },
+    {
+      "id": "overheating-reported",
+      "when": {"main_problem": "overheating"},
+      "protocol": "overheating",
+      "reason": "Rescuer reports overheating or fever."
+    },
+    {
+      "id": "after-eva-reported",
+      "when": {"main_problem": "after_eva"},
+      "protocol": "decompression-sickness",
+      "reason": "Rescuer reports a problem after a spacewalk (EVA)."
+    },
+    {
+      "id": "seizure-reported",
+      "when": {"main_problem": "seizure"},
+      "protocol": "seizure",
+      "reason": "Rescuer reports a seizure."
     }
   ],
-  "unrouted_conditions": {
-    "note": "Spec 1: conditions no current intake main_problem value can express. Each needs a new value, added only by team agreement (contract rule). Until then the intake reaches them only through 'not covered'.",
-    "low-blood-sugar": "proposed main_problem value: low_blood_sugar",
-    "severe-bleeding": "'injury' is shared with head-injury; proposed value: bleeding",
-    "head-injury": "'injury' is shared with severe-bleeding; proposed value: head_injury",
-    "sepsis": "proposed main_problem value: infection",
-    "overheating": "proposed main_problem value: overheating",
-    "decompression-sickness": "proposed main_problem value: after_eva",
-    "seizure": "proposed main_problem value: seizure"
-  },
   "fallback": {
     "id": "no-match",
     "reason": "No cited protocol matches what was reported. Ground should advise."

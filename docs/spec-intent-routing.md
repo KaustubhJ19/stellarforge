@@ -45,7 +45,7 @@ Structured form, held on the `Emergency` and never sent to a model as a decision
 |---|---|
 | `responsive` | `yes`, `no` |
 | `breathing` | `normal`, `abnormal`, `none` |
-| `main_problem` | `chest_pain`, `breathing_trouble`, `cabin_alert`, `collapse`, `injury`, `other` |
+| `main_problem` | `chest_pain`, `breathing_trouble`, `cabin_alert`, `collapse`, `bleeding`, `head_injury`, `injury`, `low_blood_sugar`, `seizure`, `overheating`, `infection`, `after_eva`, `other` (library values added by team agreement 2026-11-15, Spec 1) |
 | `source` | `tap`, `text_confirmed` |
 
 Tap questions come from `content/flow/confirm-questions.json` (currently a stub; wording is to be replaced).

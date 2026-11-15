@@ -141,11 +141,9 @@ REAL_ROUTES = json.loads((CONTENT / "triage" / "routes.json").read_text(encoding
 CONDITIONS = [json.loads(p.read_text(encoding="utf-8")) for p in sorted((CONTENT / "conditions").glob("*.json"))]
 
 
-def test_every_condition_has_a_router_row_or_waits_for_a_team_agreed_intake_value():
+def test_every_condition_has_its_own_router_row():
     routed_ids = {r["protocol"] for r in REAL_ROUTES["rows"]}
-    waiting = set(REAL_ROUTES["unrouted_conditions"]) - {"note"}
-    for c in CONDITIONS:
-        assert c["protocol"] in routed_ids or c["id"] in waiting, c["id"]
+    assert [c["id"] for c in CONDITIONS if c["protocol"] not in routed_ids] == []
 
 
 def test_route_rows_only_use_values_the_intake_offers():
@@ -176,3 +174,30 @@ def test_collapse_row_never_catches_a_patient_not_breathing_normally(breathing):
     intake = {"responsive": "yes", "breathing": breathing, "main_problem": "collapse", "source": "tap"}
     r = triage.route(REAL_ROUTES, intake, {}, available={"microgravity-cpr", "chest-pain", "fainting"})
     assert r["rule_id"] != "collapse-responsive" and r["protocol_id"] != "fainting"
+
+
+# ---- team-agreed intake values (2026-11-15): every condition is reachable from the intake -------------
+
+NEW_VALUES = {"low_blood_sugar": "low-blood-sugar", "bleeding": "severe-bleeding", "head_injury": "head-injury",
+              "infection": "sepsis", "overheating": "overheating", "after_eva": "decompression-sickness",
+              "seizure": "seizure"}
+
+
+def test_no_condition_waits_for_an_intake_value_any_more():
+    assert "unrouted_conditions" not in REAL_ROUTES
+
+
+@pytest.mark.parametrize("value,protocol", sorted(NEW_VALUES.items()))
+def test_new_intake_value_reaches_its_condition_row_and_says_not_covered_until_approved(value, protocol):
+    assert value in triage.INTAKE_VALUES["main_problem"]
+    intake = {"responsive": "yes", "breathing": "normal", "main_problem": value, "source": "tap"}
+    r = triage.route(REAL_ROUTES, intake, {}, available={"microgravity-cpr", "chest-pain"})
+    row = next(x for x in REAL_ROUTES["rows"] if x["id"] == r["rule_id"])
+    assert row["protocol"] == protocol and r["protocol_id"] is None and "Contact ground" in r["reason"]
+
+
+@pytest.mark.parametrize("value", sorted(NEW_VALUES))
+def test_unresponsive_not_breathing_still_goes_to_cpr_whatever_the_main_problem(value):
+    intake = {"responsive": "no", "breathing": "none", "main_problem": value, "source": "tap"}
+    r = triage.route(REAL_ROUTES, intake, {}, available={"microgravity-cpr", "chest-pain"})
+    assert r["protocol_id"] == "microgravity-cpr"

@@ -15,7 +15,9 @@ from .content import CONTENT
 INTAKE_VALUES = {
     "responsive": ("yes", "no"),
     "breathing": ("normal", "abnormal", "none"),
-    "main_problem": ("chest_pain", "breathing_trouble", "cabin_alert", "collapse", "injury", "other"),
+    # Spec 1 library values (low_blood_sugar ... after_eva): team agreement 2026-11-15.
+    "main_problem": ("chest_pain", "breathing_trouble", "cabin_alert", "collapse", "bleeding", "head_injury",
+                     "injury", "low_blood_sugar", "seizure", "overheating", "infection", "after_eva", "other"),
     "source": ("tap", "text_confirmed"),
 }
 REQUIRED = ("responsive", "breathing", "main_problem")
