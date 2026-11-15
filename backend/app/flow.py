@@ -81,6 +81,7 @@ class FlowEngine:
         self.emergencies: dict[str, Emergency] = {}
         self.alerts: dict[str, dict] = {}  # crew -> latest emergency Alert (Spec 3)
         self.readings: dict[str, dict[str, dict]] = {}  # crew -> indicator -> latest Reading
+        self.hot_summaries: dict[str, dict] = {}  # crew -> latest HotSummary pushed with an Alert or Trigger (Spec 2)
         self.ground = None  # set by ground module (ticket 12)
         self.habitat = None  # Spec 1 service adapter (ticket 15), optional
         self._ids = itertools.count(1)

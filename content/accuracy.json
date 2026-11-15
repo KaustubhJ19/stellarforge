@@ -38,6 +38,18 @@
    "result": "Mean error 1.12 points on a 0–10 scale, the same as \"tomorrow = today\" (1.12); range covers the true answer 89.6 % of the time (target about 90 %)",
    "measured_on": "16 PMData people, each forecast only for people never used to train",
    "rerun": "PYTHONPATH=. python tools/test_forecast_b.py"
+  },
+  {
+   "what": "Joint-pattern alert (Spec 2)",
+   "result": "0.009 false joint alerts per crew-day (4 in 462 crew-days), against 0.175 for today's per-indicator detector. A combined small drift (1 sd each in resting heart rate, sleep and mood) was caught on day 11, 11 and 12 for three crews and day 41 for the fourth; joint is earlier than today's detector on 1 of 4 crews. Its gain is being about 20 times quieter, not faster",
+   "measured_on": "4 shared PMData crew replays with injected drifts",
+   "rerun": "PYTHONPATH=. python tools/test_joint_pattern.py"
+  },
+  {
+   "what": "Action-plan learning (Spec 2)",
+   "result": "Per-person learning reversed 64 % of drifts (68 % in the second half) against 52 % for the best single fixed plan. Learns per person; demonstrated on simulated response, not proven",
+   "measured_on": "12 simulated people x 60 drift episodes, 5 seeds, made-up response model",
+   "rerun": "PYTHONPATH=. python tools/test_bandit.py"
   }
  ],
  "labels": "every detection cut-off is a \"team value\" or an \"Earth reference, no space data\" (sources in `content/profiles/detection-cut-offs.json`). The forecast and webcam numbers are \"estimate, not validated\".",
@@ -49,6 +61,7 @@
   "The emergency is a Pulse Physiology Engine simulation (\"estimate, not validated\"). Chest pain is crew-reported, not simulated.",
   "Safety limits are Earth clinical references (AHA). There are no published in-flight limits. A low heart rate can be normal for fit people, so the low limit is applied to the live heart rate only, not to resting heart rate.",
   "Webcam heart rate was measured on 5 people in good light, sitting still. One person had errors of 8–20 bpm.",
-  "The readiness forecast is no more accurate than assuming tomorrow equals today. Its value is the range and the explanation, not the number."
+  "The readiness forecast is no more accurate than assuming tomorrow equals today. Its value is the range and the explanation, not the number.",
+  "The joint-pattern detector and the action-plan learning were measured on Earth data with injected drifts and on a made-up response model. Action plans are placeholders until the team writes and approves them."
  ]
 }

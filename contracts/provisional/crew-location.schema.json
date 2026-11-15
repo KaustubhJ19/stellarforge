@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "crew-location.schema.json",
+  "title": "CrewLocation",
+  "x-status": "PROVISIONAL: CrewLocation is not one of Spec 1's seven contracts. Spec 2: the crew-location timeline used to turn cabin readings (crew = the cabin id, e.g. habitat) into per-person dose and CO2 exposure (team value). Replay event type: location. Needs team agreement before it is frozen (add-only).",
+  "type": "object",
+  "required": ["crew", "cabin", "t"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "crew": {"type": "string"},
+    "cabin": {"type": "string", "description": "Cabin id matching the crew field of that cabin's Readings; eva = outside"},
+    "t": {"type": "number", "description": "Mission clock seconds the person moved there"}
+  }
+}

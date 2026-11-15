@@ -2,6 +2,7 @@ numpy
 opencv-python<5  # 5.x dropped the Haar face detector (CascadeClassifier)
 pandas
 scikit-learn
+scipy  # Spec 2 joint-pattern limit (F distribution); already installed with scikit-learn
 mapie>=1,<2  # 1.x API: SplitConformalRegressor
 shap
 pytest

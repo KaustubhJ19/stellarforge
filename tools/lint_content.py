@@ -194,8 +194,9 @@ def lint_tree(root: Path, deny: list[str]) -> list[Issue]:
 
 
 def lint_approval(data, f: Path, root: Path) -> list[Issue]:
-    """Spec 1: a protocol file (content/protocols/<id>.json) serves only approved steps; a stub only STUB text."""
-    if not (f.parent == root / "protocols" and f.name.count(".") == 1 and isinstance(data, dict)
+    """Spec 1: a protocol or action plan serves only approved steps; a stub only STUB text."""
+    is_plan = f.parent == root / "plans" and isinstance(data, dict) and data.get("kind") == "action-plan"
+    if not ((f.parent == root / "protocols" or is_plan) and f.name.count(".") == 1 and isinstance(data, dict)
             and isinstance(data.get("steps"), list)):
         return []
     approvers = load_approvers(root / "approvers.json")
