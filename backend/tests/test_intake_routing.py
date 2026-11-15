@@ -37,7 +37,9 @@ def step_ids(eng, crew):
 
 
 def to_steps(eng, crew):
-    while eng.view(crew)["screen"] in ("record", "contributors"):
+    while (v := eng.view(crew))["screen"] in ("record", "contributors"):
+        if v["screen"] == "contributors" and v["choice"] is None:  # ticket 05: a choice is required before the steps
+            eng.copilot_choice(crew, "router")
         eng.next(crew)
 
 
@@ -77,6 +79,7 @@ def test_not_covered_shows_no_steps_but_keeps_contributors_and_report(reng):
     reng.next("B")
     v = reng.view("B")
     assert v["screen"] == "contributors" and v["route"]["protocol_id"] is None and v["causes"]
+    reng.copilot_choice("B", "router")
     reng.next("B")
     v = reng.view("B")
     assert v["screen"] == "report"

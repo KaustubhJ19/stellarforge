@@ -34,6 +34,8 @@ export type Investigator = {
   notes?: InvestigatorNote[];
   dropped?: number;
 };
+// The rescuer's required decision about the copilot (ticket 05); null until made.
+export type CopilotChoice = { kind: "router" | "suggestion" | "other" | "none"; protocol_id: string | null; by: string };
 export type L0Verdict = {
   rule_id: string;
   protocol_id: string | null;
@@ -50,6 +52,8 @@ type Rescuer = Base & {
   briefing?: Briefing;
   investigator?: Investigator;
   l0?: L0Verdict;
+  choice?: CopilotChoice | null;
+  suggestion?: { protocol_id: string; title: string } | null;
 };
 
 export type View = (
@@ -141,6 +145,8 @@ export const api = {
   observer: (crew: string, choice: string) => call<View>("POST", "/api/observer", { crew, choice }),
   intake: (crew: string, intake: Record<string, string>) => call<View>("POST", "/api/intake", { crew, intake }),
   switchProtocol: (crew: string, protocol: string) => call<View>("POST", "/api/switch-protocol", { crew, protocol }),
+  copilotChoice: (crew: string, choice: CopilotChoice["kind"], protocol?: string) =>
+    call<View>("POST", "/api/copilot-choice", { crew, choice, protocol }),
   next: (crew: string) => call<View>("POST", "/api/next", { crew }),
   back: (crew: string) => call<View>("POST", "/api/back", { crew }),
   explain: (crew: string) => call<Explanation>("POST", "/api/explain", { crew }),

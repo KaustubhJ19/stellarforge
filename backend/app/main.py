@@ -49,6 +49,10 @@ class IntakeForm(CrewAction):
 class SwitchProtocol(CrewAction):
     protocol: str
 
+class CopilotChoice(CrewAction):
+    choice: str
+    protocol: str | None = None
+
 class Explain(CrewAction):
     question: str | None = None
 
@@ -163,6 +167,11 @@ def create_app(engine: FlowEngine | None = None, ticker: bool = True) -> FastAPI
     @app.post("/api/switch-protocol")
     def switch_protocol(a: SwitchProtocol):
         eng.switch_protocol(a.crew, a.protocol, a.emergency)
+        return eng.view(a.crew)
+
+    @app.post("/api/copilot-choice")
+    def copilot_choice(a: CopilotChoice):
+        eng.copilot_choice(a.crew, a.choice, a.protocol, a.emergency)
         return eng.view(a.crew)
 
     @app.post("/api/next")

@@ -1,5 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { describe, expect, it, vi } from "vitest";
 import { Screen } from "./screens";
 import type { View } from "./api";
 
@@ -38,5 +39,40 @@ describe("briefing panel", () => {
   it("is absent when the service sends no briefing", () => {
     show({ ...resc, screen: "intake", fields, route: null });
     expect(screen.queryByTestId("briefing")).toBeNull();
+  });
+});
+
+// Ticket 05: the rescuer's required choice.
+describe("choice panel", () => {
+  const route = { protocol_id: "chest-pain", rule_id: "chest-pain-responsive", reason: "Rescuer reports chest pain." };
+  const contributors = { ...resc, screen: "contributors" as const, causes: [], message: null, route, briefing };
+
+  it("blocks Next until a choice is made, then shows it", () => {
+    show({ ...contributors, choice: null });
+    expect(screen.getByRole("button", { name: "Next" })).toBeDisabled();
+    cleanup();
+    show({ ...contributors, choice: { kind: "none", protocol_id: "chest-pain", by: "B" } });
+    expect(screen.getByRole("button", { name: "Next" })).toBeEnabled();
+    expect(screen.getByTestId("choice")).toHaveTextContent("acting on your own");
+  });
+
+  it("offers all four options and posts the choice", async () => {
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify({ screen: "idle" }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    show({ ...contributors, choice: null, suggestion: { protocol_id: "chest-pain", title: "Chest pain" } });
+    await userEvent.click(screen.getByRole("button", { name: /Keep router default/ }));
+    await userEvent.click(screen.getByRole("button", { name: /copilot suggestion/ }));
+    await userEvent.click(screen.getByRole("button", { name: /None, I'll act on my own/ }));
+    await userEvent.selectOptions(screen.getByLabelText(/Other protocol/), "chest-pain");
+    const calls = fetchMock.mock.calls as unknown as [string, RequestInit][];
+    const bodies = calls.map((c) => JSON.parse(c[1].body as string));
+    expect(bodies.map((b) => b.choice)).toEqual(["router", "suggestion", "none", "other"]);
+    expect(bodies[3].protocol).toBe("chest-pain");
+    vi.unstubAllGlobals();
+  });
+
+  it("hides the suggestion button when the copilot has none", () => {
+    show({ ...contributors, choice: null });
+    expect(screen.queryByRole("button", { name: /copilot suggestion/ })).toBeNull();
   });
 });
