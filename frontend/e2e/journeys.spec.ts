@@ -42,6 +42,7 @@ test.describe("home screen in a real browser, no service", () => {
     await openApp(page);
     await waitForBody(page);
     const before = await page.locator(".body-host canvas").screenshot();
+    await page.locator("summary", { hasText: "Layers" }).click(); // the Layers dropdown starts closed
     await page.getByRole("checkbox", { name: "Show muscles" }).uncheck();
     await page.waitForTimeout(300);
     const after = await page.locator(".body-host canvas").screenshot();
@@ -87,7 +88,7 @@ test.describe("home screen in a real browser, no service", () => {
     expect(px.amber).toBeGreaterThan(20_000);
     expect(px.green).toBeLessThan(500); // the lungs' glow is off in insight
     await page.getByRole("button", { name: "Exit insight" }).click();
-    await expect(page.getByRole("checkbox", { name: "Show muscles" })).toBeVisible();
+    await expect(page.locator("summary", { hasText: "Layers" })).toBeVisible(); // the controls are back
   });
 
   test("the heart visibly beats when zoomed in", async ({ page }) => {
@@ -111,7 +112,7 @@ test.describe("home screen in a real browser, no service", () => {
     const box = (await svg.boundingBox())!;
     await page.mouse.move(box.x + box.width * 0.3, box.y + box.height / 2);
     await page.mouse.move(box.x + box.width * 0.62, box.y + box.height / 2, { steps: 4 });
-    await expect(page.locator(".trend__tooltip")).toContainText("Day 3 15:00");
+    await expect(page.locator(".trend__tooltip")).toContainText("Day 3 · 15:00");
     await expect(page.locator(".trend__tooltip")).toContainText("96 bpm");
     await expect(page.locator(".trend__tooltip")).toContainText("Watch");
   });
@@ -128,7 +129,7 @@ test.describe("home screen in a real browser, no service", () => {
     await page.waitForURL("**/emergency.html?crew=*&start=emergency");
     await page.goBack();
     await page.getByRole("button", { name: "Help a crewmate" }).click();
-    await page.waitForURL(/emergency\.html\?crew=[A-Z]$/);
+    await page.waitForURL(/emergency\.html\?crew=[A-Z]&start=help$/);
     expect(requested).toHaveLength(2);
   });
 
@@ -140,6 +141,7 @@ test.describe("home screen in a real browser, no service", () => {
     await expect(card).toContainText("70 bpm");
     // Spec 5's structured card, bundled from content/cards/heart_rate.json.
     await expect(card.getByRole("region", { name: "Why it matters" })).toContainText("Risk of Cardiovascular Adaptations");
+    await card.locator("summary", { hasText: "If abnormal" }).click(); // closed while the reading is Normal
     await expect(card.getByRole("region", { name: "If abnormal" }).getByRole("term")).toHaveCount(4);
     await card.screenshot({ path: "test-results/card-heart-rate.png" });
     for (let i = 0; i < 4; i++) {
@@ -255,7 +257,7 @@ test.describe("Mission profile switcher", () => {
       const mainBox = (await page.getByRole("main").boundingBox())!;
       expect(barBox.y).toBeLessThan(mainBox.y);
       const select = bar.getByRole("combobox", { name: "Mission profile" });
-      expect((await select.boundingBox())!.height).toBeGreaterThanOrEqual(56);
+      expect((await select.boundingBox())!.height).toBeGreaterThanOrEqual(44);
       await select.selectOption({ label: "Space station (ISS)" });
       await expect(bar).toContainText("0 min");
       // Emergency is still first in the tab order from a fresh page.

@@ -1,6 +1,6 @@
 import type { IndicatorId } from "../contracts";
 import { HABITAT_INDICATORS, INDICATORS, byIndicatorOrder, type HealthKind } from "../indicators";
-import type { ShownReading } from "../replay/state";
+import type { NumericReading, ShownReading } from "../replay/state";
 import { IndicatorTile } from "./IndicatorTile";
 
 const TITLE: Record<HealthKind, string> = { physical: "Physical health", mental: "Mental health" };
@@ -9,10 +9,13 @@ const TITLE: Record<HealthKind, string> = { physical: "Physical health", mental:
 export function HealthSummary({
   kind,
   latest,
+  history,
   onDetails,
 }: {
   kind: HealthKind;
   latest: Map<IndicatorId, ShownReading>;
+  /** Recent Readings of an Indicator up to the scrubbed time, for each tile's mini chart. */
+  history?: (indicator: IndicatorId) => NumericReading[];
   onDetails?: (indicator: IndicatorId) => void;
 }) {
   const readings = [...latest.values()]
@@ -29,6 +32,7 @@ export function HealthSummary({
             <IndicatorTile
               key={r.indicator}
               reading={r}
+              history={history?.(r.indicator)}
               onDetails={onDetails && (() => onDetails(r.indicator))}
             />
           ))}

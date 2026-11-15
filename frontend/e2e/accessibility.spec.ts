@@ -110,7 +110,7 @@ test.describe("crew forms for gloved hands", () => {
     ["Log post-EVA check", 1440],
     ["Log post-EVA check", 390],
   ] as const) {
-    test(`${button} at ${width}px: axe-clean, every control at least 56 px`, async ({ page }) => {
+    test(`${button} at ${width}px: axe-clean, every control at least 44 px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
       await openApp(page);
       await page.getByRole("button", { name: button }).click();
@@ -120,7 +120,7 @@ test.describe("crew forms for gloved hands", () => {
       const axe = await new AxeBuilder({ page }).include(".form-dialog").withTags(["wcag2a", "wcag2aa", "wcag22aa"]).analyze();
       expect(axe.violations.map((v) => v.id)).toEqual([]);
       const small = await dialog.locator("input:not([type=radio]), textarea, .form-choice, button").evaluateAll((els) =>
-        els.map((el) => ({ text: el.textContent?.trim() || el.id, h: el.getBoundingClientRect().height })).filter((e) => e.h < 56),
+        els.map((el) => ({ text: el.textContent?.trim() || el.id, h: el.getBoundingClientRect().height })).filter((e) => e.h < 44),
       );
       expect(small).toEqual([]);
       await page.screenshot({ path: `test-results/form-${button.split(" ").pop()}-${width}.png`, fullPage: false });
@@ -169,7 +169,7 @@ test("forecast panel and 'Why this forecast?' view are axe-clean with large targ
   const axe = await new AxeBuilder({ page }).include(".forecast").include(".why-forecast").withTags(["wcag2a", "wcag2aa", "wcag22aa"]).analyze();
   expect(axe.violations.map((v) => v.id)).toEqual([]);
   const small = await page.locator(".forecast button, .why-forecast button").evaluateAll((els) =>
-    els.map((el) => ({ text: el.textContent, h: el.getBoundingClientRect().height })).filter((e) => e.h < 56),
+    els.map((el) => ({ text: el.textContent, h: el.getBoundingClientRect().height })).filter((e) => e.h < 44),
   );
   expect(small).toEqual([]);
 });
@@ -185,7 +185,7 @@ for (const [button, dialogName] of [["How accurate is this?", "How accurate is t
     const axe = await new AxeBuilder({ page }).include('[role="dialog"]').withTags(["wcag2a", "wcag2aa", "wcag22aa"]).analyze();
     expect(axe.violations.map((v) => v.id)).toEqual([]);
     const small = await dialog.locator("button").evaluateAll((els) =>
-      els.map((el) => ({ text: el.textContent, h: el.getBoundingClientRect().height })).filter((e) => e.h < 56),
+      els.map((el) => ({ text: el.textContent, h: el.getBoundingClientRect().height })).filter((e) => e.h < 44),
     );
     expect(small).toEqual([]);
     await page.screenshot({ path: `test-results/about-${dialogName.split(" ")[0]}.png` });

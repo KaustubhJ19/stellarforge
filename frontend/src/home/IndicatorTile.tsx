@@ -1,8 +1,18 @@
-import type { ShownReading } from "../replay/state";
+import type { NumericReading, ShownReading } from "../replay/state";
 import { INDICATORS, formatValue, indicatorLabel } from "../indicators";
+import { Sparkline } from "../charts/Sparkline";
 import { StatusBadge } from "../status";
 
-export function IndicatorTile({ reading, onDetails }: { reading: ShownReading; onDetails?: () => void }) {
+export function IndicatorTile({
+  reading,
+  history = [],
+  onDetails,
+}: {
+  reading: ShownReading;
+  /** Recent Readings up to the scrubbed time, drawn as a mini chart. */
+  history?: NumericReading[];
+  onDetails?: () => void;
+}) {
   const label = indicatorLabel(reading.indicator);
   const shown = formatValue(reading.value, reading.unit);
   return (
@@ -11,6 +21,11 @@ export function IndicatorTile({ reading, onDetails }: { reading: ShownReading; o
       <span className="indicator-tile__value">
         {shown.value} <small>{shown.unit}</small>
       </span>
+      {history.length > 1 && (
+        <span className="indicator-tile__spark">
+          <Sparkline readings={history} />
+        </span>
+      )}
       <StatusBadge status={reading.status} />
       {INDICATORS[reading.indicator]?.note && <span className="card__label">{INDICATORS[reading.indicator].note}</span>}
       {onDetails && (

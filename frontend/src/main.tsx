@@ -12,7 +12,7 @@ import "./theme.css";
 /** Hand over to Spec 4's emergency flow: this person's tablet, and for Emergency open the flow straight away. */
 function openEmergencyFlow(crewId: string, request: EmergencyRequest) {
   const query = new URLSearchParams({ crew: crewId });
-  if (request === "emergency") query.set("start", "emergency");
+  query.set("start", request === "emergency" ? "emergency" : "help");
   window.location.assign(`/emergency.html?${query}`);
 }
 

@@ -25,6 +25,13 @@ export function TaskList({
       {tasks.length === 0 ? (
         <p className="empty">Nothing due today.</p>
       ) : (
+        <>
+        <progress
+          className="tasks__progress"
+          aria-label="Tasks done"
+          value={tasks.filter((t) => t.done).length}
+          max={tasks.length}
+        />
         <ul>
           {tasks.map((t) => (
             <li key={t.id} data-done={t.done}>
@@ -36,6 +43,7 @@ export function TaskList({
             </li>
           ))}
         </ul>
+        </>
       )}
       {notes.length > 0 && (
         <ul className="tasks__notes" aria-label="Notes">

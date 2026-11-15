@@ -13,13 +13,16 @@ export function BodyStatusList({ glow }: { glow: Glow }) {
   rows.sort((a, b) => STATUS_RANK[b.status] - STATUS_RANK[a.status]);
   if (rows.length === 0) return <p className="empty">Nothing to show on the body yet.</p>;
   return (
-    <ul className="body-status" aria-label="Body status">
-      {rows.map((r) => (
-        <li key={r.name} aria-label={r.name} className="body-status__item" data-status={r.status}>
-          <span>{r.name}</span>
-          <StatusBadge status={r.status} />
-        </li>
-      ))}
-    </ul>
+    <details className="fold">
+      <summary>Body status</summary>
+      <ul className="body-status" aria-label="Body status">
+        {rows.map((r) => (
+          <li key={r.name} aria-label={r.name} className="body-status__item" data-status={r.status}>
+            <span>{r.name}</span>
+            <StatusBadge status={r.status} />
+          </li>
+        ))}
+      </ul>
+    </details>
   );
 }
