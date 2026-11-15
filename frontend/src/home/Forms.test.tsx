@@ -1,0 +1,236 @@
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { App } from "../App";
+import { marsMission, type Mission } from "../test/replay";
+import { fakeBodyScene } from "../test/fakeBodyScene";
+import type { Reading } from "../contracts";
+import Ajv2020 from "ajv/dist/2020";
+import readingSchema from "../../../contracts/reading.schema.json";
+
+/** The data service checks each POSTed Reading on its own against Spec 1's schema. */
+const validReading = new Ajv2020({ allErrors: true, strict: false }).compile(readingSchema);
+const schemaProblems = (readings: Reading[]) =>
+  readings.flatMap((r) => (validReading(r) ? [] : [`${r.indicator}: ${JSON.stringify(validReading.errors)}`]));
+
+function renderHome(mission: Mission = marsMission(), onReadings = vi.fn(), onEmergency = vi.fn()) {
+  render(<App {...mission} bodyScene={fakeBodyScene().factory} onReadings={onReadings} onEmergency={onEmergency} />);
+  return onReadings;
+}
+
+/** Type I complaints after a spacewalk. */
+const SYMPTOMS = ["Hand or finger pain", "Joint pain", "Skin itch or rash", "Tingling"];
+/** NASA's Type II decompression sickness warning signs (OCHMO-TB-037 Rev D, p. 3). */
+const WARNING_SIGNS = ["Numbness", "Weakness", "Confusion", "Dizziness or ear problems", "Chest pain or trouble breathing"];
+
+async function openForm(name: string) {
+  const tasks = screen.getByRole("region", { name: "Today's tasks" });
+  await userEvent.click(within(tasks).getByRole("button", { name }));
+  return screen.getByRole("dialog");
+}
+
+async function answer(dialog: HTMLElement, question: string, choice: "Yes" | "No") {
+  await userEvent.click(within(within(dialog).getByRole("radiogroup", { name: question })).getByRole("radio", { name: choice }));
+}
+
+async function fill(dialog: HTMLElement, label: string, value: string) {
+  const field = within(dialog).getByLabelText(label);
+  await userEvent.clear(field);
+  await userEvent.type(field, value);
+}
+
+describe("stand test form", () => {
+  async function logStandTest(mission?: Mission) {
+    const onReadings = renderHome(mission);
+    const dialog = await openForm("Log stand test");
+    await fill(dialog, "Lying heart rate (bpm)", "62");
+    await fill(dialog, "Standing heart rate (bpm)", "92");
+    await fill(dialog, "Standing systolic blood pressure (mmHg)", "110");
+    await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+    return { dialog: screen.getByRole("dialog"), onReadings };
+  }
+
+  it("is reached from today's tasks and saves Readings the home screen shows", async () => {
+    const { onReadings } = await logStandTest();
+    const physical = screen.getByRole("region", { name: "Physical health" });
+    expect(within(physical).getByRole("group", { name: "Standing heart rate" })).toHaveTextContent("92 bpm");
+    expect(within(physical).getByRole("group", { name: "Standing systolic BP" })).toHaveTextContent("110 mmHg");
+    const saved = onReadings.mock.calls[0][0] as Reading[];
+    expect(saved.map((r) => [r.indicator, r.value, r.unit, r.source])).toEqual([
+      ["resting_heart_rate", 62, "bpm", "manual"],
+      ["standing_heart_rate", 92, "bpm", "manual"],
+      ["standing_systolic_bp", 110, "mmHg", "manual"],
+    ]);
+    expect(schemaProblems(saved)).toEqual([]);
+  });
+
+  it("compares with the astronaut's own pre-flight test first, then the Apollo group average", async () => {
+    const mission = marsMission();
+    mission.crew.anchor.standing_heart_rate = { mean: 76, sd: 5 };
+    const { dialog } = await logStandTest(mission);
+    const row = within(dialog).getByRole("row", { name: /Standing heart rate/ });
+    const cells = within(row).getAllByRole("cell").map((c) => c.textContent);
+    expect(cells).toEqual(["92 bpm", "76 bpm (+16)", "+23.4 bpm"]);
+    const headers = within(dialog).getAllByRole("columnheader").map((c) => c.textContent);
+    expect(headers.indexOf("Your pre-flight test")).toBeLessThan(headers.indexOf("Apollo crews after landing"));
+    expect(dialog).toHaveTextContent("group averages after landing, not limits");
+  });
+
+  it("takes the Apollo shift and its source from Spec 3's content file, not a copy", async () => {
+    const { dialog } = await logStandTest();
+    expect(dialog).toHaveTextContent("NASA Apollo AP005, Table 6, first postflight minus preflight");
+  });
+
+  it("says so when there is no pre-flight test on record", async () => {
+    const { dialog } = await logStandTest();
+    const row = within(dialog).getByRole("row", { name: /Standing systolic BP/ });
+    expect(within(row).getAllByRole("cell")[1]).toHaveTextContent("No pre-flight test on record");
+  });
+
+  it("asks for every value before saving, and saves nothing until then", async () => {
+    const onReadings = renderHome();
+    const dialog = await openForm("Log stand test");
+    await fill(dialog, "Lying heart rate (bpm)", "62");
+    await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+    expect(within(dialog).getByRole("alert")).toHaveTextContent("Enter standing heart rate and standing systolic blood pressure.");
+    expect(onReadings).not.toHaveBeenCalled();
+  });
+
+  it("refuses values that cannot be right, saying which and why", async () => {
+    const onReadings = renderHome();
+    const dialog = await openForm("Log stand test");
+    await fill(dialog, "Lying heart rate (bpm)", "0x5C");
+    await fill(dialog, "Standing heart rate (bpm)", "920");
+    await fill(dialog, "Standing systolic blood pressure (mmHg)", "110");
+    await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+    expect(within(dialog).getByRole("alert")).toHaveTextContent(
+      "Check lying heart rate and standing heart rate: enter a number from 20 to 250 bpm.",
+    );
+    expect(onReadings).not.toHaveBeenCalled();
+  });
+
+  it("moves focus to Done once saved, so it stays inside the dialog", async () => {
+    await logStandTest();
+    expect(screen.getByRole("button", { name: "Done" })).toHaveFocus();
+  });
+
+  it("logs at the mission time now, even when the clock is scrubbed back, and returns to now", async () => {
+    const onReadings = renderHome();
+    const slider = screen.getByRole("slider", { name: "Mission clock" });
+    const now = Number(slider.getAttribute("aria-valuemax") ?? (slider as HTMLInputElement).max);
+    fireEvent.change(slider, { target: { value: String(now - 6 * 3600) } });
+    const dialog = await openForm("Log stand test");
+    await fill(dialog, "Lying heart rate (bpm)", "62");
+    await fill(dialog, "Standing heart rate (bpm)", "92");
+    await fill(dialog, "Standing systolic blood pressure (mmHg)", "110");
+    await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+    expect((onReadings.mock.calls[0][0] as Reading[]).every((r) => r.t === now)).toBe(true);
+    expect((slider as HTMLInputElement).value).toBe(String(now));
+  });
+
+  it("closes with Escape and returns focus to the task button", async () => {
+    renderHome();
+    await openForm("Log stand test");
+    await userEvent.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Log stand test" })).toHaveFocus();
+  });
+});
+
+describe("post-EVA check form", () => {
+  it("logs vitals and symptoms as self-reported Readings", async () => {
+    const onReadings = renderHome();
+    const dialog = await openForm("Log post-EVA check");
+    await fill(dialog, "Heart rate (bpm)", "88");
+    await userEvent.click(within(dialog).getByRole("radio", { name: "4" }));
+    await answer(dialog, "Hand or finger pain", "Yes");
+    for (const symptom of [...SYMPTOMS.slice(1), ...WARNING_SIGNS]) await answer(dialog, symptom, "No");
+    await userEvent.type(within(dialog).getByLabelText("Note (optional)"), "Left index finger sore");
+    await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+
+    const saved = onReadings.mock.calls[0][0] as Reading[];
+    expect(saved.map((r) => [r.indicator, r.value, r.unit])).toEqual([
+      ["post_eva_heart_rate", 88, "bpm"],
+      ["fatigue", 4, "score 1-5"],
+      ["hand_pain", 1, "yes/no"],
+      ["joint_pain", 0, "yes/no"],
+      ["skin_irritation", 0, "yes/no"],
+      ["tingling", 0, "yes/no"],
+      ["numbness", 0, "yes/no"],
+      ["weakness", 0, "yes/no"],
+      ["confusion", 0, "yes/no"],
+      ["dizziness", 0, "yes/no"],
+      ["chest_or_breathing", 0, "yes/no"],
+    ]);
+    expect(saved.every((r) => r.source === "manual")).toBe(true);
+    expect(schemaProblems(saved)).toEqual([]);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    const physical = screen.getByRole("region", { name: "Physical health" });
+    expect(within(physical).getByRole("group", { name: "Hand or finger pain" })).toHaveTextContent("Yes");
+    expect(within(screen.getByRole("region", { name: "Mental health" })).getByRole("group", { name: "Fatigue" })).toHaveTextContent(
+      "4 of 5",
+    );
+    const tasks = screen.getByRole("region", { name: "Today's tasks" });
+    expect(within(tasks).getByRole("listitem", { name: /Post-EVA note/ })).toHaveTextContent("Left index finger sore");
+  });
+
+  it("asks for fatigue and every symptom before saving: a skipped question is not a 'No'", async () => {
+    const onReadings = renderHome();
+    const dialog = await openForm("Log post-EVA check");
+    await fill(dialog, "Heart rate (bpm)", "88");
+    await answer(dialog, "Hand or finger pain", "No");
+    await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+    expect(within(dialog).getByRole("alert")).toHaveTextContent(
+      "Enter fatigue, joint pain, skin itch or rash, tingling, numbness, weakness, confusion, dizziness or ear problems and chest pain or trouble breathing.",
+    );
+    expect(onReadings).not.toHaveBeenCalled();
+  });
+
+  it("keeps the post-EVA heart rate apart from the wearable's, so the heart keeps its own beat", async () => {
+    const body = fakeBodyScene();
+    render(<App {...marsMission()} bodyScene={body.factory} />);
+    const before = body.view.heartRate;
+    const dialog = await openForm("Log post-EVA check");
+    await fill(dialog, "Heart rate (bpm)", "130");
+    await userEvent.click(within(dialog).getByRole("radio", { name: "2" }));
+    for (const symptom of [...SYMPTOMS, ...WARNING_SIGNS]) await answer(dialog, symptom, "No");
+    await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+    expect(body.view.heartRate).toBe(before);
+    expect(screen.getByRole("group", { name: "Heart rate after EVA" })).toHaveTextContent("130 bpm");
+  });
+});
+
+describe("post-EVA warning signs (Type II decompression sickness)", () => {
+  async function check(yes: string[]) {
+    const onReadings = vi.fn();
+    const onEmergency = vi.fn();
+    renderHome(marsMission(), onReadings, onEmergency);
+    const dialog = await openForm("Log post-EVA check");
+    await fill(dialog, "Heart rate (bpm)", "88");
+    await userEvent.click(within(dialog).getByRole("radio", { name: "3" }));
+    for (const q of [...SYMPTOMS, ...WARNING_SIGNS]) await answer(dialog, q, yes.includes(q) ? "Yes" : "No");
+    return { dialog, onReadings, onEmergency };
+  }
+
+  it("asks them as their own group and says a Yes opens the emergency flow", async () => {
+    const { dialog } = await check([]);
+    const group = within(dialog).getByRole("group", { name: "Warning signs" });
+    for (const q of WARNING_SIGNS) expect(within(group).getByRole("radiogroup", { name: q })).toBeInTheDocument();
+    expect(group).toHaveTextContent("A Yes to any of these opens the emergency flow when you save.");
+  });
+
+  it.each(WARNING_SIGNS)("saves the check, then opens the emergency flow, on a Yes to %s", async (sign) => {
+    const { dialog, onReadings, onEmergency } = await check([sign]);
+    await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+    const saved = onReadings.mock.calls[0][0] as Reading[];
+    expect(saved.filter((r) => r.value === 1).map((r) => r.indicator)).toHaveLength(1);
+    expect(onEmergency).toHaveBeenCalledWith("emergency");
+    expect(onReadings.mock.invocationCallOrder[0]).toBeLessThan(onEmergency.mock.invocationCallOrder[0]);
+  });
+
+  it("does not open the emergency flow for Type I complaints alone", async () => {
+    const { dialog, onReadings, onEmergency } = await check(SYMPTOMS);
+    await userEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+    expect(onReadings).toHaveBeenCalled();
+    expect(onEmergency).not.toHaveBeenCalled();
+  });
+});

@@ -1,0 +1,1687 @@
+{
+ "schema_version": "1.0.0",
+ "crew": "habitat",
+ "profile": "mars_transit",
+ "events": [
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2800,
+    "unit": "ppm",
+    "t": 172800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.1,
+    "unit": "mmHg",
+    "t": 172800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.4,
+    "unit": "degC",
+    "t": 172800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 42,
+    "unit": "%",
+    "t": 172800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 172800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.2,
+    "unit": "mGy",
+    "t": 172800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2837,
+    "unit": "ppm",
+    "t": 176400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.14,
+    "unit": "mmHg",
+    "t": 176400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.7,
+    "unit": "degC",
+    "t": 176400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 43,
+    "unit": "%",
+    "t": 176400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 176400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.23,
+    "unit": "mGy",
+    "t": 176400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2874,
+    "unit": "ppm",
+    "t": 180000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.17,
+    "unit": "mmHg",
+    "t": 180000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 23,
+    "unit": "degC",
+    "t": 180000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 44,
+    "unit": "%",
+    "t": 180000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 180000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.26,
+    "unit": "mGy",
+    "t": 180000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2911,
+    "unit": "ppm",
+    "t": 183600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.21,
+    "unit": "mmHg",
+    "t": 183600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.6,
+    "unit": "degC",
+    "t": 183600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 45,
+    "unit": "%",
+    "t": 183600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 183600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.29,
+    "unit": "mGy",
+    "t": 183600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2948,
+    "unit": "ppm",
+    "t": 187200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.25,
+    "unit": "mmHg",
+    "t": 187200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.9,
+    "unit": "degC",
+    "t": 187200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 42,
+    "unit": "%",
+    "t": 187200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 187200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.32,
+    "unit": "mGy",
+    "t": 187200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2985,
+    "unit": "ppm",
+    "t": 190800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.29,
+    "unit": "mmHg",
+    "t": 190800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.5,
+    "unit": "degC",
+    "t": 190800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 43,
+    "unit": "%",
+    "t": 190800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 190800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.35,
+    "unit": "mGy",
+    "t": 190800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 3022,
+    "unit": "ppm",
+    "t": 194400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.32,
+    "unit": "mmHg",
+    "t": 194400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.8,
+    "unit": "degC",
+    "t": 194400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 44,
+    "unit": "%",
+    "t": 194400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 194400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.38,
+    "unit": "mGy",
+    "t": 194400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 3059,
+    "unit": "ppm",
+    "t": 198000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.36,
+    "unit": "mmHg",
+    "t": 198000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.4,
+    "unit": "degC",
+    "t": 198000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 45,
+    "unit": "%",
+    "t": 198000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 198000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.41,
+    "unit": "mGy",
+    "t": 198000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 3096,
+    "unit": "ppm",
+    "t": 201600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.4,
+    "unit": "mmHg",
+    "t": 201600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.7,
+    "unit": "degC",
+    "t": 201600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 42,
+    "unit": "%",
+    "t": 201600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 201600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.44,
+    "unit": "mGy",
+    "t": 201600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2833,
+    "unit": "ppm",
+    "t": 205200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.13,
+    "unit": "mmHg",
+    "t": 205200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 23,
+    "unit": "degC",
+    "t": 205200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 43,
+    "unit": "%",
+    "t": 205200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 205200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.47,
+    "unit": "mGy",
+    "t": 205200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 5800,
+    "unit": "ppm",
+    "t": 208800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 3.4,
+    "unit": "mmHg",
+    "t": 208800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.6,
+    "unit": "degC",
+    "t": 208800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 44,
+    "unit": "%",
+    "t": 208800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 208800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.5,
+    "unit": "mGy",
+    "t": 208800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 5820,
+    "unit": "ppm",
+    "t": 212400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 3.4,
+    "unit": "mmHg",
+    "t": 212400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.9,
+    "unit": "degC",
+    "t": 212400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 45,
+    "unit": "%",
+    "t": 212400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 212400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.53,
+    "unit": "mGy",
+    "t": 212400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2944,
+    "unit": "ppm",
+    "t": 216000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.24,
+    "unit": "mmHg",
+    "t": 216000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.5,
+    "unit": "degC",
+    "t": 216000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 42,
+    "unit": "%",
+    "t": 216000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 216000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.56,
+    "unit": "mGy",
+    "t": 216000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2981,
+    "unit": "ppm",
+    "t": 219600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.28,
+    "unit": "mmHg",
+    "t": 219600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.8,
+    "unit": "degC",
+    "t": 219600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 43,
+    "unit": "%",
+    "t": 219600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 219600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.59,
+    "unit": "mGy",
+    "t": 219600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 3018,
+    "unit": "ppm",
+    "t": 223200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.32,
+    "unit": "mmHg",
+    "t": 223200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.4,
+    "unit": "degC",
+    "t": 223200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 44,
+    "unit": "%",
+    "t": 223200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 223200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.62,
+    "unit": "mGy",
+    "t": 223200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 3055,
+    "unit": "ppm",
+    "t": 226800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.35,
+    "unit": "mmHg",
+    "t": 226800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.7,
+    "unit": "degC",
+    "t": 226800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 45,
+    "unit": "%",
+    "t": 226800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 226800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.65,
+    "unit": "mGy",
+    "t": 226800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 3092,
+    "unit": "ppm",
+    "t": 230400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.39,
+    "unit": "mmHg",
+    "t": 230400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 23,
+    "unit": "degC",
+    "t": 230400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 42,
+    "unit": "%",
+    "t": 230400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 230400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.68,
+    "unit": "mGy",
+    "t": 230400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2829,
+    "unit": "ppm",
+    "t": 234000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.13,
+    "unit": "mmHg",
+    "t": 234000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.6,
+    "unit": "degC",
+    "t": 234000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 43,
+    "unit": "%",
+    "t": 234000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 234000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.71,
+    "unit": "mGy",
+    "t": 234000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2866,
+    "unit": "ppm",
+    "t": 237600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.17,
+    "unit": "mmHg",
+    "t": 237600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.9,
+    "unit": "degC",
+    "t": 237600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 44,
+    "unit": "%",
+    "t": 237600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 237600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.74,
+    "unit": "mGy",
+    "t": 237600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2903,
+    "unit": "ppm",
+    "t": 241200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.2,
+    "unit": "mmHg",
+    "t": 241200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.5,
+    "unit": "degC",
+    "t": 241200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 45,
+    "unit": "%",
+    "t": 241200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 241200,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.77,
+    "unit": "mGy",
+    "t": 241200,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2940,
+    "unit": "ppm",
+    "t": 244800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.24,
+    "unit": "mmHg",
+    "t": 244800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.8,
+    "unit": "degC",
+    "t": 244800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 42,
+    "unit": "%",
+    "t": 244800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 244800,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.8,
+    "unit": "mGy",
+    "t": 244800,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 2977,
+    "unit": "ppm",
+    "t": 248400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.28,
+    "unit": "mmHg",
+    "t": 248400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.4,
+    "unit": "degC",
+    "t": 248400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 43,
+    "unit": "%",
+    "t": 248400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 248400,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.83,
+    "unit": "mGy",
+    "t": 248400,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 3014,
+    "unit": "ppm",
+    "t": 252000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.31,
+    "unit": "mmHg",
+    "t": 252000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 22.7,
+    "unit": "degC",
+    "t": 252000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 44,
+    "unit": "%",
+    "t": 252000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 252000,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.86,
+    "unit": "mGy",
+    "t": 252000,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_co2",
+    "value": 3051,
+    "unit": "ppm",
+    "t": 255600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_pco2_1h",
+    "value": 2.35,
+    "unit": "mmHg",
+    "t": 255600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_temperature",
+    "value": 23,
+    "unit": "degC",
+    "t": 255600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "cabin_relative_humidity",
+    "value": 45,
+    "unit": "%",
+    "t": 255600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  },
+  {
+   "t": 255600,
+   "type": "reading",
+   "payload": {
+    "crew": "habitat",
+    "indicator": "radiation_dose_accumulated",
+    "value": 41.89,
+    "unit": "mGy",
+    "t": 255600,
+    "source": "sensor",
+    "confidence": 1,
+    "state": "released"
+   }
+  }
+ ]
+}

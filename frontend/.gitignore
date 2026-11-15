@@ -1,0 +1,6 @@
+node_modules/
+dist/
+*.png
+test-results/
+playwright-report/
+public/replay/shared/
