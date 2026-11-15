@@ -1,0 +1,5 @@
+{
+  "enabled": false,
+  "label": "Spec 3 Collapse Copilot: future scope (architecture in place, off by default)",
+  "note": "Team decision 2026-11-15: the copilot needs training data and evaluation (Spec 3 tickets 07-12, 15, 16) before it may advise a rescuer. While false: no briefing, no required copilot choice before the steps, no L3 investigator, no copilot section in the ground report, no emergency fetch of the crew form answers, and router rows marked copilot_only (the L0 airway row) are left out. Routing and approved protocols work as without Spec 3. Tests turn it on with build(copilot=True)."
+}

@@ -48,6 +48,7 @@ Measured on datasets, not on astronauts. Full numbers and how to re-run them: [a
 - The Mars delay default (28.5 min one way) exceeds NASA's stated 20 min maximum, by team choice.
 - The female body's muscle, skeleton and vessel layers are approximate (resized from the male model).
 - The demo runs in a laptop browser, with one local service standing in for the habitat network.
+- **Future scope: the Collapse Copilot.** Its architecture is built and tested (briefing, rescuer choice, hash-chained decision record, ground-report section, L0 airway rule, L3 investigator, HotSummary adapter), but it is **off by default** (`content/copilot/copilot.json`). It needs training data and evaluation (scenario generator, L1/L2 ranking, golden replays, degraded modes) before it may advise a rescuer. With it off, routing and the approved protocols work as without it.
 
 ## Credits and AI use
 

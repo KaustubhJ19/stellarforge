@@ -26,7 +26,10 @@ def load_records(path=DEFAULT_RECORDS) -> dict[str, dict]:
 def build(protocol: str = DEFAULT_PROTOCOL, profile: str = DEFAULT_PROFILE, db: str = ":memory:",
           clock: MissionClock | None = None, records_path=DEFAULT_RECORDS, content_root=CONTENT,
           explainer="ollama", habitat_url: str | None = None, routing: bool = False,
-          investigator=None) -> FlowEngine:
+          investigator=None, copilot: bool | None = None) -> FlowEngine:
+    """copilot: Spec 3 on or off; None reads content/copilot/copilot.json (off: future scope)."""
+    if copilot is None:
+        copilot = bool(json.loads((content_root / "copilot" / "copilot.json").read_text(encoding="utf-8"))["enabled"])
     habitat_url = habitat_url or os.environ.get("SF_HABITAT_URL")
     if habitat_url:
         from .habitat import HabitatClock
@@ -36,6 +39,8 @@ def build(protocol: str = DEFAULT_PROTOCOL, profile: str = DEFAULT_PROFILE, db: 
     protocols, routes = {main.id: main}, None
     if routing:  # intent-first: load every protocol the route table can pick that has approved content
         routes = triage.load_routes(content_root / "triage" / "routes.json")
+        if not copilot:  # Spec 3 rows (the L0 airway rule) wait for the copilot
+            routes = {**routes, "rows": [r for r in routes["rows"] if not r.get("copilot_only")]}
         loaded = {main.id: main} | {pid: load_protocol(pid, content_root)
                                     for pid in sorted({r["protocol"] for r in routes["rows"]} - {main.id})
                                     if (content_root / "protocols" / f"{pid}.json").exists()}
@@ -44,13 +49,14 @@ def build(protocol: str = DEFAULT_PROTOCOL, profile: str = DEFAULT_PROFILE, db: 
         protocols = {pid: p for pid, p in loaded.items() if p.steps and not p.stub}
     eng = FlowEngine(Store(db), clock or MissionClock(), main, load_profile(profile, content_root),
                      load_records(records_path), questions, protocols=protocols, routes=routes)
+    eng.copilot_enabled = copilot
     from .explainer import Explainer, ollama_transport
     url = os.environ.get("SF_OLLAMA_URL", "http://127.0.0.1:11434")
     if explainer == "ollama":
         explainer = ollama_transport(os.environ.get("SF_OLLAMA_MODEL", "llama3.2:3b"), url)
         from copilot.investigator_eval import load_config
         cfg = load_config()
-        if investigator is None and cfg["enabled"]:  # ship gate (ticket 14): off by default unless the eval passed
+        if investigator is None and cfg["enabled"] and copilot:  # ship gate (ticket 14): off by default unless the eval passed
             from copilot.investigator import SYSTEM, TIME_BOX_S  # same local server, JSON replies, longer answers
             investigator = ollama_transport(os.environ.get("SF_INVESTIGATOR_MODEL", cfg["model"]), url,
                                             timeout=TIME_BOX_S, system=SYSTEM, num_predict=400, json_mode=True)

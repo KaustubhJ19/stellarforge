@@ -31,7 +31,8 @@
       "when": {"airway_threat": true},
       "protocol": "cabin-air",
       "reason": "Oxygen saturation is below the bound, or the rescuer reports the patient is not breathing.",
-      "life_threat": true
+      "life_threat": true,
+      "copilot_only": true
     },
     {
       "id": "chest-pain-responsive",

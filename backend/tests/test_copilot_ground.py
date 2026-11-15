@@ -15,7 +15,7 @@ from test_copilot_record import CHEST, routed
 
 @pytest.fixture
 def reng():
-    return build(protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS, explainer=None,
+    return build(copilot=True, protocol="microgravity-cpr", profile="mars_transit", records_path=REAL_RECORDS, explainer=None,
                  routing=True)
 
 

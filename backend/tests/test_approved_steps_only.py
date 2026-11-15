@@ -79,7 +79,7 @@ def routed(eng, main_problem):
 
 def seen_steps(eng, crew="B"):
     while (v := eng.view(crew))["screen"] in ("record", "contributors"):
-        if v["screen"] == "contributors" and v.get("choice") is None:  # copilot ticket 05: a choice comes first
+        if v["screen"] == "contributors" and "l0" in v and v["choice"] is None:  # copilot on: a choice comes first
             eng.copilot_choice(crew, "router")
         eng.next(crew)
     seen = []
@@ -131,7 +131,7 @@ def test_offline_bundle_holds_approved_protocols_and_steps_only(eng):
 def test_rendered_step_carries_no_approval_bookkeeping(eng):
     routed(eng, "injury")
     while (v := eng.view("B"))["screen"] in ("record", "contributors"):
-        if v["screen"] == "contributors" and v.get("choice") is None:  # copilot ticket 05: a choice comes first
+        if v["screen"] == "contributors" and "l0" in v and v["choice"] is None:  # copilot on: a choice comes first
             eng.copilot_choice("B", "router")
         eng.next("B")
     assert set(eng.view("B")["step"]) == {"id", "text", "source", "equipment", "rescuers"}

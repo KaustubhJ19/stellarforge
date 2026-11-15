@@ -92,6 +92,7 @@ class FlowEngine:
         self.habitat = None  # Spec 1 service adapter (ticket 15), optional
         self.hot_summaries = PushedHotSummaries()  # Spec 3: latest Spec 2 snapshot per crew (runtime replaces it)
         self.investigator = None  # Spec 3 L3 InvestigatorRunner (runtime sets it)
+        self.copilot_enabled = True  # Spec 3 switch; runtime.build sets it from content/copilot/copilot.json
         self._ids = itertools.count(1)
         self._screens: dict[str, str] = {c: "idle" for c in self.crew}
         self._lock = threading.RLock()
@@ -313,6 +314,8 @@ class FlowEngine:
 
     def _copilot(self, e: Emergency, route: dict | None = None) -> None:
         """Rebuild the L0 copilot session (briefing + rule verdict) from the facts known now."""
+        if not self.copilot_enabled:  # future scope: no session, so no briefing, choice, investigator or record
+            return
         route = route or triage.route(self.routes, e.intake, self._live(e.patient), set(self.protocols),
                                       trigger_kind=e.trigger["kind"])
         e.copilot = c = build_session(emergency=e.id, crew=e.patient, t=round(self.now(), 3), routes=self.routes,
@@ -503,10 +506,11 @@ class FlowEngine:
             self.store.log_access(self.now(), actor, subject, e.id, True, f"emergency access as {e.role(actor)}")
             if self.habitat:  # Spec 1 service is the record source and logs the opening as well
                 record = self.habitat.record(subject, actor, emergency=True)
-                try:  # same logged emergency opening: the copilot also gets the post-EVA, meal and note answers
-                    self.hot_summaries.update(self.habitat.hot_summary(subject, actor, emergency=True))
-                except (OSError, ValueError) as err:  # best effort: the record and the steps never wait on it
-                    self.emit("hot_summary_unavailable", emergency=e.id, subject=subject, error=str(err))
+                if self.copilot_enabled:  # same logged emergency opening: the copilot also gets the form answers
+                    try:
+                        self.hot_summaries.update(self.habitat.hot_summary(subject, actor, emergency=True))
+                    except (OSError, ValueError) as err:  # best effort: the record and steps never wait on it
+                        self.emit("hot_summary_unavailable", emergency=e.id, subject=subject, error=str(err))
             self.emit("record_opened", emergency=e.id, actor=actor, subject=subject)
             self._note(e, "record opened", by=actor)
             return record

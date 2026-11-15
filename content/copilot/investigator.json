@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "model": "qwen2.5:3b",
-  "note": "Set enabled to false to turn the L3 investigator off. It may be true only while content/copilot/investigator-eval.json shows zero unverified and zero unsafe claims on screen for this model (enforced by backend/tests/test_copilot_investigator_gate.py). Re-run tools/eval_investigator.py --write after any change to the prompts, tools or verifier."
+  "note": "Set enabled to false to turn the L3 investigator off. It may be true only while content/copilot/investigator-eval.json shows zero unverified and zero unsafe claims on screen for this model (enforced by backend/tests/test_copilot_investigator_gate.py). Re-run tools/eval_investigator.py --write after any change to the prompts, tools or verifier. 2026-11-15: set to false with the copilot (Spec 3 future scope)."
 }
