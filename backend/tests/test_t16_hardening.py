@@ -39,6 +39,17 @@ def test_demo_endpoints_work_when_enabled(eng, monkeypatch):
         assert c.post("/api/sim/reset").status_code == 200
 
 
+def test_demo_reset_keeps_the_crew_records(monkeypatch):
+    """Reset rebuilt the engine without the records file, so every record opened empty afterwards."""
+    for var in ("SF_PROTOCOL", "SF_PROFILE", "SF_RECORDS", "SF_HABITAT_URL"):
+        monkeypatch.delenv(var, raising=False)
+    monkeypatch.setenv("SF_SIM", "1")
+    with TestClient(create_app(ticker=False)) as c:
+        assert c.post("/api/sim/reset").status_code == 200
+        record = c.get("/api/record", params={"actor": "A", "subject": "A"}).json()
+        assert record and record["id"] == "A" and record["anchor"]
+
+
 # ---- the default service runs the real content --------------------------------
 
 def test_default_service_uses_real_protocol_profile_and_crew(monkeypatch):
