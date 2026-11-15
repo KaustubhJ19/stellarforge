@@ -225,4 +225,6 @@ class InvestigatorRunner:
                  "snapshot_digest": result.snapshot_digest}
         with self.eng._lock:
             self.eng._note(e, "investigator", **facts)
-            self.eng.emit("investigator", emergency=e.id, crew=e.patient, **facts)
+            self.eng.copilot_event(e, "investigator", crew=e.patient, **facts)  # joins the hash chain
+            if self.eng.ground:  # a report still in transit carries the notes
+                self.eng.ground.refresh(e)

@@ -30,6 +30,38 @@
     },
     "reply": {
       "description": "optional"
+    },
+    "copilot": {
+      "description": "optional, added by Spec 3 (add-only): the hash-chained copilot record of this emergency. events are the copilot_* events as stored (each carries prev, the SHA-256 of the one before); chain.head is the SHA-256 of the newest, so a receiver can re-check the copy.",
+      "type": "object",
+      "required": ["chain", "events"],
+      "properties": {
+        "chain": {
+          "type": "object",
+          "required": ["ok", "length", "head"],
+          "properties": {
+            "ok": {"type": "boolean"},
+            "reason": {"type": "string"},
+            "length": {"type": "integer", "minimum": 0},
+            "head": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["t", "type", "emergency", "prev"],
+            "properties": {
+              "t": {"type": "number"},
+              "type": {"type": "string", "pattern": "^copilot_"},
+              "emergency": {"type": "string"},
+              "prev": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+            }
+          }
+        },
+        "versions": {"type": "object", "description": "schema, model and content versions of the build that advised"},
+        "timings": {"type": "object", "description": "Mission clock seconds: assessed_t, chosen_t, choice_after_s, investigator_elapsed_s"}
+      }
     }
   },
   "required": [

@@ -57,3 +57,50 @@ describe("ticket 13: ground console", () => {
     expect(screen.queryByText("STUB summary")).toBeNull();
   });
 });
+
+describe("ticket 06: copilot record in the report and console", () => {
+  const H = "a".repeat(64);
+  const copilot = {
+    chain: { ok: true, reason: "", length: 2, head: H },
+    events: [
+      { t: 1, type: "copilot_assessment", prev: "0".repeat(64), l0: { rule_id: "R1" }, briefing: { text: "STUB briefing" } },
+      { t: 9, type: "copilot_choice", prev: H, kind: "router", by: "B", protocol_id: "stub" },
+    ],
+    versions: { model: "none (L0 rules only)", schema_version: "1.0.0" },
+    timings: { choice_after_s: 8 },
+  };
+  const withCopilot = { ...report, copilot };
+  const consoleBody = (over: object) => ({
+    now: 2000, scripted_reply: "STUB",
+    reports: [{ id: "gr-em-1", crew: "cmdr", arrived: true, arrives_t: 1726, report: withCopilot, replied: false,
+      copilot_chain: { ok: true, length: 2 }, outcomes: [], ...over }],
+  });
+
+  it("shows the copilot section and the verified status in the crew report", () => {
+    render(<ReportPanel view={rv({ report: withCopilot })} />);
+    expect(screen.getByTestId("chain-status")).toHaveTextContent("Record verified: 2 events, chain intact");
+    expect(screen.getByText(/Rescuer B chose "router"/)).toBeInTheDocument();
+    expect(screen.getByTestId("copilot-versions")).toHaveTextContent("none (L0 rules only)");
+  });
+
+  it("shows a failed ground-side re-check as an alert", async () => {
+    const bad = { ok: false, reason: "event 1 (copilot_choice) does not match the one before it", length: 2 };
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify(consoleBody({ copilot_chain: bad })))));
+    render(<Console />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(/Record check FAILED: event 1/);
+  });
+
+  it("saves an outcome label and lists the ones already stored", async () => {
+    const calls: string[] = [];
+    vi.stubGlobal("fetch", vi.fn(async (url: string, init?: RequestInit) => {
+      calls.push(`${init?.method ?? "GET"} ${url} ${init?.body ?? ""}`);
+      const body = url === "/api/console" ? consoleBody({ replied: true, outcomes: [{ id: "lb-1", t: 1900, text: "Back on duty." }] }) : {};
+      return new Response(JSON.stringify(body), { status: 200 });
+    }));
+    render(<Console />);
+    expect(await screen.findByTestId("outcome")).toHaveTextContent("Back on duty.");
+    await userEvent.type(screen.getByLabelText("Outcome"), "Recovered");
+    await userEvent.click(screen.getByRole("button", { name: "Save outcome label" }));
+    expect(calls.some((c) => c.startsWith("POST /api/console/outcome") && c.includes('"text":"Recovered"'))).toBe(true);
+  });
+});

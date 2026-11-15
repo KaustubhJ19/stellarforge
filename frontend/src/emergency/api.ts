@@ -87,8 +87,19 @@ export type CrewRecord = {
   anchor: Record<string, { mean: number; sd: number }>;
 };
 
+// Collapse Copilot (ticket 06): the hash-chained record carried in the ground report.
+export type CopilotEvent = { t: number; type: string; prev: string; [k: string]: unknown };
+export type ChainStatus = { ok: boolean; reason?: string; length: number };
+export type CopilotSection = {
+  chain: ChainStatus & { head: string };
+  events: CopilotEvent[];
+  versions?: Record<string, unknown>;
+  timings?: Record<string, number>;
+};
+
 export type ReportView = {
   report: {
+    copilot?: CopilotSection;
     id: string;
     crew: string;
     summary: string;
@@ -156,6 +167,7 @@ export const api = {
   console: () => call<ConsoleView>("GET", "/api/console"),
   reply: (report: string, text: string, scripted = false) =>
     call<unknown>("POST", "/api/console/reply", { report, text, scripted }),
+  outcome: (report: string, text: string) => call<unknown>("POST", "/api/console/outcome", { report, text }),
 };
 
 export type ConsoleView = {
@@ -168,5 +180,7 @@ export type ConsoleView = {
     arrives_t: number;
     report: ReportView["report"];
     replied: boolean;
+    copilot_chain?: ChainStatus | null;
+    outcomes?: { id: string; t: number; text: string }[];
   }[];
 };

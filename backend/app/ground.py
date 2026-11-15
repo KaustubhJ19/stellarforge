@@ -8,9 +8,14 @@ from __future__ import annotations
 
 import json
 
+from copilot import record
+
 from . import contracts
-from .content import CONTENT
+from .content import CONTENT, lint_content
 from .flow import ESTIMATE_LABEL, NOT_ASSESSED, URGENCY_LABEL, Emergency, FlowError
+
+
+MAX_OUTCOME_CHARS = 1000
 
 
 def _content(name: str) -> dict:
@@ -67,10 +72,27 @@ class Ground:
             "timeline": list(e.timeline), "actions": list(e.actions),
             "sent_t": st.get("sent_t", eng.now()),
         }
+        if section := self.copilot_section(e):  # add-only: what the copilot saw, suggested and the rescuer chose
+            report["copilot"] = section
         if st.get("delivered"):  # Spec 1: reply_t is a number when present, so omit it until then
             report["reply_t"] = st["reply_t"]
             report["reply"] = st["reply"]
         return contracts.validate("ground_report", report)
+
+    def copilot_section(self, e: Emergency) -> dict | None:
+        """The hash-chained copilot record of this emergency with its verification status, or None without one."""
+        with self.eng._lock:  # the async investigator appends events; read the store and the head together
+            chain = record.chain_of(self.eng.store.events(), e.id)
+            if not chain:
+                return None
+            head = record.digest(e.copilot_last)
+        res = record.verify(chain, head=head)
+        return {"chain": {"ok": res.ok, "reason": res.reason, "length": len(chain), "head": head}, "events": chain,
+                "versions": dict(e.copilot.versions) if e.copilot else {}, "timings": record.timings(chain)}
+
+    def _chain(self, e: Emergency, name: str, **data) -> None:
+        if e.copilot:  # one log: ground steps join the copilot chain only when the copilot ran
+            self.eng.copilot_event(e, name, **data)
 
     # --------------------------------------------------------------- sending
     def start(self, e: Emergency) -> None:
@@ -119,6 +141,19 @@ class Ground:
                 return eid, st
         raise FlowError(f"unknown report {report_id}")
 
+    @staticmethod
+    def _carried_chain(snapshot: dict) -> dict | None:
+        """Ground re-checks the copy of the record that came with the report (None when it carried none)."""
+        section = snapshot.get("copilot")
+        if not section:
+            return None
+        res = record.check_section(section)
+        return {"ok": res.ok, "reason": res.reason, "length": len(section["events"])}
+
+    def _outcomes(self, eid: str) -> list[dict]:
+        return [{"id": lb["id"], "t": lb["t"], "text": lb["text"]}
+                for lb in self.eng.store.labels() if lb.get("kind") == "outcome" and lb.get("emergency_id") == eid]
+
     def console_view(self) -> dict:
         now = self.eng.now()
         out = []
@@ -126,7 +161,9 @@ class Ground:
             arrived = now >= st["arrives_t"]
             out.append({"id": st["snapshot"]["id"], "crew": st["snapshot"]["crew"], "arrived": arrived,
                         "arrives_t": st["arrives_t"], "report": st["snapshot"] if arrived else None,
-                        "replied": "reply" in st})
+                        "replied": "reply" in st,
+                        "copilot_chain": self._carried_chain(st["snapshot"]) if arrived else None,
+                        "outcomes": self._outcomes(eid)})
         return {"now": now, "scripted_reply": self.scripted, "reports": out}
 
     def console_reply(self, report_id: str | None, text: str, scripted: bool = False) -> dict:
@@ -145,6 +182,32 @@ class Ground:
                           typed_t=now, reaches_crew_t=st["reply_t"])
             return {"report": st["snapshot"]["id"], "reaches_crew_t": st["reply_t"], "scripted": scripted}
 
+    def add_outcome(self, report_id: str | None, text: str) -> dict:
+        """The flight surgeon labels the outcome after the fact: a Label linked to crew and emergency that also joins
+        the record chain. Several labels may follow one report; none changes the report that was sent."""
+        text = (text or "").strip()
+        if not text:
+            raise FlowError("outcome text is empty")
+        if len(text) > MAX_OUTCOME_CHARS:
+            raise FlowError(f"outcome text is over {MAX_OUTCOME_CHARS} characters")
+        if lint_content.find_drug_or_dose(text, lint_content.load_deny_list()):
+            raise FlowError("outcome text must not name a medication or dose")
+        with self.eng._lock:
+            eid, st = self._by_report(report_id)
+            now = self.eng.now()
+            if now < st["arrives_t"]:
+                raise FlowError("the report has not reached ground yet")
+            e = self.eng.emergencies[eid]
+            label_id = f"lb-outcome-{eid}-{len(self._outcomes(eid)) + 1}"
+            self._chain(e, "outcome_label", label=label_id, text=text)
+            label = contracts.validate("label", {
+                "id": label_id, "crew": e.patient, "kind": "outcome", "t": now, "report": self.build(e),
+                "text": text, "emergency_id": eid})
+            self.eng.store.put_label(label)
+            self.eng._note(e, "outcome labelled", label=label_id)
+            self.eng.emit("label_stored", label=label_id, crew=e.patient)
+            return {"label": label_id, "report": st["snapshot"]["id"]}
+
     def due_times(self) -> list[float]:
         out = []
         for st in self.state.values():
@@ -161,6 +224,8 @@ class Ground:
             e = self.eng.emergencies[eid]
             if "reply" in st and not st.get("delivered") and now >= st["reply_t"]:
                 st["delivered"] = True
+                self._chain(e, "ground_reply", report=st["snapshot"]["id"], scripted=st["scripted"],
+                            reply_t=st["reply_t"], text_sha256=record.digest(st["reply"]))
                 report = self.build(e)
                 label = contracts.validate("label", {
                     "id": f"lb-{eid}", "crew": e.patient, "kind": "ground_reply", "t": st["reply_t"], "report": report,

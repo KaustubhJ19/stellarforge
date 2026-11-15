@@ -150,7 +150,7 @@ def test_record_gets_notes_and_dropped_counts_without_dropped_text():
     e = eng.active_for("A")
     ev = next(x for x in e.timeline if x["event"] == "investigator")
     assert len(ev["notes"]) == 1 and ev["dropped"] == 1 and ev["dropped_reasons"] == ["drug or dose"]
-    assert "aspirin" not in json.dumps(e.timeline) and any(x["type"] == "investigator" for x in eng.events)
+    assert "aspirin" not in json.dumps(e.timeline) and any(x["type"] == "copilot_investigator" for x in eng.events)
 
 
 def test_panel_says_unavailable_on_failure_and_emergency_still_works():

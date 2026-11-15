@@ -44,3 +44,25 @@ def verify(chain: list[dict], head: str | None = None) -> ChainResult:
     if head is not None and prev != head:
         return ChainResult(False, "the newest event was changed or removed")
     return ChainResult(True)
+
+
+def timings(chain: list[dict]) -> dict:
+    """When the system first assessed, when the rescuer chose, and how long the investigator took (Mission clock s)."""
+    first: dict[str, dict] = {}
+    for ev in chain:
+        first.setdefault(ev["type"][len(PREFIX):], ev)
+    out: dict = {}
+    if "assessment" in first:
+        out["assessed_t"] = first["assessment"]["t"]
+    if "choice" in first:
+        out["chosen_t"] = first["choice"]["t"]
+        if "assessment" in first:
+            out["choice_after_s"] = round(first["choice"]["t"] - first["assessment"]["t"], 3)
+    if first.get("investigator", {}).get("elapsed_s") is not None:
+        out["investigator_elapsed_s"] = first["investigator"]["elapsed_s"]
+    return out
+
+
+def check_section(section: dict) -> ChainResult:
+    """Re-verify the copy of the record carried in a ground report, against the head it was sent with."""
+    return verify(section["events"], head=section["chain"]["head"])

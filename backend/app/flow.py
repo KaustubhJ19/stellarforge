@@ -369,6 +369,8 @@ class FlowEngine:
         e.choice = {"kind": kind, "protocol_id": e.protocol_id, "by": crew}
         self._note(e, "copilot choice", **e.choice)
         self.copilot_event(e, "choice", assessment_id=e.copilot.assessment_id, **e.choice)
+        if self.ground:  # a report still in transit carries the choice
+            self.ground.refresh(e)
 
     def _set_route(self, e: Emergency, route: dict) -> None:
         e.route, e.protocol_id = route, route["protocol_id"]

@@ -23,7 +23,8 @@
       "type": "number"
     },
     "kind": {
-      "type": "string"
+      "type": "string",
+      "description": "ground_reply, or outcome (Spec 3: the flight surgeon's after-the-fact outcome label, held in text)"
     },
     "report": {
       "type": "object"
