@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, type ConsoleView } from "./api";
+import { SummaryList } from "./Report";
 
 // Ground console (demo): a teammate plays the flight surgeon.
 export default function Console() {
@@ -36,7 +37,7 @@ export default function Console() {
             <p>In transit. Arrives at T+{Math.round(r.arrives_t)} s.</p>
           ) : (
             <>
-              <p>{r.report.summary}</p>
+              <SummaryList text={r.report.summary} />
               <details><summary>Full report</summary><pre>{JSON.stringify(r.report, null, 1)}</pre></details>
               {r.replied ? (
                 <p className="note">Reply sent.</p>

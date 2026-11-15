@@ -102,8 +102,8 @@ async function call<T>(method: string, path: string, body?: unknown): Promise<T>
 
 export const api = {
   view: (crew: string) => call<View>("GET", `/api/view?crew=${encodeURIComponent(crew)}`),
-  trigger: (crew: string, t: number) =>
-    call<{ emergency: string }>("POST", "/api/trigger", { schema_version: "1.0.0", kind: "manual", crew, t, reason: "Emergency button" }),
+  trigger: (crew: string, t: number, reason = "Emergency button") =>
+    call<{ emergency: string }>("POST", "/api/trigger", { schema_version: "1.0.0", kind: "manual", crew, t, reason }),
   answer: (crew: string, question: string, choice: string) => call<View>("POST", "/api/answer", { crew, question, choice }),
   accept: (crew: string) => call<{ role: string }>("POST", "/api/accept", { crew }),
   joinR2: (crew: string) => call<{ role: string }>("POST", "/api/join-r2", { crew }),

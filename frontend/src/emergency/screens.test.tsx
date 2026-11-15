@@ -30,6 +30,23 @@ describe("ticket 03: manual trigger and verdict", () => {
     expect(screen.queryByTestId("disclaimer")).toBeNull();
   });
 
+  it("idle home has a Help a crewmate action: it lists the other crew, not yourself, and raises an emergency for the one picked", async () => {
+    const f = vi.fn(async (url: string) =>
+      url === "/api/offline-bundle"
+        ? new Response(JSON.stringify({ profile: { crew: ["cmdr", "eng", "sci"] }, names: { cmdr: "Commander", eng: "Engineer", sci: "Scientist" } }), { status: 200 })
+        : new Response(JSON.stringify({ emergency: "em-1" }), { status: 201 }),
+    );
+    vi.stubGlobal("fetch", f);
+    const act = async (fn: () => Promise<unknown>) => { await fn(); };
+    render(<Screen crew="cmdr" view={{ screen: "idle", t: 42 }} offline={false} error={null} act={act} />);
+    await userEvent.click(screen.getByRole("button", { name: "Help a crewmate" }));
+    expect(await screen.findByRole("button", { name: "Engineer" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Commander" })).toBeNull();
+    await userEvent.click(screen.getByRole("button", { name: "Engineer" }));
+    const post = f.mock.calls.find(([u]) => u === "/api/trigger") as unknown as [string, RequestInit];
+    expect(JSON.parse(post[1].body as string)).toMatchObject({ kind: "manual", crew: "eng", t: 42, reason: "Help a crewmate" });
+  });
+
   it("verdict screen shows plain-words urgency, questions and the disclaimer", () => {
     render(<Screen crew="cmdr" view={verdict} offline={false} error={null} act={async () => {}} />);
     expect(screen.getByTestId("urgency")).toHaveTextContent("Urgency not assessed (manual start)");
