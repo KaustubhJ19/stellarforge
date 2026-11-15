@@ -12,15 +12,13 @@ home screen → collapse → guidance → ground report → delayed ground reply
 
 ## Re-record (macOS or Linux)
 
-**Blocked on `main` (Spec 1 / Spec 4):** Spec 4 on `main` no longer reads `SF_RECORDS`, so the demo server loads the stub crew records (`cmdr`, `eng`, …), and its `load_records` needs `{"records": [...]}` while Spec 1's `replay/crew-records.json` is a bare list. Until Spec 4 accepts a records path again and the two formats agree, the real crew A–D cannot be served, so `record_demo.mjs` cannot be re-run as written. The committed video was recorded before that change. The demo endpoints also need `SF_SIM=1`.
-
-Needs `frontend/node_modules` (`cd frontend && npm ci && npx playwright install chromium`), a built app (`npx vite build` in `frontend/`) and `.venv` with the backend packages.
+Needs `frontend/node_modules` (`cd frontend && npm ci && npx playwright install chromium`), a built app (`npx vite build` in `frontend/`) and `backend/.venv` with the backend packages (see the README).
 
 ```bash
 mkdir -p out
-.venv/bin/python tools/demo/demo_collapse.py out/collapse.json
-cd frontend && SF_SIM=1 SF_PROTOCOL=microgravity-cpr SF_PROFILE=mars_transit SF_RECORDS=$PWD/../replay/crew-records.json SF_OLLAMA_URL=http://127.0.0.1:9 ../.venv/bin/python -m uvicorn app.main:app --app-dir ../backend --host 127.0.0.1 --port 8771 &
-cd .. && node tools/demo/record_demo.mjs http://127.0.0.1:8771 out/collapse.json out
+backend/.venv/bin/python tools/demo/demo_collapse.py out/collapse.json
+SF_SIM=1 SF_OLLAMA_URL=http://127.0.0.1:9 backend/.venv/bin/python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8771 &
+node tools/demo/record_demo.mjs http://127.0.0.1:8771 out/collapse.json out
 ```
 
 The video (`out/page@*.webm`, about 2 minutes, 1280×800) and one screenshot per scene (`out/s01.png` …) land in `out/`.
