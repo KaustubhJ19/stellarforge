@@ -6,6 +6,20 @@ It learns each person's own normal, flags drift before it becomes a problem, and
 
 > **Decision support, not diagnosis.** Rules and published guidelines decide. Models detect and forecast. The language model only explains. Prototype for a hackathon; the medical content has not been clinically reviewed. Not medical advice.
 
+## My contributions
+
+*Team project, built with the StellarForge team for NASA Space Apps 2026. This is my personal copy; the original is at [SCAPE-NASA/stellarforge](https://github.com/SCAPE-NASA/stellarforge).*
+
+I led the **health app frontend** (React, TypeScript, Three.js, Vite) and wrote the largest share of the commits (105 of about 266):
+
+- **3D body digital twin:** exported male and female anatomy models from Z-Anatomy to GLB, with layers you can make transparent one at a time. The view zooms from body to region to structure and loads detail only when needed. Body parts glow by health status, the heart beats at the crew member's real heart rate, and the lungs breathe.
+- **Mission-operations home screen:** summaries, today's tasks, Emergency and Help actions, a mission-profile switcher, and a CO₂ banner that compares the cabin's 1-hour average with the profile's limit.
+- **Trends and forecasting UI:** trend charts with a personal-baseline band and alert markers, a mission-clock scrubber that replays status over time, and a readiness forecast with a "Why this forecast?" view.
+- **Measurement cards and forms:** "How / Why / If abnormal" cards, plus a stand test and a post-EVA form whose warning signs open the emergency flow.
+- **Replay integration:** the app runs from recorded replay files alone, with no backend, and validates against the team's shared data contracts.
+- **First-aid protocol library:** drafted cited protocols from ERC First Aid 2025 and the Surviving Sepsis Campaign 2021, and built the approval gate that routes each condition.
+- **Quality:** accessibility work (keyboard use, high contrast, reduced motion, colour-blind-safe status colours) and Vitest and Playwright end-to-end tests.
+
 ## How it works
 
 Everything is **replay-first**: the web app runs from JSON replay files alone, and an optional local service plays the part of the habitat network.
